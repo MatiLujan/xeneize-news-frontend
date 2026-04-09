@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Xeneize News — El mundo azul y oro</title>
+<meta name="description" content="El medio digital más innovador de Boca Juniors. Noticias, foro, estadísticas y el Cerebro Xeneize."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --azul:#002060;--azul2:#001440;--azul3:#003399;
+  --oro:#F5A800;--oro2:#e09500;
+  --blanco:#ffffff;--gris:#e8edf5;--gris2:#c8d0e0;
+  --txt:#001440;--txt2:#334477;--txt3:#667799;
+  --rojo:#cc2200;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min-height:100vh;}
+.xn-wrapper{max-width:960px;margin:0 auto;background:var(--gris);}
+
+@keyframes ticker{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+@keyframes pulseGold{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes onlinePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+@keyframes shimmerGold{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes typing{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* NAV */
+.xn-nav{background:var(--azul);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px;border-bottom:4px solid var(--oro);position:sticky;top:0;z-index:100;}
+.xn-logo{display:flex;align-items:center;cursor:pointer;}
+.xn-logo-txt{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;font-style:italic;color:var(--oro);letter-spacing:1px;line-height:1;}
+.xn-logo-star{display:inline-flex;align-items:center;margin:0 2px;margin-bottom:6px;}
+.xn-logo-star svg{width:22px;height:22px;fill:none;stroke:var(--oro);stroke-width:2;}
+.xn-logo-news{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--blanco);letter-spacing:2px;line-height:1;}
+.xn-navlinks{display:flex;gap:2px;}
+.xn-navlink{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.5px;padding:7px 12px;border-radius:6px;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;border:none;background:none;text-transform:uppercase;}
+.xn-navlink:hover{color:var(--oro);background:rgba(245,168,0,0.1);}
+.xn-navlink.activo{color:var(--oro);background:rgba(245,168,0,0.15);border-bottom:2px solid var(--oro);}
+.xn-live{background:var(--rojo);color:white;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:4px;animation:pulseGold 1.5s infinite;text-transform:uppercase;}
+
+/* TICKER */
+.xn-ticker{background:var(--oro);height:34px;overflow:hidden;display:flex;align-items:center;}
+.xn-ticker-lbl{background:var(--azul2);color:var(--oro);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;padding:0 14px;height:100%;display:flex;align-items:center;flex-shrink:0;text-transform:uppercase;}
+.xn-ticker-track{overflow:hidden;flex:1;}
+.xn-ticker-inner{white-space:nowrap;animation:ticker 32s linear infinite;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--azul2);letter-spacing:0.3px;}
+
+/* SECCIONES */
+.xn-sec{display:none;}
+.xn-sec.visible{display:block;animation:fadeUp 0.25s ease;}
+
+/* PULSO XENEIZE — STATS REALES */
+.px-wrap{background:var(--azul2);}
+.px-header{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--oro);}
+.px-hdr-left{display:flex;align-items:center;gap:8px;}
+.px-dot{width:8px;height:8px;border-radius:50%;background:var(--oro);animation:pulseGold 2s infinite;}
+.px-titulo{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;font-style:italic;color:white;letter-spacing:0.5px;}
+.px-titulo span{color:var(--oro);}
+.px-updated{font-size:11px;color:rgba(255,255,255,0.4);font-weight:500;}
+.px-refresh{background:rgba(245,168,0,0.15);border:1px solid rgba(245,168,0,0.3);border-radius:5px;padding:4px 11px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--oro);cursor:pointer;transition:all 0.15s;letter-spacing:0.5px;text-transform:uppercase;}
+.px-refresh:hover{background:rgba(245,168,0,0.25);}
+.px-loading{padding:28px;text-align:center;display:none;}
+.px-loading.visible{display:block;}
+.px-spinner{width:28px;height:28px;border:3px solid rgba(245,168,0,0.2);border-top-color:var(--oro);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px;}
+.px-loading-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;}
+.px-error{background:#fff5f5;padding:20px;text-align:center;display:none;}
+.px-error.visible{display:block;}
+.px-error-txt{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--rojo);}
+.px-error-sub{font-size:12px;color:var(--txt3);margin-top:5px;}
+.px-body{display:none;}
+.px-body.visible{display:block;}
+.px-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);}
+.px-stat{padding:12px 16px;border-right:1px solid rgba(245,168,0,0.12);}
+.px-stat:last-child{border-right:none;}
+.px-stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;color:rgba(255,255,255,0.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.px-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:white;line-height:1;}
+.px-stat-sub{font-size:11px;color:var(--oro);margin-top:3px;font-weight:500;}
+
+/* HOME BODY */
+.xn-body{display:grid;grid-template-columns:1fr 300px;}
+.xn-main{background:var(--blanco);}
+.xn-sidebar{background:var(--blanco);border-left:3px solid var(--azul);}
+.xn-sec-label{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.xn-sec-label-line{width:4px;height:20px;background:var(--oro);border-radius:2px;}
+.xn-sec-label-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--azul);letter-spacing:2px;text-transform:uppercase;}
+.xn-hero-wrap{padding:20px 24px;border-bottom:2px solid var(--gris);}
+.xn-hero-card{background:var(--azul);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:14px;transition:opacity 0.2s;}
+.xn-hero-card:hover{opacity:0.93;}
+.xn-hero-img{height:175px;background:var(--azul2);display:flex;align-items:flex-end;padding:18px;position:relative;}
+.xn-hero-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,20,64,0.95) 0%,rgba(0,32,96,0.3) 100%);}
+.xn-hero-star{position:absolute;top:12px;right:12px;z-index:2;}
+.xn-hero-star svg{width:38px;height:38px;fill:none;stroke:rgba(245,168,0,0.3);stroke-width:1.5;}
+.xn-tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:8px;position:relative;z-index:2;}
+.xn-tag.oro{background:var(--oro);color:var(--azul2);}
+.xn-tag.azul{background:var(--azul3);color:white;}
+.xn-tag.rojo{background:var(--rojo);color:white;}
+.xn-tag.verde{background:#1a7a3a;color:white;}
+.xn-tag.gris{background:rgba(255,255,255,0.15);color:white;}
+.xn-hero-titulo{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:800;font-style:italic;color:var(--blanco);line-height:1.25;position:relative;z-index:2;}
+.xn-notas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.xn-nota{border:1.5px solid var(--gris);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.15s;}
+.xn-nota:hover{border-color:var(--oro);background:#fffbf0;}
+.xn-nota-titulo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--txt);line-height:1.35;margin-top:6px;}
+.xn-nota-meta{font-size:11px;color:var(--txt3);margin-top:5px;font-weight:500;}
+
+/* TABLA Y PARTIDOS EN HOME */
+.xn-stats-home{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--gris);}
+.xn-stats-col{padding:16px 20px;background:white;}
+.xn-stats-col:first-child{border-right:1.5px solid var(--gris);}
+.p-tabla{width:100%;border-collapse:collapse;}
+.p-tabla th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;padding:0 5px 8px;text-align:center;}
+.p-tabla th:first-child{text-align:left;}
+.p-tabla td{font-size:12px;padding:7px 5px;border-top:1px solid var(--gris);color:var(--txt2);text-align:center;font-weight:500;}
+.p-tabla td:first-child{text-align:left;}
+.p-tabla tr.boca-row td{background:rgba(245,168,0,0.07);font-weight:700;color:var(--azul);}
+.p-pos{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--txt3);}
+.p-pos.boca{color:var(--azul);}
+.p-team-name{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.3px;}
+.p-partidos{display:flex;flex-direction:column;gap:7px;}
+.p-partido{background:#f5f7fc;border-radius:7px;padding:9px 11px;border:1.5px solid var(--gris2);}
+.p-partido.boca-partido{border-color:rgba(245,168,0,0.35);background:rgba(245,168,0,0.04);}
+.p-partido-fecha{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.p-partido-equipos{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+.p-partido-equipo{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);flex:1;}
+.p-partido-equipo.right{text-align:right;}
+.p-partido-score{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--azul);text-align:center;min-width:38px;}
+.p-partido-score.upcoming{font-size:11px;font-weight:700;color:var(--txt3);}
+.p-estado{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;padding:1px 7px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;margin-top:3px;}
+.estado-fin{background:#e8f5ee;color:#1a5a30;}
+.estado-vivo{background:#ffe8e8;color:#aa1100;animation:pulseGold 1s infinite;}
+.estado-prox{background:rgba(245,168,0,0.15);color:#7a5000;}
+.stats-loading{padding:20px;text-align:center;}
+.stats-loading-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt3);letter-spacing:0.5px;}
+.stats-mini-spinner{width:20px;height:20px;border:2px solid var(--gris2);border-top-color:var(--azul);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 8px;}
+
+/* ENCUESTA */
+.xn-encuesta{padding:18px 24px;background:#f5f7fc;border-top:2px solid var(--gris);}
+.xn-pregunta{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;font-style:italic;color:var(--azul);margin-bottom:12px;line-height:1.3;}
+.xn-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.xn-opt{position:relative;border-radius:8px;overflow:hidden;border:1.5px solid var(--gris2);cursor:pointer;background:white;transition:border-color 0.15s;}
+.xn-opt:hover{border-color:var(--azul);}
+.xn-opt-fill{position:absolute;left:0;top:0;bottom:0;background:rgba(0,32,96,0.07);transition:width 0.7s ease;}
+.xn-opt-fill.win{background:rgba(245,168,0,0.18);}
+.xn-opt-label{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;padding:9px 13px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--txt);}
+.xn-opt-pct{font-size:13px;color:var(--txt2);}
+.xn-votos{font-size:11px;color:var(--txt3);text-align:center;font-weight:500;}
+
+/* SIDEBAR */
+.xn-sidebar-inner{padding:18px 16px;}
+.xn-fp-item{padding:12px 0;border-bottom:1.5px solid var(--gris);cursor:pointer;}
+.xn-fp-item:last-child{border-bottom:none;}
+.xn-fp-calor{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:5px;text-transform:uppercase;}
+.fuego{background:#fff0e0;color:#b84a00;}
+.caliente{background:#ffe8e8;color:#aa1100;}
+.activo{background:#e8f0ff;color:#1a3a99;}
+.xn-fp-titulo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--txt);line-height:1.35;}
+.xn-fp-meta{font-size:11px;color:var(--txt3);margin-top:4px;font-weight:500;}
+.xn-btn{width:100%;background:var(--azul);color:white;border:none;border-radius:7px;padding:10px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.5px;cursor:pointer;margin-top:12px;transition:background 0.15s;text-transform:uppercase;}
+.xn-btn:hover{background:var(--azul2);}
+.xn-btn.oro{background:var(--oro);color:var(--azul2);margin-top:8px;}
+.xn-btn.oro:hover{background:var(--oro2);}
+
+/* FORO */
+.f-header{background:var(--azul);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--oro);}
+.f-logo-wrap{display:flex;align-items:center;gap:10px;}
+.f-logo-icon{width:36px;height:36px;background:rgba(245,168,0,0.15);border:1.5px solid rgba(245,168,0,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.f-logo-icon svg{width:18px;height:18px;fill:none;stroke:var(--oro);stroke-width:2;}
+.f-logo-txt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;font-style:italic;color:var(--blanco);}
+.f-logo-txt span{color:var(--oro);}
+.f-stats{display:flex;gap:16px;}
+.f-st{text-align:center;}
+.f-st-n{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--oro);line-height:1;}
+.f-st-l{font-size:10px;color:rgba(255,255,255,0.4);font-weight:500;}
+.f-live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;margin-right:3px;animation:onlinePulse 2s infinite;}
+.f-rangos{background:var(--azul2);padding:8px 24px;display:flex;align-items:center;gap:7px;overflow-x:auto;border-bottom:2px solid rgba(245,168,0,0.15);}
+.f-rlbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0;}
+.f-chip{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.5px;padding:3px 11px;border-radius:4px;border:1px solid;white-space:nowrap;flex-shrink:0;cursor:pointer;text-transform:uppercase;transition:opacity 0.15s;}
+.f-chip:hover{opacity:0.8;}
+.chip-r{border-color:rgba(180,178,169,0.35);color:#aaa;background:rgba(180,178,169,0.06);}
+.chip-h{border-color:rgba(99,153,34,0.5);color:#7bc44a;background:rgba(99,153,34,0.07);}
+.chip-f{border-color:rgba(100,160,255,0.5);color:#80b3ff;background:rgba(100,160,255,0.07);}
+.chip-x{border-color:rgba(245,168,0,0.5);color:var(--oro);background:rgba(245,168,0,0.08);}
+.chip-s{border-color:rgba(212,83,126,0.5);color:#e07aaa;background:rgba(212,83,126,0.07);animation:pulseGold 2.5s infinite;}
+.f-toolbar{background:#f0f3fa;border-bottom:1.5px solid var(--gris2);padding:10px 24px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.f-filtros{display:flex;gap:5px;flex:1;flex-wrap:wrap;}
+.f-filtro{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;padding:5px 13px;border-radius:6px;border:1.5px solid var(--gris2);background:white;color:var(--txt2);cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.f-filtro:hover{border-color:var(--azul);color:var(--azul);}
+.f-filtro.activo{background:var(--azul);color:white;border-color:var(--azul);}
+.f-btn-nuevo{background:var(--oro);color:var(--azul2);border:none;border-radius:6px;padding:7px 16px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.5px;cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.f-btn-nuevo:hover{background:var(--oro2);}
+.f-nuevo-form{background:white;border-bottom:1.5px solid var(--gris);padding:16px 24px;display:none;animation:slideDown 0.2s ease;}
+.f-nuevo-form.visible{display:block;}
+.f-form-lbl{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--azul);margin-bottom:8px;text-transform:uppercase;}
+.f-cats{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.f-cat{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;padding:4px 11px;border-radius:4px;border:1.5px solid var(--gris2);background:#f5f7fc;color:var(--txt2);cursor:pointer;transition:all 0.15s;text-transform:uppercase;}
+.f-cat.sel.superclasico{background:#ffe8e8;color:#aa1100;border-color:#ffaaaa;}
+.f-cat.sel.mercado{background:#e8f0ff;color:#1a3a99;border-color:#aabcff;}
+.f-cat.sel.debate{background:rgba(245,168,0,0.15);color:#7a5000;border-color:var(--oro);}
+.f-cat.sel.historia{background:#e8f5ee;color:#1a5a30;border-color:#80ccaa;}
+.f-cat.sel.tactica{background:#f0eaff;color:#4a1a99;border-color:#c0aaff;}
+.f-finput{width:100%;padding:9px 13px;border-radius:7px;border:1.5px solid var(--gris2);font-family:'Barlow',sans-serif;font-size:14px;color:var(--txt);background:#f5f7fc;margin-bottom:8px;}
+.f-finput:focus{outline:none;border-color:var(--azul);}
+.f-ftextarea{width:100%;padding:9px 13px;border-radius:7px;border:1.5px solid var(--gris2);font-family:'Barlow',sans-serif;font-size:13px;color:var(--txt);background:#f5f7fc;resize:vertical;min-height:70px;margin-bottom:10px;}
+.f-ftextarea:focus{outline:none;border-color:var(--azul);}
+.f-form-actions{display:flex;justify-content:flex-end;gap:8px;}
+.f-btn-cancel{background:none;border:1.5px solid var(--gris2);border-radius:6px;padding:6px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt2);cursor:pointer;text-transform:uppercase;}
+.f-btn-pub{background:var(--azul);color:white;border:none;border-radius:6px;padding:6px 18px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:background 0.15s;text-transform:uppercase;}
+.f-btn-pub:hover{background:var(--azul2);}
+.f-lista{background:white;}
+.f-hilo{border-bottom:1.5px solid var(--gris);padding:15px 24px;transition:background 0.15s;}
+.f-hilo:hover{background:#f8f9fd;}
+.f-hilo.pinned{border-left:4px solid var(--oro);padding-left:20px;}
+.f-pin-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;color:var(--oro2);margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase;}
+.f-hilo-top{display:flex;gap:12px;}
+.f-av-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
+.f-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;}
+.f-av.socio{box-shadow:0 0 0 2.5px var(--oro);}
+.f-flair{font-size:13px;line-height:1;}
+.f-hilo-main{flex:1;min-width:0;}
+.f-hilo-meta{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;}
+.f-uname{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.3px;}
+.u-rookie{color:#888;}
+.u-hincha{color:#3B6D11;}
+.u-fanatico{color:#1a3a99;}
+.u-xeneize{background:linear-gradient(90deg,#c8860a,var(--oro),#c8860a);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerGold 3s linear infinite;}
+.u-socio{background:linear-gradient(90deg,#D4537E,#993556,#D4537E);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmerGold 2.5s linear infinite;}
+.f-rbadge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;padding:1px 7px;border-radius:4px;margin-left:3px;letter-spacing:0.5px;text-transform:uppercase;}
+.rb-r{background:rgba(136,136,136,0.1);color:#888;}
+.rb-h{background:rgba(59,109,17,0.1);color:#3B6D11;}
+.rb-f{background:rgba(26,58,153,0.1);color:#1a3a99;}
+.rb-x{background:rgba(245,168,0,0.12);color:#7a5000;}
+.rb-s{background:rgba(212,83,126,0.12);color:#993556;}
+.f-tiempo{font-size:11px;color:var(--txt3);font-weight:500;}
+.f-bcalor{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:0.3px;text-transform:uppercase;}
+.f-bcat{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px;letter-spacing:0.3px;text-transform:uppercase;}
+.f-titulo{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;font-style:italic;color:var(--txt);line-height:1.3;margin-bottom:5px;cursor:pointer;transition:color 0.15s;}
+.f-titulo:hover{color:var(--azul3);}
+.f-preview{font-size:12px;color:var(--txt2);line-height:1.5;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.f-acciones{display:flex;gap:8px;}
+.f-acc{display:flex;align-items:center;gap:4px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt3);cursor:pointer;padding:4px 8px;border-radius:6px;transition:all 0.15s;border:none;background:none;}
+.f-acc:hover{background:#f0f3fa;color:var(--txt);}
+.f-acc.liked{color:var(--rojo);}
+.f-acc svg{width:13px;height:13px;flex-shrink:0;}
+.f-calor-wrap{display:flex;align-items:center;gap:8px;margin-top:9px;}
+.f-calor-track{flex:1;height:4px;background:var(--gris);border-radius:2px;overflow:hidden;}
+.f-calor-fill{height:100%;border-radius:2px;transition:width 0.6s ease,background 0.4s ease;}
+.f-calor-pct{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--txt3);min-width:28px;text-align:right;}
+.f-exp{border-top:1.5px solid var(--gris);margin-top:10px;padding-top:12px;display:none;}
+.f-exp.open{display:block;animation:fadeUp 0.2s ease;}
+.f-resps{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.f-resp{display:flex;gap:8px;}
+.f-resp-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;flex-shrink:0;}
+.f-resp-bur{background:#f5f7fc;border-radius:0 8px 8px 8px;padding:8px 11px;flex:1;border:1px solid var(--gris);}
+.f-resp-user{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:var(--txt);margin-bottom:2px;}
+.f-resp-txt{font-size:12px;color:var(--txt2);line-height:1.5;}
+.f-resp-inp{display:flex;gap:6px;margin-top:8px;}
+.f-resp-inp input{flex:1;padding:7px 11px;border-radius:7px;border:1.5px solid var(--gris2);font-family:'Barlow',sans-serif;font-size:12px;color:var(--txt);background:white;}
+.f-resp-inp input:focus{outline:none;border-color:var(--azul);}
+.f-resp-send{background:var(--azul);color:white;border:none;border-radius:6px;padding:7px 13px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;cursor:pointer;text-transform:uppercase;transition:background 0.15s;}
+.f-resp-send:hover{background:var(--azul2);}
+
+/* MODAL */
+.f-modal-overlay{position:fixed;inset:0;background:rgba(0,20,64,0.8);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.f-modal-overlay.open{display:flex;animation:fadeUp 0.2s ease;}
+.f-modal{background:white;border-radius:12px;padding:26px;max-width:390px;width:100%;border-top:4px solid var(--oro);max-height:90vh;overflow-y:auto;}
+.f-modal-h{text-align:center;margin-bottom:16px;}
+.f-modal-ico{font-size:30px;margin-bottom:8px;}
+.f-modal-tit{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;font-style:italic;color:var(--azul);}
+.f-modal-sub{font-size:13px;color:var(--txt2);margin-top:4px;}
+.f-precio{text-align:center;padding:12px;background:#f5f7fc;border-radius:8px;margin-bottom:14px;border:1.5px solid var(--gris);}
+.f-precio-n{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;color:var(--azul);}
+.f-precio-l{font-size:11px;color:var(--txt3);font-weight:500;}
+.f-flairs-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:var(--txt2);margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;}
+.f-flairs{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.f-flair-opt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 11px;border-radius:7px;border:2px solid var(--gris2);cursor:pointer;transition:all 0.15s;}
+.f-flair-opt:hover{border-color:var(--azul);transform:translateY(-2px);}
+.f-flair-opt.sel{border-color:var(--oro);background:rgba(245,168,0,0.07);}
+.f-flair-opt span:first-child{font-size:22px;}
+.f-flair-opt span:last-child{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--txt2);text-transform:uppercase;}
+.f-bens{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
+.f-ben{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;background:#f5f7fc;border-radius:8px;border-left:3px solid var(--oro);}
+.f-ben-ico{font-size:15px;flex-shrink:0;}
+.f-ben-txt{font-size:12px;color:var(--txt2);line-height:1.4;}
+.f-ben-txt strong{font-family:'Barlow Condensed',sans-serif;color:var(--txt);font-size:13px;font-weight:800;display:block;margin-bottom:1px;}
+.f-btn-sus{width:100%;background:var(--azul);color:white;border:none;border-radius:8px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:0.5px;cursor:pointer;text-transform:uppercase;transition:background 0.15s;}
+.f-btn-sus:hover{background:var(--azul2);}
+.f-btn-cls{width:100%;background:none;border:none;color:var(--txt3);font-size:12px;cursor:pointer;margin-top:8px;font-family:'Barlow',sans-serif;}
+
+/* CEREBRO */
+.cx-header{background:var(--azul);padding:18px 24px;display:flex;align-items:center;gap:14px;border-bottom:4px solid var(--oro);}
+.cx-brain{width:48px;height:48px;border-radius:50%;background:rgba(245,168,0,0.14);border:2px solid rgba(245,168,0,0.4);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.cx-tit{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;font-style:italic;color:white;line-height:1;}
+.cx-tit span{color:var(--oro);}
+.cx-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;}
+.cx-status{margin-left:auto;text-align:right;}
+.cx-online{font-size:11px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:4px;justify-content:flex-end;}
+.cx-odot{width:6px;height:6px;border-radius:50%;background:#4ade80;}
+.cx-mod{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:rgba(245,168,0,0.55);margin-top:2px;letter-spacing:0.5px;}
+.cx-sugs{background:#f0f3fa;border-bottom:1.5px solid var(--gris2);padding:10px 24px;}
+.cx-sug-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px;}
+.cx-sug-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.cx-sug{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;padding:4px 12px;border-radius:5px;border:1.5px solid var(--gris2);background:white;color:var(--txt2);cursor:pointer;transition:all 0.15s;}
+.cx-sug:hover{border-color:var(--azul);color:var(--azul);}
+.cx-chat{background:white;min-height:360px;padding:16px 24px;display:flex;flex-direction:column;gap:12px;}
+.cx-msg{display:flex;gap:10px;animation:fadeUp 0.3s ease;}
+.cx-msg.user{flex-direction:row-reverse;}
+.cx-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;}
+.cx-av.bot{background:var(--azul);color:var(--oro);}
+.cx-av.usr{background:rgba(0,32,96,0.1);color:var(--azul);}
+.cx-bubble{max-width:78%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.65;}
+.cx-bubble.bot{background:#f0f3fa;color:var(--txt);border-radius:0 12px 12px 12px;border:1px solid var(--gris2);}
+.cx-bubble.usr{background:var(--azul);color:white;border-radius:12px 0 12px 12px;}
+.cx-bubble p+p{margin-top:8px;}
+.cx-dato{display:inline-block;background:rgba(245,168,0,0.18);color:#7a5000;padding:2px 8px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;margin:1px 2px;}
+.cx-typing{display:flex;gap:10px;align-items:center;}
+.cx-typing-dots{display:flex;gap:4px;padding:10px 14px;background:#f0f3fa;border-radius:0 12px 12px 12px;border:1px solid var(--gris2);}
+.cx-typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--txt3);animation:typing 1.2s infinite;display:block;}
+.cx-typing-dots span:nth-child(2){animation-delay:0.2s;}
+.cx-typing-dots span:nth-child(3){animation-delay:0.4s;}
+.cx-inp-area{background:#f0f3fa;border-top:1.5px solid var(--gris2);padding:12px 24px;display:flex;gap:8px;align-items:flex-end;}
+.cx-inp{flex:1;padding:9px 14px;border-radius:8px;border:1.5px solid var(--gris2);font-family:'Barlow',sans-serif;font-size:13px;color:var(--txt);background:white;resize:none;min-height:40px;max-height:110px;line-height:1.5;}
+.cx-inp:focus{outline:none;border-color:var(--azul);}
+.cx-send{background:var(--azul);color:white;border:none;border-radius:8px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background 0.15s;}
+.cx-send:hover{background:var(--azul2);}
+.cx-send svg{width:16px;height:16px;}
+.cx-disc{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:var(--txt3);text-align:center;padding:8px 24px 16px;background:white;border-top:1px solid var(--gris);letter-spacing:0.3px;}
+
+/* FOOTER */
+.xn-footer{background:var(--azul2);padding:22px 24px;text-align:center;border-top:4px solid var(--oro);}
+.xn-footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;font-style:italic;color:var(--oro);margin-bottom:5px;}
+.xn-footer-logo span{color:white;}
+.xn-footer-txt{font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;}
+
+@media(max-width:680px){
+  .xn-pulso-grid,.px-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .xn-body{grid-template-columns:1fr;}
+  .xn-main{border-right:none;border-bottom:2px solid var(--gris);}
+  .xn-notas-grid,.xn-stats-home{grid-template-columns:1fr;}
+  .xn-navlink{padding:5px 9px;font-size:12px;}
+  .f-rangos,.f-header,.f-toolbar,.f-hilo{padding-left:16px;padding-right:16px;}
+  .cx-header,.cx-sugs,.cx-chat,.cx-inp-area,.cx-disc{padding-left:16px;padding-right:16px;}
+}
+</style>
+</head>
+<body>
+<div class="xn-wrapper">
+
+<nav class="xn-nav">
+  <div class="xn-logo">
+    <span class="xn-logo-txt">XENEIZE</span>
+    <span class="xn-logo-star"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></span>
+    <span class="xn-logo-news">NEWS!</span>
+  </div>
+  <div class="xn-navlinks">
+    <button class="xn-navlink activo" onclick="ir('home',this)">Inicio</button>
+    <button class="xn-navlink" onclick="ir('historias',this)">Historias</button>
+    <button class="xn-navlink" onclick="ir('stats',this)">Stats</button>
+    <button class="xn-navlink" onclick="ir('foro',this)">Foro</button>
+    <button class="xn-navlink" onclick="ir('cerebro',this)">Cerebro</button>
+  </div>
+  <div class="xn-live">En vivo</div>
+</nav>
+
+<div class="xn-ticker">
+  <div class="xn-ticker-lbl">Ahora</div>
+  <div class="xn-ticker-track">
+    <div class="xn-ticker-inner" id="tickerInner">Cargando datos en tiempo real... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div class="xn-sec visible" id="sec-home">
+  <div class="px-wrap">
+    <div class="px-header">
+      <div class="px-hdr-left"><div class="px-dot"></div><div class="px-titulo">PULSO <span>XENEIZE</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="px-updated" id="pUpdated">Cargando...</div>
+        <button class="px-refresh" onclick="cargarStats()">&#8635; Actualizar</button>
+      </div>
+    </div>
+    <div class="px-loading visible" id="pLoading"><div class="px-spinner"></div><div class="px-loading-txt">Conectando con la Liga Profesional...</div></div>
+    <div class="px-error" id="pError"><div class="px-error-txt" id="pErrorTxt">Error al cargar datos</div><div class="px-error-sub" id="pErrorSub">Intenta de nuevo</div></div>
+    <div class="px-body" id="pBody">
+      <div class="px-stats-grid">
+        <div class="px-stat"><div class="px-stat-lbl">Posicion</div><div class="px-stat-val" id="sPosicion">-</div><div class="px-stat-sub" id="sTorneo">Liga Profesional</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Puntos</div><div class="px-stat-val" id="sPuntos">-</div><div class="px-stat-sub" id="sJugados">- partidos</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Goles</div><div class="px-stat-val" id="sGoles">-</div><div class="px-stat-sub" id="sGA">- en contra</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Forma</div><div class="px-stat-val" id="sForma" style="font-size:16px;padding-top:4px;">-</div><div class="px-stat-sub">ultimos resultados</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="xn-body">
+    <div class="xn-main">
+      <div class="xn-hero-wrap">
+        <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Ultimas noticias</div></div>
+        <div class="xn-hero-card">
+          <div class="xn-hero-img">
+            <div class="xn-hero-star"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></div>
+            <div>
+              <div class="xn-tag oro">Fichajes</div>
+              <div class="xn-hero-titulo">Boca va con todo por refuerzo europeo: negociacion avanzada con club de LaLiga</div>
+            </div>
+          </div>
+        </div>
+        <div class="xn-notas-grid">
+          <div class="xn-nota"><div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div><div class="xn-nota-meta">hace 2h &middot; 4 min</div></div>
+          <div class="xn-nota"><div class="xn-tag verde">Stats</div><div class="xn-nota-titulo">Merentiel supera a Palermo en goles en un solo torneo</div><div class="xn-nota-meta">hace 4h &middot; 3 min</div></div>
+          <div class="xn-nota"><div class="xn-tag gris">Mercado</div><div class="xn-nota-titulo">Cavani abre la puerta a renovar hasta fin de 2025</div><div class="xn-nota-meta">hace 5h &middot; 2 min</div></div>
+          <div class="xn-nota"><div class="xn-tag rojo">Informe</div><div class="xn-nota-titulo">Los 5 jugadores que mas corrieron en el Superclasico</div><div class="xn-nota-meta">ayer &middot; 5 min</div></div>
+        </div>
+      </div>
+
+      <div class="xn-stats-home" id="statsHome">
+        <div class="xn-stats-col">
+          <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Tabla de posiciones</div></div>
+          <div id="tablaHome"><div class="stats-loading"><div class="stats-mini-spinner"></div><div class="stats-loading-txt">Cargando tabla...</div></div></div>
+        </div>
+        <div class="xn-stats-col">
+          <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Partidos de Boca</div></div>
+          <div id="partidosHome"><div class="stats-loading"><div class="stats-mini-spinner"></div><div class="stats-loading-txt">Cargando partidos...</div></div></div>
+        </div>
+      </div>
+
+      <div class="xn-encuesta">
+        <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Voz Xeneize</div></div>
+        <div class="xn-pregunta">Merentiel fue el mejor Boca de los ultimos 5 anos?</div>
+        <div class="xn-opts">
+          <div class="xn-opt" onclick="votar(0)"><div class="xn-opt-fill win" id="ef0" style="width:62%"></div><div class="xn-opt-label">Si, el mejor<span class="xn-opt-pct" id="ep0">62%</span></div></div>
+          <div class="xn-opt" onclick="votar(1)"><div class="xn-opt-fill" id="ef1" style="width:24%"></div><div class="xn-opt-label">Cavani fue mejor<span class="xn-opt-pct" id="ep1">24%</span></div></div>
+          <div class="xn-opt" onclick="votar(2)"><div class="xn-opt-fill" id="ef2" style="width:14%"></div><div class="xn-opt-label">Hay mejores<span class="xn-opt-pct" id="ep2">14%</span></div></div>
+        </div>
+        <div class="xn-votos" id="enc-total">4.382 votos</div>
+      </div>
+    </div>
+
+    <div class="xn-sidebar">
+      <div class="xn-sidebar-inner">
+        <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">La Bombonera Digital</div></div>
+        <div>
+          <div class="xn-fp-item"><div class="xn-fp-calor fuego">&#128293; En fuego</div><div class="xn-fp-titulo">Fue penal el de Advincula en el Superclasico?</div><div class="xn-fp-meta">&#128172; 347 &middot; hace 1h</div></div>
+          <div class="xn-fp-item"><div class="xn-fp-calor caliente">Caliente</div><div class="xn-fp-titulo">Gago deberia titularizar a los juveniles mas seguido</div><div class="xn-fp-meta">&#128172; 189 &middot; hace 2h</div></div>
+          <div class="xn-fp-item"><div class="xn-fp-calor activo">Activo</div><div class="xn-fp-titulo">El mejor once de Boca en los ultimos 20 anos</div><div class="xn-fp-meta">&#128172; 203 &middot; hace 3h</div></div>
+          <div class="xn-fp-item"><div class="xn-fp-calor activo">Activo</div><div class="xn-fp-titulo">Predicciones para el partido del sabado</div><div class="xn-fp-meta">&#128172; 98 &middot; hace 4h</div></div>
+        </div>
+        <button class="xn-btn" onclick="ir('foro',null)">Entrar al foro</button>
+        <button class="xn-btn oro" onclick="ir('cerebro',null)">&#129504; Cerebro Xeneize</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS COMPLETO -->
+<div class="xn-sec" id="sec-stats">
+  <div class="px-wrap">
+    <div class="px-header">
+      <div class="px-hdr-left"><div class="px-dot"></div><div class="px-titulo">PULSO <span>XENEIZE</span> &mdash; Stats completos</div></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="px-updated" id="pUpdated2">Cargando...</div>
+        <button class="px-refresh" onclick="cargarStats()">&#8635; Actualizar</button>
+      </div>
+    </div>
+    <div class="px-loading visible" id="pLoading2"><div class="px-spinner"></div><div class="px-loading-txt">Conectando con la Liga Profesional...</div></div>
+    <div class="px-error" id="pError2"><div class="px-error-txt">Error al cargar</div><div class="px-error-sub">Intenta de nuevo</div></div>
+    <div class="px-body" id="pBody2">
+      <div class="px-stats-grid">
+        <div class="px-stat"><div class="px-stat-lbl">Posicion</div><div class="px-stat-val" id="sPosicion2">-</div><div class="px-stat-sub">Liga Profesional</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Puntos</div><div class="px-stat-val" id="sPuntos2">-</div><div class="px-stat-sub" id="sJugados2">- partidos</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Goles a favor</div><div class="px-stat-val" id="sGoles2">-</div><div class="px-stat-sub" id="sGA2">- en contra</div></div>
+        <div class="px-stat"><div class="px-stat-lbl">Forma</div><div class="px-stat-val" id="sForma2" style="font-size:16px;padding-top:4px;">-</div><div class="px-stat-sub">ultimos resultados</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;background:white;">
+    <div style="padding:20px 24px;border-right:1.5px solid var(--gris);">
+      <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Tabla completa</div></div>
+      <div id="tablaFull"><div class="stats-loading"><div class="stats-mini-spinner"></div><div class="stats-loading-txt">Cargando...</div></div></div>
+    </div>
+    <div style="padding:20px 24px;">
+      <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Ultimos y proximos partidos</div></div>
+      <div id="partidosFull"><div class="stats-loading"><div class="stats-mini-spinner"></div><div class="stats-loading-txt">Cargando...</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FORO -->
+<div class="xn-sec" id="sec-foro">
+  <div class="f-header">
+    <div class="f-logo-wrap">
+      <div class="f-logo-icon"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></div>
+      <div class="f-logo-txt">La Bombonera <span>Digital</span></div>
+    </div>
+    <div class="f-stats">
+      <div class="f-st"><div class="f-st-n">847</div><div class="f-st-l">hilos</div></div>
+      <div class="f-st"><div class="f-st-n">12.4K</div><div class="f-st-l">respuestas</div></div>
+      <div class="f-st"><div class="f-st-n"><span class="f-live-dot"></span><span id="f-online">34</span></div><div class="f-st-l">en linea</div></div>
+    </div>
+  </div>
+  <div class="f-rangos">
+    <div class="f-rlbl">Rangos:</div>
+    <div class="f-chip chip-r">Rookie 0-20pts</div>
+    <div class="f-chip chip-h">Hincha 21-100pts</div>
+    <div class="f-chip chip-f">Fanatico 101-300pts</div>
+    <div class="f-chip chip-x">&#9733; Xeneize de Ley 301+</div>
+    <div class="f-chip chip-s" onclick="abrirModal()">&#128142; Socio Digital</div>
+  </div>
+  <div class="f-toolbar">
+    <div class="f-filtros">
+      <div class="f-filtro activo" onclick="filtrar(this,'todos')">Todos</div>
+      <div class="f-filtro" onclick="filtrar(this,'fuego')">&#128293; En fuego</div>
+      <div class="f-filtro" onclick="filtrar(this,'superclasico')">Superclasico</div>
+      <div class="f-filtro" onclick="filtrar(this,'mercado')">Mercado</div>
+      <div class="f-filtro" onclick="filtrar(this,'debate')">Debate</div>
+      <div class="f-filtro" onclick="filtrar(this,'historia')">Historia</div>
+    </div>
+    <button class="f-btn-nuevo" onclick="toggleForm()">+ Nuevo hilo</button>
+  </div>
+  <div class="f-nuevo-form" id="nuevoForm">
+    <div class="f-form-lbl">Nuevo hilo</div>
+    <div class="f-cats">
+      <div class="f-cat sel superclasico" data-cat="superclasico" onclick="selCat(this)">Superclasico</div>
+      <div class="f-cat" data-cat="mercado" onclick="selCat(this)">Mercado</div>
+      <div class="f-cat" data-cat="debate" onclick="selCat(this)">Debate</div>
+      <div class="f-cat" data-cat="historia" onclick="selCat(this)">Historia</div>
+      <div class="f-cat" data-cat="tactica" onclick="selCat(this)">Tactica</div>
+    </div>
+    <input class="f-finput" id="nTitulo" placeholder="Titulo del hilo..."/>
+    <textarea class="f-ftextarea" id="nTexto" placeholder="Desarrolla tu opinion..."></textarea>
+    <div class="f-form-actions">
+      <button class="f-btn-cancel" onclick="toggleForm()">Cancelar</button>
+      <button class="f-btn-pub" onclick="publicar()">Publicar hilo</button>
+    </div>
+  </div>
+  <div class="f-lista" id="fLista"></div>
+</div>
+
+<!-- CEREBRO -->
+<div class="xn-sec" id="sec-cerebro">
+  <div class="cx-header">
+    <div class="cx-brain">&#129504;</div>
+    <div>
+      <div class="cx-tit">CEREBRO <span>XENEIZE</span></div>
+      <div class="cx-sub">Historia, cultura, idolos y el mundo Boca completo</div>
+    </div>
+    <div class="cx-status">
+      <div class="cx-online"><div class="cx-odot"></div>Activo ahora</div>
+      <div class="cx-mod">XENEIZE INTELLIGENCE V2.1</div>
+    </div>
+  </div>
+  <div class="cx-sugs">
+    <div class="cx-sug-lbl">Preguntas frecuentes</div>
+    <div class="cx-sug-grid">
+      <div class="cx-sug" onclick="cxPreguntar('Cuantos titulos tiene Tevez')">Titulos de Tevez</div>
+      <div class="cx-sug" onclick="cxPreguntar('Quien es el maximo goleador de Boca')">Maximo goleador</div>
+      <div class="cx-sug" onclick="cxPreguntar('Quien es Davo Xeneize')">Davo Xeneize</div>
+      <div class="cx-sug" onclick="cxPreguntar('Comparame a Riquelme con Tevez')">Riquelme vs Tevez</div>
+      <div class="cx-sug" onclick="cxPreguntar('Cuantas Libertadores gano Boca')">Las 6 Libertadores</div>
+      <div class="cx-sug" onclick="cxPreguntar('Contame sobre La Bombonera')">La Bombonera</div>
+      <div class="cx-sug" onclick="cxPreguntar('Quien fue Bianchi')">Carlos Bianchi</div>
+      <div class="cx-sug" onclick="cxPreguntar('Quien es La Cobra')">La Cobra</div>
+    </div>
+  </div>
+  <div class="cx-chat" id="cxChat">
+    <div class="cx-msg">
+      <div class="cx-av bot">CX</div>
+      <div><div class="cx-bubble bot">Hola xeneize! Soy el <strong>Cerebro Xeneize</strong>. Preguntame lo que quieras sobre Boca: historia, idolos, titulos, Superclasicos, Davo, La Cobra y todo el mundo azul y oro.</div></div>
+    </div>
+  </div>
+  <div class="cx-inp-area">
+    <textarea class="cx-inp" id="cxInp" placeholder="Preguntale algo al Cerebro Xeneize..." rows="1"></textarea>
+    <button class="cx-send" onclick="cxEnviar()"><svg viewBox="0 0 16 16" fill="white"><path d="M2 2l12 6-12 6V9.5l8-1.5-8-1.5V2z"/></svg></button>
+  </div>
+  <div class="cx-disc">CEREBRO XENEIZE &middot; CONOCIMIENTO ACTUALIZADO 2025 &middot; PARA NOTICIAS DEL DIA VERICA EN FUENTES OFICIALES</div>
+</div>
+
+
+<!-- HISTORIAS XENEIZAS -->
+<div class="xn-sec" id="sec-historias">
+<style>
+.h-header2{background:var(--azul);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--oro);}
+.h-logo2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;font-style:italic;color:white;}
+.h-logo2 span{color:var(--oro);}
+.h-nueva-btn2{background:var(--oro);color:var(--azul2);border:none;border-radius:6px;padding:7px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;transition:background 0.15s;}
+.h-nueva-btn2:hover{background:var(--oro2);}
+.h-stories-row2{background:white;padding:14px 20px;border-bottom:1.5px solid var(--gris);overflow-x:auto;}
+.h-stories-scroll2{display:flex;gap:12px;align-items:flex-start;}
+.h-story-thumb2{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;width:68px;}
+.h-story-ring2{width:60px;height:60px;border-radius:50%;padding:3px;background:var(--azul);transition:transform 0.15s;}
+.h-story-ring2:hover{transform:scale(1.05);}
+.h-story-ring2.nueva2{background:var(--oro);animation:pulseGold 2s infinite;}
+.h-story-av2{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;border:2.5px solid white;}
+.h-story-nombre2{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--txt2);text-align:center;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.h-add-story2{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;flex-shrink:0;width:68px;}
+.h-add-ring2{width:60px;height:60px;border-radius:50%;background:#f0f3fa;border:2px dashed var(--gris2);display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.h-add-ring2:hover{border-color:var(--azul);}
+.h-viewer-wrap2{display:none;min-height:560px;background:rgba(0,20,64,0.92);align-items:center;justify-content:center;padding:20px;}
+.h-viewer-wrap2.open{display:flex;animation:fadeUp 0.2s ease;}
+.h-viewer2{width:100%;max-width:380px;}
+.h-viewer-progress2{display:flex;gap:3px;margin-bottom:10px;}
+.h-prog-bar2{flex:1;height:3px;background:rgba(255,255,255,0.3);border-radius:2px;overflow:hidden;}
+.h-prog-fill2{height:100%;background:white;border-radius:2px;}
+.h-prog-fill2.active{animation:progressBar 5s linear forwards;}
+.h-prog-fill2.done{width:100%;}
+.h-viewer-top2{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.h-viewer-av2{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;border:2px solid var(--oro);}
+.h-viewer-close2{background:none;border:none;color:white;font-size:22px;cursor:pointer;line-height:1;padding:0;}
+.h-story-card2{border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:500px;position:relative;display:flex;align-items:flex-end;}
+.h-story-texto2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;font-style:italic;color:white;line-height:1.3;text-align:center;width:100%;padding:0 10px;}
+.h-viewer-reactions2{display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap;}
+.h-reaction2{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:6px 14px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.h-reaction2:hover{background:rgba(255,255,255,0.22);}
+.h-reaction2.reacted{background:rgba(245,168,0,0.25);border-color:var(--oro);}
+.h-creator-wrap2{display:none;min-height:560px;background:rgba(0,20,64,0.95);align-items:flex-start;justify-content:center;padding:20px;}
+.h-creator-wrap2.open{display:flex;animation:fadeUp 0.2s ease;}
+.h-creator2{width:100%;max-width:480px;}
+.h-creator-title2{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;font-style:italic;color:white;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;}
+.h-creator-close2{background:none;border:none;color:white;font-size:22px;cursor:pointer;}
+.h-creator-preview2{border-radius:14px;overflow:hidden;aspect-ratio:9/16;max-height:280px;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.h-creator-form2{display:flex;flex-direction:column;gap:10px;}
+.h-form-label2{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.h-form-input2{width:100%;padding:9px 13px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);font-family:'Barlow',sans-serif;font-size:13px;color:white;}
+.h-form-input2::placeholder{color:rgba(255,255,255,0.4);}
+.h-form-input2:focus{outline:none;border-color:var(--oro);}
+.h-bg-picker2{display:flex;gap:8px;flex-wrap:wrap;}
+.h-bg-opt2{width:36px;height:36px;border-radius:8px;cursor:pointer;border:3px solid transparent;transition:all 0.15s;}
+.h-bg-opt2:hover{transform:scale(1.1);}
+.h-bg-opt2.sel{border-color:var(--oro);}
+.h-sticker-picker2{display:flex;gap:8px;flex-wrap:wrap;}
+.h-sticker-opt2{width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;border:2px solid transparent;transition:all 0.15s;}
+.h-sticker-opt2:hover{background:rgba(255,255,255,0.2);}
+.h-sticker-opt2.sel{border-color:var(--oro);}
+.h-tag-picker2{display:flex;gap:6px;flex-wrap:wrap;}
+.h-tag-opt2{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;cursor:pointer;border:1.5px solid;transition:all 0.15s;text-transform:uppercase;}
+.h-tag-opt2.sel{border-width:2.5px;}
+.h-publish-btn2{background:var(--oro);color:var(--azul2);border:none;border-radius:8px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.15s;width:100%;}
+.h-publish-btn2:hover{background:var(--oro2);}
+.h-feed2{background:white;}
+.h-feed-item2{border-bottom:1.5px solid var(--gris);padding:16px 20px;animation:fadeUp 0.3s ease;}
+.h-feed-header2{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.h-feed-av2{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;cursor:pointer;border:2.5px solid var(--azul);}
+.h-feed-card2{border-radius:10px;overflow:hidden;margin-bottom:10px;cursor:pointer;position:relative;height:200px;display:flex;align-items:center;justify-content:center;}
+.h-feed-card2:hover{opacity:0.92;}
+.h-feed-texto2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;font-style:italic;color:white;text-align:center;padding:16px;line-height:1.3;position:relative;z-index:2;}
+.h-feed-reactions-row2{display:flex;gap:6px;flex-wrap:wrap;}
+.h-feed-react2{background:#f5f7fc;border:1.5px solid var(--gris2);border-radius:20px;padding:5px 12px;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:4px;}
+.h-feed-react2:hover{border-color:var(--azul);}
+.h-feed-react2.reacted{background:rgba(245,168,0,0.12);border-color:var(--oro);}
+</style>
+
+<div class="h-header2">
+  <div class="h-logo2">Historias <span>Xeneizas</span></div>
+  <button class="h-nueva-btn2" onclick="hAbrirCreator()">+ Nueva historia</button>
+</div>
+<div class="h-stories-row2">
+  <div class="h-stories-scroll2" id="hStoriesRow"></div>
+</div>
+<div class="h-viewer-wrap2" id="hViewer">
+  <div class="h-viewer2">
+    <div class="h-viewer-progress2" id="hViewerProgress"></div>
+    <div class="h-viewer-top2">
+      <div class="h-viewer-av2" id="hViewerAv"></div>
+      <div style="flex:1;">
+        <div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:800;color:white;" id="hViewerUser"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);" id="hViewerTime"></div>
+      </div>
+      <button class="h-viewer-close2" onclick="hCerrarViewer()">&#10005;</button>
+    </div>
+    <div class="h-story-card2" id="hViewerCard"></div>
+    <div class="h-viewer-reactions2" id="hViewerReactions"></div>
+    <div style="display:flex;gap:8px;margin-top:10px;justify-content:center;">
+      <button onclick="hNavStory(-1)" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:8px 20px;font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:white;cursor:pointer;text-transform:uppercase;">&#8592; Anterior</button>
+      <button onclick="hNavStory(1)" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:8px 20px;font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:800;color:white;cursor:pointer;text-transform:uppercase;">Siguiente &#8594;</button>
+    </div>
+  </div>
+</div>
+<div class="h-creator-wrap2" id="hCreator">
+  <div class="h-creator2">
+    <div class="h-creator-title2">
+      <span>&#127775; Crear historia</span>
+      <button class="h-creator-close2" onclick="hCerrarCreator()">&#10005;</button>
+    </div>
+    <div class="h-creator-preview2" id="hCreatorPreview"></div>
+    <div class="h-creator-form2">
+      <div><div class="h-form-label2">Tu nombre</div><input class="h-form-input2" id="hcNombre" placeholder="Ej: RiqueXeneize" oninput="hActualizarPreview()"/></div>
+      <div><div class="h-form-label2">Tu historia xeneize</div><input class="h-form-input2" id="hcTexto" placeholder="Ej: Vi el gol de Palermo desde la popular..." oninput="hActualizarPreview()"/></div>
+      <div><div class="h-form-label2">Fondo</div><div class="h-bg-picker2" id="hBgPicker"></div></div>
+      <div><div class="h-form-label2">Sticker</div><div class="h-sticker-picker2" id="hStickerPicker"></div></div>
+      <div><div class="h-form-label2">Tema</div><div class="h-tag-picker2" id="hTagPicker"></div></div>
+      <button class="h-publish-btn2" onclick="hPublicarHistoria()">Publicar historia</button>
+    </div>
+  </div>
+</div>
+<div class="h-feed2" id="hFeed"></div>
+</div>
+
+<footer class="xn-footer">
+  <div class="xn-footer-logo">XENEIZE <span>NEWS!</span></div>
+  <div class="xn-footer-txt">El medio digital mas innovador de Boca Juniors &middot; 2025</div>
+</footer>
+</div>
+
+<div class="f-modal-overlay" id="fModal">
+  <div class="f-modal">
+    <div class="f-modal-h"><div class="f-modal-ico">&#128142;</div><div class="f-modal-tit">Socio Digital Xeneize</div><div class="f-modal-sub">Lleva tu experiencia al siguiente nivel</div></div>
+    <div class="f-precio"><div class="f-precio-n">$1.500 <span style="font-size:18px;color:#667799">ARS</span></div><div class="f-precio-l">por mes &middot; cancelas cuando queres</div></div>
+    <div class="f-flairs-lbl">Elegi tu flair de idolo</div>
+    <div class="f-flairs">
+      <div class="f-flair-opt sel" data-flair="riq" onclick="selFlair(this)"><span>&#127913;</span><span>Riquelme</span></div>
+      <div class="f-flair-opt" data-flair="pal" onclick="selFlair(this)"><span>&#128081;</span><span>Palermo</span></div>
+      <div class="f-flair-opt" data-flair="tev" onclick="selFlair(this)"><span>&#9889;</span><span>Tevez</span></div>
+      <div class="f-flair-opt" data-flair="mar" onclick="selFlair(this)"><span>&#129409;</span><span>Maradona</span></div>
+      <div class="f-flair-opt" data-flair="can" onclick="selFlair(this)"><span>&#128293;</span><span>Caniggia</span></div>
+    </div>
+    <div class="f-bens">
+      <div class="f-ben"><div class="f-ben-ico">&#128142;</div><div class="f-ben-txt"><strong>Badge Socio Digital exclusivo</strong>Tu nombre brilla distinto en el foro.</div></div>
+      <div class="f-ben"><div class="f-ben-ico">&#127942;</div><div class="f-ben-txt"><strong>Flair de idolo personalizado</strong>Aparece junto a tu avatar.</div></div>
+      <div class="f-ben"><div class="f-ben-ico">&#128204;</div><div class="f-ben-txt"><strong>1 hilo anclado por mes</strong>Mas visibilidad para tus posts.</div></div>
+      <div class="f-ben"><div class="f-ben-ico">&#9889;</div><div class="f-ben-txt"><strong>Acceso anticipado a noticias</strong>2 horas antes que el resto.</div></div>
+    </div>
+    <button class="f-btn-sus" onclick="cerrarModal()">Quiero ser Socio Digital</button>
+    <button class="f-btn-cls" onclick="cerrarModal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const BACKEND='https://xeneize-backend.vercel.app';
+const BOCA_ID=451;
+let statsData=null;
+
+function ir(sec,btn){
+  document.querySelectorAll('.xn-sec').forEach(s=>s.classList.remove('visible'));
+  document.getElementById('sec-'+sec).classList.add('visible');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(btn){document.querySelectorAll('.xn-navlink').forEach(b=>b.classList.remove('activo'));btn.classList.add('activo');}
+  else{document.querySelectorAll('.xn-navlink').forEach(b=>{const t=b.textContent.trim().toLowerCase();b.classList.toggle('activo',(sec==='home'&&t==='inicio')||(sec==='historias'&&t==='historias')||(sec==='stats'&&t==='stats')||(sec==='foro'&&t==='foro')||(sec==='cerebro'&&t==='cerebro'));});}
+}
+
+function mostrarPulso(estado){
+  ['pLoading','pError','pBody'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
+  ['pLoading2','pError2','pBody2'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
+  if(estado==='loading'){document.getElementById('pLoading').classList.add('visible');const el2=document.getElementById('pLoading2');if(el2)el2.classList.add('visible');}
+  else if(estado==='error'){document.getElementById('pError').classList.add('visible');const el2=document.getElementById('pError2');if(el2)el2.classList.add('visible');}
+  else{document.getElementById('pBody').classList.add('visible');const el2=document.getElementById('pBody2');if(el2)el2.classList.add('visible');}
+}
+
+function acortar(n){const m={'Club Atletico Boca Juniors':'Boca Juniors','Club Atletico River Plate':'River Plate','Club Atletico San Lorenzo':'San Lorenzo','Club Atletico Independiente':'Independiente','Racing Club':'Racing','Club Estudiantes de La Plata':'Estudiantes','Club Atletico Huracan':'Huracan','Club Atletico Velez Sarsfield':'Velez','Club Atletico Talleres':'Talleres','Club Atletico Lanus':'Lanus','Club Atletico Banfield':'Banfield','Newell\'s Old Boys':'Newells','Gimnasia y Esgrima La Plata':'Gimnasia LP','Defensa y Justicia':'Defensa y J.','Club Atletico Belgrano':'Belgrano','Club Atletico Tigre':'Tigre','Union de Santa Fe':'Union SF'};return m[n]||(n||'').replace('Club Atletico ','').replace('Club ','').substring(0,16);}
+
+function renderTabla(table,containerId,limit){
+  const top=table.slice(0,limit||10);
+  const html='<table class="p-tabla"><thead><tr><th>#</th><th style="text-align:left;">Equipo</th><th>PTS</th><th>PJ</th><th>GF</th></tr></thead><tbody>'+
+  top.map(t=>{const b=t.team.id===BOCA_ID;return '<tr class="'+(b?'boca-row':'')+'"><td><span class="p-pos '+(b?'boca':'')+'">'+t.position+'</span></td><td><span class="p-team-name">'+(b?'&#9733; ':'')+acortar(t.team.name)+'</span></td><td><strong>'+t.points+'</strong></td><td>'+t.playedGames+'</td><td>'+t.goalsFor+'</td></tr>';}).join('')+
+  '</tbody></table>';
+  const el=document.getElementById(containerId);if(el)el.innerHTML=html;
+}
+
+function renderPartidos(matches,containerId){
+  const bocaM=matches.filter(m=>m.homeTeam&&m.awayTeam&&(m.homeTeam.id===BOCA_ID||m.awayTeam.id===BOCA_ID)).slice(-6);
+  if(!bocaM.length){const el=document.getElementById(containerId);if(el)el.innerHTML='<div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:700;color:var(--txt3);text-align:center;padding:20px;">Sin partidos disponibles</div>';return;}
+  const html='<div class="p-partidos">'+bocaM.map(m=>{
+    const fecha=new Date(m.utcDate).toLocaleDateString('es-AR',{day:'2-digit',month:'short'});
+    const hora=new Date(m.utcDate).toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    const home=acortar(m.homeTeam.name),away=acortar(m.awayTeam.name);
+    let score='',badge='';
+    if(m.status==='FINISHED'){const gh=m.score?.fullTime?.home??'?',ga=m.score?.fullTime?.away??'?';score='<div class="p-partido-score">'+gh+'-'+ga+'</div>';badge='<span class="p-estado estado-fin">Final</span>';}
+    else if(m.status==='IN_PLAY'||m.status==='PAUSED'){const gh=m.score?.fullTime?.home??0,ga=m.score?.fullTime?.away??0;score='<div class="p-partido-score">'+gh+'-'+ga+'</div>';badge='<span class="p-estado estado-vivo">En vivo</span>';}
+    else{score='<div class="p-partido-score upcoming">'+hora+'</div>';badge='<span class="p-estado estado-prox">Proximo</span>';}
+    return '<div class="p-partido boca-partido"><div class="p-partido-fecha">'+fecha+' &nbsp;'+badge+'</div><div class="p-partido-equipos"><div class="p-partido-equipo">'+home+'</div>'+score+'<div class="p-partido-equipo right">'+away+'</div></div></div>';
+  }).join('')+'</div>';
+  const el=document.getElementById(containerId);if(el)el.innerHTML=html;
+}
+
+function renderForma(won,draw,lost,elId){
+  const resultados=[];
+  for(let i=0;i<Math.min(won,3);i++)resultados.push('V');
+  for(let i=0;i<Math.min(draw,1);i++)resultados.push('E');
+  for(let i=0;i<Math.min(lost,1);i++)resultados.push('D');
+  const forma=resultados.slice(0,5);
+  const el=document.getElementById(elId);
+  if(el)el.innerHTML=forma.map(r=>'<span style="display:inline-block;width:20px;height:20px;border-radius:4px;background:'+(r==='V'?'#1a7a3a':r==='E'?'#7a5000':'#aa1100')+';color:white;font-size:10px;font-weight:800;text-align:center;line-height:20px;margin:0 1px;">'+r+'</span>').join('');
+}
+
+async function cargarStats(){
+  mostrarPulso('loading');
+  try{
+    const [sRes,fRes,nRes]=await Promise.all([
+      fetch(BACKEND+'/api/stats?type=standings'),
+      fetch(BACKEND+'/api/stats?type=fixtures'),
+      fetch(BACKEND+'/api/stats?type=next')
+    ]);
+    if(!sRes.ok)throw new Error('API '+sRes.status);
+    const sData=await sRes.json();
+    const fData=fRes.ok?await fRes.json():{response:[]};
+    const nData=nRes.ok?await nRes.json():{response:[]};
+    const standing=sData.response?.[0]?.league?.standings?.[0]||[];
+    const table=standing.map(t=>({position:t.rank,team:{id:t.team.id,name:t.team.name},points:t.points,playedGames:t.all.played,goalsFor:t.all.goals.for,goalsAgainst:t.all.goals.against,won:t.all.win,draw:t.all.draw,lost:t.all.lose}));
+    const boca=table.find(t=>t.team.id===BOCA_ID);
+    const allM=[...(fData.response||[]),...(nData.response||[])].sort((a,b)=>new Date(a.fixture.date)-new Date(b.fixture.date));
+    const matches=allM.map(m=>({homeTeam:{id:m.teams.home.id,name:m.teams.home.name},awayTeam:{id:m.teams.away.id,name:m.teams.away.name},utcDate:m.fixture.date,status:m.fixture.status.short==='FT'?'FINISHED':m.fixture.status.short==='1H'||m.fixture.status.short==='2H'?'IN_PLAY':'SCHEDULED',score:{fullTime:{home:m.goals.home,away:m.goals.away}}}));
+    const now=new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+
+    if(boca){
+      ['sPosicion','sPosicion2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='#'+boca.position;});
+      ['sPuntos','sPuntos2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=boca.points;});
+      ['sJugados','sJugados2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=boca.playedGames+' jugados';});
+      ['sGoles','sGoles2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=boca.goalsFor;});
+      ['sGA','sGA2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=boca.goalsAgainst+' en contra';});
+      renderForma(boca.won,boca.draw,boca.lost,'sForma');
+      renderForma(boca.won,boca.draw,boca.lost,'sForma2');
+    }
+    renderTabla(table,'tablaHome',8);
+    renderTabla(table,'tablaFull',28);
+    renderPartidos(matches,'partidosHome');
+    renderPartidos(matches,'partidosFull');
+
+    const tickerParts=[];
+    if(boca)tickerParts.push('Boca #'+boca.position+' con '+boca.points+' pts');
+    const ultimo=matches.filter(m=>m.status==='FINISHED').slice(-1)[0];
+    if(ultimo){const gh=ultimo.score?.fullTime?.home,ga=ultimo.score?.fullTime?.away,h=acortar(ultimo.homeTeam.name),a=acortar(ultimo.awayTeam.name);tickerParts.push('Ultimo: '+h+' '+gh+'-'+ga+' '+a);}
+    const prox=bocaM.find(m=>m.status==='SCHEDULED');
+    if(prox){const h=acortar(prox.homeTeam.name),a=acortar(prox.awayTeam.name),fecha=new Date(prox.utcDate).toLocaleDateString('es-AR',{day:'2-digit',month:'short'});tickerParts.push('Proximo: '+h+' vs '+a+' '+fecha);}
+    tickerParts.push('Stats actualizados '+now);
+    const ticker=document.getElementById('tickerInner');
+    if(ticker)ticker.textContent=tickerParts.join(' &middot; ')+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+    ['pUpdated','pUpdated2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='Actualizado '+now;});
+    mostrarPulso('body');
+  }catch(e){
+    mostrarPulso('error');
+    const et=document.getElementById('pErrorTxt');if(et)et.textContent='No se pudieron cargar los datos';
+    const es=document.getElementById('pErrorSub');if(es)es.textContent=e.message||'Intenta de nuevo';
+  }
+}
+
+let eV=[62,24,14],eT=4382,eVotado=false;
+function votar(i){if(eVotado)return;eVotado=true;eV[i]++;eT++;const s=eV.reduce((a,b)=>a+b,0);eV.forEach((v,j)=>{const p=Math.round((v/s)*100);document.getElementById('ef'+j).style.width=p+'%';document.getElementById('ep'+j).textContent=p+'%';});document.getElementById('enc-total').textContent=eT.toLocaleString('es-AR')+' votos';}
+
+const AVC=[{bg:'#dbeafe',c:'#1e40af'},{bg:'#fce7f3',c:'#9d174d'},{bg:'#d1fae5',c:'#065f46'},{bg:'#ede9fe',c:'#5b21b6'},{bg:'rgba(245,168,0,0.2)',c:'#7a5000'},{bg:'#fee2e2',c:'#991b1b'}];
+const RNG=[{min:0,max:20,cls:'u-rookie',badge:'rb-r',label:'Rookie'},{min:21,max:100,cls:'u-hincha',badge:'rb-h',label:'Hincha'},{min:101,max:300,cls:'u-fanatico',badge:'rb-f',label:'Fanatico'},{min:301,max:9999,cls:'u-xeneize',badge:'rb-x',label:'Xeneize de Ley'},{min:-1,max:-1,cls:'u-socio',badge:'rb-s',label:'Socio Digital'}];
+function getRango(pts,socio){if(socio)return RNG[4];return RNG.find(r=>pts>=r.min&&pts<=r.max)||RNG[0];}
+function avS(i){const a=AVC[i%AVC.length];return 'background:'+a.bg+';color:'+a.c+';';}
+function calor(c){if(c>=80)return{bg:'#fff0e0',color:'#b84a00',txt:'En fuego',bar:'#F5A800'};if(c>=55)return{bg:'#ffe8e8',color:'#aa1100',txt:'Caliente',bar:'#f97316'};if(c>=30)return{bg:'#e8f0ff',color:'#1a3a99',txt:'Activo',bar:'#60a5fa'};return{bg:'#e8f5ee',color:'#1a5a30',txt:'Nuevo',bar:'#4ade80'};}
+const CAT={superclasico:{bg:'#ffe8e8',c:'#aa1100',l:'Superclasico'},mercado:{bg:'#e8f0ff',c:'#1a3a99',l:'Mercado'},debate:{bg:'rgba(245,168,0,0.15)',c:'#7a5000',l:'Debate'},historia:{bg:'#e8f5ee',c:'#1a5a30',l:'Historia'},tactica:{bg:'#f0eaff',c:'#4a1a99',l:'Tactica'}};
+function catB(cat){const s=CAT[cat]||CAT.debate;return '<span class="f-bcat" style="background:'+s.bg+';color:'+s.c+';">'+s.l+'</span>';}
+function uHTML(user,pts,socio,flair,sz){const r=getRango(pts,socio);const f=socio&&flair?'<span style="font-size:'+(sz-2)+'px;">'+flair+'</span>':'';return '<span class="f-uname '+r.cls+'" style="font-size:'+sz+'px;">'+user+'</span>'+f+'<span class="f-rbadge '+r.badge+'">'+r.label+'</span>';}
+function rResps(h){return h.resps.map(r=>'<div class="f-resp"><div class="f-resp-av" style="'+avS(r.av)+'">'+r.ini+'</div><div class="f-resp-bur"><div class="f-resp-user">'+uHTML(r.user,r.pts,r.socio,r.flair,12)+'</div><div class="f-resp-txt">'+r.txt+'</div></div></div>').join('');}
+const HILOS=[
+  {id:1,user:'RiqueXeneize',ini:'RX',av:0,pts:420,socio:false,flair:'',tiempo:'hace 23 min',cat:'superclasico',calidad:97,titulo:'Fue el mejor Superclasico de los ultimos 10 anos?',preview:'No exagero cuando digo que este partido va a quedar en la historia. La presion en el primer tiempo fue increible...',likes:341,misLike:false,pinned:false,resps:[{user:'GolazoJunior',ini:'GJ',av:1,pts:85,socio:true,flair:'&#128081;',txt:'Completamente de acuerdo. La intensidad no la veia desde el 2018.'},{user:'BocaEterno77',ini:'BE',av:2,pts:55,socio:false,flair:'',txt:'Para mi el mejor fue el 3-1 de 2015 pero este estuvo muy cerca.'}]},
+  {id:2,user:'SocioXeneize',ini:'SX',av:4,pts:999,socio:true,flair:'&#127913;',tiempo:'hace 45 min',cat:'tactica',calidad:82,titulo:'El 4-2-3-1 de Gago: por que funciona tan bien',preview:'Estuve analizando los ultimos 6 partidos y encontre algo interesante en como Boca sale desde atras...',likes:214,misLike:false,pinned:true,resps:[{user:'ProfeDePorte',ini:'PP',av:3,pts:180,socio:false,flair:'',txt:'Excelente analisis. La clave esta en Equi Fernandez como pivote.'}]},
+  {id:3,user:'MercadoBoca',ini:'MB',av:5,pts:140,socio:false,flair:'',tiempo:'hace 2h',cat:'mercado',calidad:70,titulo:'Que posicion necesita mas Boca para el segundo semestre?',preview:'Se habla de un mediocampista pero yo creo que el mayor agujero esta en la banda derecha...',likes:189,misLike:false,pinned:false,resps:[{user:'ScoutXeneize',ini:'SX',av:1,pts:60,socio:false,flair:'',txt:'Banda derecha sin dudas.'},{user:'TransferNerd',ini:'TN',av:2,pts:22,socio:false,flair:'',txt:'Yo iria por un 8 de box-to-box.'}]},
+  {id:4,user:'HistoriaBoca',ini:'HB',av:2,pts:310,socio:false,flair:'',tiempo:'hace 3h',cat:'historia',calidad:52,titulo:'El XI historico de Boca: arma el tuyo y debatamos',preview:'Romero - Ibarra, Coloccini, Samuel, Toresani - Riquelme, Serna, Basualdo - Palermo, Tevez, Caniggia...',likes:98,misLike:false,pinned:false,resps:[{user:'RetroXeneize',ini:'RX',av:0,pts:15,socio:false,flair:'',txt:'Sacaria a Caniggia y pondria a Rodrigues Batista.'}]},
+  {id:5,user:'NuevoHincha',ini:'NH',av:3,pts:5,socio:false,flair:'',tiempo:'hace 4h',cat:'debate',calidad:22,titulo:'Primera vez en La Bombonera: que me recomiendan?',preview:'El sabado voy por primera vez. Entradas popular norte. A que hora llegar?',likes:44,misLike:false,pinned:false,resps:[]},
+];
+let filtroActivo='todos',catSel='superclasico';
+function rHilo(h){const c=calor(h.calidad);const pct=Math.min(100,h.calidad);return '<div class="f-hilo'+(h.pinned?' pinned':'')+'" id="fh-'+h.id+'">'+(h.pinned?'<div class="f-pin-lbl">Anclado - Socio Digital</div>':'')+'<div class="f-hilo-top"><div class="f-av-wrap"><div class="f-av'+(h.socio?' socio':'')+'" style="'+avS(h.av)+'">'+h.ini+'</div>'+(h.socio&&h.flair?'<div class="f-flair">'+h.flair+'</div>':'')+'</div><div class="f-hilo-main"><div class="f-hilo-meta">'+uHTML(h.user,h.pts,h.socio,h.flair,14)+'<span class="f-tiempo">'+h.tiempo+'</span><span class="f-bcalor" id="fb-'+h.id+'" style="background:'+c.bg+';color:'+c.color+';">'+c.txt+'</span>'+catB(h.cat)+'</div><div class="f-titulo" onclick="toggleHilo('+h.id+')">'+h.titulo+'</div><div class="f-preview">'+h.preview+'</div><div class="f-acciones"><button class="f-acc'+(h.misLike?' liked':'')+'" onclick="darLike('+h.id+',this)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2C6.8 3.5 4 4.5 4 7.5c0 2.2 1.8 4 4 4s4-1.8 4-4C12 4.5 9.2 3.5 8 2z"/><rect x="5" y="11.5" width="6" height="1.2" rx="0.6"/><rect x="5.5" y="12.7" width="5" height="1" rx="0.5"/></svg><span id="flk-'+h.id+'">'+h.likes+'</span></button><button class="f-acc" onclick="toggleHilo('+h.id+')"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v7.5a1 1 0 01-1 1H3a1 1 0 01-1-1V3z"/><path d="M5 11.5v2l3-2"/></svg><span id="frc-'+h.id+'">'+h.resps.length+' resps.</span></button></div><div class="f-calor-wrap"><div class="f-calor-track"><div class="f-calor-fill" id="fbar-'+h.id+'" style="width:'+pct+'%;background:'+c.bar+';"></div></div><div class="f-calor-pct">'+pct+'</div></div></div></div><div class="f-exp" id="fexp-'+h.id+'"><div class="f-resps" id="frlist-'+h.id+'">'+rResps(h)+'</div><div class="f-resp-inp"><input id="fri-'+h.id+'" placeholder="Tu respuesta..."/><button class="f-resp-send" onclick="responder('+h.id+')">Responder</button></div></div></div>';}
+function renderForo(){const lista=document.getElementById('fLista');let arr=filtroActivo==='todos'?[...HILOS]:filtroActivo==='fuego'?HILOS.filter(h=>h.calidad>=80):HILOS.filter(h=>h.cat===filtroActivo);arr.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));lista.innerHTML=arr.length?arr.map(rHilo).join(''):'<div style="padding:28px;text-align:center;color:var(--txt3);font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:700;">No hay hilos en esta categoria.</div>';}
+function toggleHilo(id){const e=document.getElementById('fexp-'+id);if(!e)return;const o=e.classList.contains('open');document.querySelectorAll('.f-exp.open').forEach(x=>x.classList.remove('open'));if(!o)e.classList.add('open');}
+function darLike(id,btn){const h=HILOS.find(x=>x.id===id);if(!h)return;h.misLike=!h.misLike;h.likes+=h.misLike?1:-1;h.calidad=Math.min(100,Math.max(0,h.calidad+(h.misLike?3:-3)));btn.classList.toggle('liked');const c=calor(h.calidad);document.getElementById('flk-'+id).textContent=h.likes;const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}}
+function responder(id){const inp=document.getElementById('fri-'+id);const txt=inp.value.trim();if(!txt)return;const h=HILOS.find(x=>x.id===id);h.resps.push({user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',txt});h.calidad=Math.min(100,h.calidad+4);inp.value='';document.getElementById('frlist-'+id).innerHTML=rResps(h);document.getElementById('frc-'+id).textContent=h.resps.length+' resps.';const c=calor(h.calidad);const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}}
+function filtrar(el,tipo){document.querySelectorAll('.f-filtro').forEach(f=>f.classList.remove('activo'));el.classList.add('activo');filtroActivo=tipo;renderForo();}
+function toggleForm(){const f=document.getElementById('nuevoForm');f.classList.toggle('visible');if(f.classList.contains('visible'))document.getElementById('nTitulo').focus();}
+function selCat(el){document.querySelectorAll('.f-cat').forEach(c=>{c.classList.remove('sel','superclasico','mercado','debate','historia','tactica');});el.classList.add('sel',el.dataset.cat);catSel=el.dataset.cat;}
+function publicar(){const t=document.getElementById('nTitulo').value.trim();const tx=document.getElementById('nTexto').value.trim();if(!t)return;HILOS.unshift({id:Date.now(),user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',tiempo:'ahora mismo',cat:catSel,calidad:10,titulo:t,preview:tx||'Hilo recien publicado.',likes:0,misLike:false,pinned:false,resps:[]});document.getElementById('nTitulo').value='';document.getElementById('nTexto').value='';toggleForm();filtroActivo='todos';document.querySelectorAll('.f-filtro').forEach((f,i)=>f.classList.toggle('activo',i===0));renderForo();}
+function abrirModal(){document.getElementById('fModal').classList.add('open');}
+function cerrarModal(){document.getElementById('fModal').classList.remove('open');}
+function selFlair(el){document.querySelectorAll('.f-flair-opt').forEach(f=>f.classList.remove('sel'));el.classList.add('sel');}
+document.getElementById('fModal').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
+
+const KB=[
+  {prio:100,keys:['tevez','carlitos','apache','carlos tevez'],resp:'<p><strong>Carlos "El Apache" Tevez</strong> gano con Boca:</p><p><strong>Copa Libertadores 2003</strong> con solo 19 anos, figura en la final contra Santos de Robinho.</p><p><strong>Intercontinental 2003</strong> vs AC Milan de Maldini y Shevchenko.</p><p>Ademas campeonatos locales en sus dos etapas (2001-2005 y 2015-2016).</p>',datos:['Libertadores 2003 con solo 19 anos','Campeon Intercontinental vs AC Milan 2003','Dos etapas en Boca, ganador en ambas']},
+  {prio:100,keys:['palermo','martin palermo','el titan','maximo goleador'],resp:'<p><strong>Martin "El Titan" Palermo</strong> es el maximo goleador historico con <strong>236 goles</strong> en 426 partidos.</p><p>Gano <strong>2 Libertadores (2000 y 2007)</strong> y multiples titulos locales. Su gol de cabeza en el 95 de la Libertadores 2000 es historico.</p>',datos:['236 goles - record historico de Boca','Libertadores 2000 y 2007','426 partidos con la camiseta azul y oro']},
+  {prio:100,keys:['riquelme','roman','juan roman','el 10'],resp:'<p><strong>Juan Roman Riquelme</strong> gano <strong>3 Libertadores</strong> (2000, 2001, 2007). El 10 que hacia parar el tiempo en La Bombonera.</p><p>Hoy es <strong>Presidente de Boca</strong> desde 2023 — unico idolo maximo que conduce su club como presidente en el futbol mundial.</p>',datos:['3 Libertadores: 2000, 2001 y 2007','Presidente de Boca desde diciembre 2023','Elegido el mejor jugador de la historia del club']},
+  {prio:100,keys:['maradona','diego','d10s'],resp:'<p><strong>Diego Maradona</strong> tuvo dos etapas en Boca: 1981-82 y 1995-97. Siempre declaro que Boca era "el club de mi vida".</p><p>Su imagen decora La Bombonera de forma permanente.</p>',datos:['Dos etapas en Boca: 1981-82 y 1995-97','"El club de mi vida" - sus propias palabras','Su imagen es omnipresente en La Bombonera']},
+  {prio:100,keys:['davo','davoo','streamer'],resp:'<p><strong>Davo</strong> (David Martinez) es el streamer xeneize mas popular de Argentina con millones de seguidores en Twitch y YouTube.</p><p>Sus streams de partidos de Boca son legendarios. Conecta a las generaciones mas jovenes con el club.</p>',datos:['Streamer xeneize mas visto de Argentina','Sus reacciones a goles de Boca son contenido viral','Referente del mundo xeneize en Twitch y YouTube']},
+  {prio:100,keys:['cobra','la cobra'],resp:'<p><strong>La Cobra</strong> es periodista declarado hincha de Boca, conocido por sus analisis encendidos y estilo sin filtros en debates futboleros.</p><p>O lo amas o lo odias, pero no podes ignorarlo. Sus intervenciones son contenido viral frecuente.</p>',datos:['Figura recurrente en debates futboleros argentinos','Declarado hincha de Boca sin filtros','Sus mejores momentos son virales en redes']},
+  {prio:80,keys:['libertadores','copa libertadores'],resp:'<p>Boca gano <strong>6 Copas Libertadores</strong>: 1977 (vs Cruzeiro), 2000, 2001, 2003 (vs Santos), 2007 (vs Gremio).</p><p>El ciclo 2000-2001 bajo Bianchi fue la cima: dos Libertadores mas dos Intercontinentales seguidos.</p>',datos:['6 Libertadores - record argentino','Unico en ganar 2 consecutivas (2000-2001)','Gano Intercontinentales vs Real Madrid y AC Milan']},
+  {prio:80,keys:['bombonera','estadio'],resp:'<p>La <strong>Bombonera</strong> fue inaugurada el 25 de mayo de 1940 y tiene aprox. 54.000 personas de capacidad.</p><p>Su diseno unico crea una acustica brutal. El piso literalmente vibra cuando esta llena. Es destino turistico internacional.</p>',datos:['Inaugurada el 25 de mayo de 1940','54.000 espectadores aprox.','Elegida entre los estadios mas impresionantes del mundo']},
+  {prio:80,keys:['bianchi','carlos bianchi','dt','tecnico'],resp:'<p><strong>Carlos Bianchi</strong> es el DT mas exitoso de la historia de Boca: 2 Libertadores, 2 Intercontinentales. Vencio al Real Madrid de Zidane 2-1 en el Intercontinental 2000.</p>',datos:['8 titulos en sus dos etapas','Vencio al Real Madrid de Zidane en 2000','Unico DT en ganar 2 Intercontinentales con el mismo club']},
+  {prio:60,keys:['titulos','campeonatos','palmares','cuanto gano'],resp:'<p>Boca Juniors tiene mas de <strong>70 titulos oficiales</strong>: 6 Libertadores, 3 Intercontinentales, 1 Copa Sudamericana y mas de 35 campeonatos locales.</p><p>Es el club mas ganador de Argentina.</p>',datos:['Mas de 70 titulos oficiales','Maximo ganador de Argentina','3 veces campeon del mundo (Intercontinental)']},
+];
+const FALLBACK=['Mmm, esa pregunta esta buena pero se me escapa. Preguntame sobre idolos, streamers como Davo, La Cobra, La Bombonera o los titulos. Dale Bo!','No tengo esa info especifica. Pero se de Libertadores, idolos, Davo, La Cobra y mucho mas. Por donde arrancamos?'];
+function norm(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function buscar(txt){const q=norm(txt);let mejor=null,max=0;for(const item of KB){let s=0;for(const k of item.keys){const kn=norm(k);if(q.includes(kn))s+=kn.length*(item.prio/50);}if(s>max){max=s;mejor=item;}}return mejor&&max>2?mejor:null;}
+function fmtResp(item){let h=item.resp;if(item.datos&&item.datos.length){h+='<div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;">';item.datos.forEach(d=>{h+='<span class="cx-dato">'+d+'</span>';});h+='</div>';}return h;}
+const cxChatEl=document.getElementById('cxChat');
+const cxInpEl=document.getElementById('cxInp');
+function cxAdd(rol,html){const isBot=rol==='bot';const div=document.createElement('div');div.className='cx-msg'+(isBot?'':' user');div.innerHTML='<div class="cx-av '+(isBot?'bot':'usr')+'">'+(isBot?'CX':'Vos')+'</div><div><div class="cx-bubble '+(isBot?'bot':'usr')+'">'+html+'</div></div>';cxChatEl.appendChild(div);cxChatEl.scrollTop=cxChatEl.scrollHeight;}
+function cxTyping(show){const ex=document.getElementById('cxT');if(show&&!ex){const d=document.createElement('div');d.id='cxT';d.className='cx-typing';d.innerHTML='<div class="cx-av bot">CX</div><div class="cx-typing-dots"><span></span><span></span><span></span></div>';cxChatEl.appendChild(d);cxChatEl.scrollTop=cxChatEl.scrollHeight;}else if(!show&&ex)ex.remove();}
+function cxEnviar(){const txt=cxInpEl.value.trim();if(!txt)return;cxAdd('usr',txt);cxInpEl.value='';cxInpEl.style.height='auto';cxTyping(true);setTimeout(()=>{cxTyping(false);const res=buscar(txt);cxAdd('bot',res?fmtResp(res):FALLBACK[Math.floor(Math.random()*FALLBACK.length)]);},900+Math.random()*600);}
+function cxPreguntar(txt){cxInpEl.value=txt;cxEnviar();}
+cxInpEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();cxEnviar();}});
+cxInpEl.addEventListener('input',()=>{cxInpEl.style.height='auto';cxInpEl.style.height=Math.min(cxInpEl.scrollHeight,110)+'px';});
+
+renderForo();
+cargarStats();
+setInterval(()=>{const el=document.getElementById('f-online');if(el){const n=parseInt(el.textContent)||34;el.textContent=Math.max(18,n+Math.floor(Math.random()*5)-2);}},4000);
+
+const hBGS=[{id:'azul',bg:'#002060'},{id:'azul-oro',bg:'linear-gradient(135deg,#002060 60%,#e09500)'},{id:'noche',bg:'#000814'},{id:'bombonera',bg:'linear-gradient(160deg,#001440 0%,#003399 100%)'},{id:'campeon',bg:'linear-gradient(135deg,#001440 0%,#7a5000 100%)'},{id:'superclasico',bg:'linear-gradient(135deg,#002060 0%,#aa1100 100%)'}];
+const hSTICKERS=[{id:'estrella',v:'&#9733;'},{id:'fuego',v:'&#128293;'},{id:'trofeo',v:'&#127942;'},{id:'pelota',v:'&#9917;'},{id:'corazon',v:'&#128153;'},{id:'punyo',v:'&#9994;'},{id:'micro',v:'&#127891;'},{id:'cohete',v:'&#128640;'}];
+const hTAGS=[{id:'memoria',label:'Mi memoria xeneize',bg:'#002060',c:'white'},{id:'bombonera',label:'En La Bombonera',bg:'#F5A800',c:'#001440'},{id:'idolo',label:'Mi idolo',bg:'#aa1100',c:'white'},{id:'titulo',label:'Momento historico',bg:'#1a5a30',c:'white'},{id:'familia',label:'Familia xeneize',bg:'#334477',c:'white'}];
+const hREACC=[{id:'fuego',emoji:'&#128293;',label:'Fuego'},{id:'estrella',emoji:'&#11088;',label:'Xeneize'},{id:'dale',emoji:'&#128153;',label:'Dale Bo'},{id:'campeon',emoji:'&#127942;',label:'Campeon'}];
+let hStories=[
+  {id:1,user:'RiqueXeneize',ini:'RX',av:0,time:'hace 2h',bg:'#002060',sticker:'&#9733;',texto:'Primera vez en La Bombonera con mi viejo en el 98. No paro de llorar todo el partido.',tag:{label:'Mi memoria xeneize',bg:'#002060',c:'white'},reacciones:{fuego:47,estrella:89,dale:123,campeon:12},misReacc:{}},
+  {id:2,user:'BocaEterno',ini:'BE',av:1,time:'hace 3h',bg:'linear-gradient(135deg,#002060 60%,#e09500)',sticker:'&#127942;',texto:'Estuve en Tokio cuando le ganamos al Real Madrid. No hay nada igual.',tag:{label:'Momento historico',bg:'#1a5a30',c:'white'},reacciones:{fuego:201,estrella:344,dale:89,campeon:412},misReacc:{}},
+  {id:3,user:'LaDoce',ini:'LD',av:2,time:'hace 4h',bg:'linear-gradient(160deg,#001440 0%,#003399 100%)',sticker:'&#128293;',texto:'Mi abuelo me hizo xeneize. Hoy lo llevo en el corazon cada vez que entro a La Bombonera.',tag:{label:'Familia xeneize',bg:'#334477',c:'white'},reacciones:{fuego:88,estrella:156,dale:234,campeon:44},misReacc:{}},
+  {id:4,user:'SocioXeneize',ini:'SX',av:4,time:'hace 5h',bg:'linear-gradient(135deg,#001440 0%,#7a5000 100%)',sticker:'&#9917;',texto:'El gol de Palermo de cabeza en el 95. Ese dia entendi que Boca es una religion.',tag:{label:'Mi idolo',bg:'#aa1100',c:'white'},reacciones:{fuego:312,estrella:198,dale:445,campeon:67},misReacc:{}},
+];
+let hBgSel='azul',hStickerSel='estrella',hTagSel='memoria',hViewerIdx=0,hViewerTimer=null;
+function hAvStyle(i){const a=AVC[i%AVC.length];return 'background:'+a.bg+';color:'+a.c+';';}
+function hRenderRow(){
+  const row=document.getElementById('hStoriesRow');if(!row)return;
+  let html='<div class="h-add-story2" onclick="hAbrirCreator()"><div class="h-add-ring2"><div style="font-size:24px;color:var(--azul);font-weight:300;line-height:1;">+</div></div><div style="font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:700;color:var(--txt3);text-align:center;">Tu historia</div></div>';
+  hStories.forEach((s,i)=>{html+='<div class="h-story-thumb2" onclick="hAbrirViewer('+i+')"><div class="h-story-ring2'+(i<2?' nueva2':'')+'"><div class="h-story-av2" style="'+hAvStyle(s.av)+'">'+s.ini+'</div></div><div class="h-story-nombre2">'+s.user+'</div></div>';});
+  row.innerHTML=html;
+}
+function hRenderFeed(){
+  const feed=document.getElementById('hFeed');if(!feed)return;
+  feed.innerHTML=hStories.map((s,i)=>'<div class="h-feed-item2"><div class="h-feed-header2"><div class="h-feed-av2" style="'+hAvStyle(s.av)+'" onclick="hAbrirViewer('+i+')">'+s.ini+'</div><div style="flex:1;"><div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:800;color:var(--txt);">'+s.user+'</div><div style="font-size:11px;color:var(--txt3);">'+s.time+'</div></div></div><div class="h-feed-card2" style="background:'+s.bg+';" onclick="hAbrirViewer('+i+')"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.15;">'+s.sticker+'</div><div class="h-feed-texto2">'+s.texto+'</div></div><div class="h-feed-reactions-row2">'+hREACC.map(r=>'<div class="h-feed-react2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarFeed('+s.id+',''+r.id+'',this)"><span style="font-size:14px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:var(--txt2);">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:800;color:var(--txt3);" id="hfr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('')+'</div></div>').join('');
+}
+function hReaccionarFeed(sid,rid,el){const s=hStories.find(x=>x.id===sid);if(!s)return;if(s.misReacc[rid]){s.reacciones[rid]--;delete s.misReacc[rid];el.classList.remove('reacted');}else{s.reacciones[rid]=(s.reacciones[rid]||0)+1;s.misReacc[rid]=true;el.classList.add('reacted');}const c=document.getElementById('hfr'+sid+rid);if(c)c.textContent=s.reacciones[rid]||0;}
+function hBuildCard(s){return '<div style="position:absolute;inset:0;background:'+s.bg+';"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:48px;opacity:0.2;">'+s.sticker+'</div><div style="position:relative;z-index:2;padding:20px;width:100%;text-align:center;"><div style="display:inline-block;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;background:'+s.tag.bg+';color:'+s.tag.c+';margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">'+s.tag.label+'</div><div class="h-story-texto2">'+s.texto+'</div></div><div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:52px;">'+s.sticker+'</div>';}
+function hAbrirViewer(idx){hViewerIdx=idx;document.getElementById('hViewer').classList.add('open');hRenderViewer();}
+function hRenderViewer(){
+  const s=hStories[hViewerIdx];
+  const av=document.getElementById('hViewerAv');av.style=hAvStyle(s.av);av.textContent=s.ini;
+  document.getElementById('hViewerUser').textContent=s.user;
+  document.getElementById('hViewerTime').textContent=s.time;
+  document.getElementById('hViewerCard').innerHTML=hBuildCard(s);
+  document.getElementById('hViewerProgress').innerHTML=hStories.map((_,i)=>'<div class="h-prog-bar2"><div class="h-prog-fill2'+(i<hViewerIdx?' done':i===hViewerIdx?' active':'')+'"></div></div>').join('');
+  document.getElementById('hViewerReactions').innerHTML=hREACC.map(r=>'<div class="h-reaction2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarViewer('+s.id+',''+r.id+'',this)"><span style="font-size:16px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:700;color:white;">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;color:rgba(255,255,255,0.7);" id="hvr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('');
+  if(hViewerTimer)clearTimeout(hViewerTimer);
+  hViewerTimer=setTimeout(()=>{if(hViewerIdx<hStories.length-1){hViewerIdx++;hRenderViewer();}else{hCerrarViewer();}},5000);
+}
+function hReaccionarViewer(sid,rid,el){const s=hStories.find(x=>x.id===sid);if(!s)return;if(s.misReacc[rid]){s.reacciones[rid]--;delete s.misReacc[rid];el.classList.remove('reacted');}else{s.reacciones[rid]=(s.reacciones[rid]||0)+1;s.misReacc[rid]=true;el.classList.add('reacted');}const c=document.getElementById('hvr'+sid+rid);if(c)c.textContent=s.reacciones[rid]||0;}
+function hNavStory(dir){if(hViewerTimer)clearTimeout(hViewerTimer);hViewerIdx=Math.max(0,Math.min(hStories.length-1,hViewerIdx+dir));hRenderViewer();}
+function hCerrarViewer(){if(hViewerTimer)clearTimeout(hViewerTimer);document.getElementById('hViewer').classList.remove('open');}
+function hAbrirCreator(){document.getElementById('hCreator').classList.add('open');hInitPickers();hActualizarPreview();}
+function hCerrarCreator(){document.getElementById('hCreator').classList.remove('open');}
+function hActualizarPreview(){
+  const texto=document.getElementById('hcTexto').value||'Tu historia xeneize...';
+  const bg=hBGS.find(b=>b.id===hBgSel)||hBGS[0];
+  const sticker=hSTICKERS.find(s=>s.id===hStickerSel)||hSTICKERS[0];
+  const tag=hTAGS.find(t=>t.id===hTagSel)||hTAGS[0];
+  const p=document.getElementById('hCreatorPreview');if(!p)return;
+  p.innerHTML='<div style="position:absolute;inset:0;background:'+bg.bg+';"></div><div style="position:absolute;top:15px;left:50%;transform:translateX(-50%);font-size:36px;opacity:0.2;">'+sticker.v+'</div><div style="position:relative;z-index:2;padding:16px;width:100%;text-align:center;"><div style="display:inline-block;font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;background:'+tag.bg+';color:'+tag.c+';margin-bottom:10px;text-transform:uppercase;">'+tag.label+'</div><div style="font-family:Barlow Condensed,sans-serif;font-size:17px;font-weight:800;font-style:italic;color:white;line-height:1.3;">'+texto+'</div></div><div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:40px;">'+sticker.v+'</div>';
+}
+function hInitPickers(){
+  const bp=document.getElementById('hBgPicker');if(bp)bp.innerHTML=hBGS.map(b=>'<div class="h-bg-opt2'+(b.id===hBgSel?' sel':'')+'" style="background:'+b.bg+';" onclick="hSelBg(''+b.id+'',this)"></div>').join('');
+  const sp=document.getElementById('hStickerPicker');if(sp)sp.innerHTML=hSTICKERS.map(s=>'<div class="h-sticker-opt2'+(s.id===hStickerSel?' sel':'')+'" onclick="hSelSticker(''+s.id+'',this)">'+s.v+'</div>').join('');
+  const tp=document.getElementById('hTagPicker');if(tp)tp.innerHTML=hTAGS.map(t=>'<div class="h-tag-opt2'+(t.id===hTagSel?' sel':'')+'" style="background:'+t.bg+';color:'+t.c+';border-color:'+t.bg+';" onclick="hSelTag(''+t.id+'',this)">'+t.label+'</div>').join('');
+}
+function hSelBg(id,el){hBgSel=id;document.querySelectorAll('.h-bg-opt2').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');hActualizarPreview();}
+function hSelSticker(id,el){hStickerSel=id;document.querySelectorAll('.h-sticker-opt2').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');hActualizarPreview();}
+function hSelTag(id,el){hTagSel=id;document.querySelectorAll('.h-tag-opt2').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');hActualizarPreview();}
+function hPublicarHistoria(){
+  const nombre=document.getElementById('hcNombre').value.trim()||'Hincha Xeneize';
+  const texto=document.getElementById('hcTexto').value.trim();
+  if(!texto){return;}
+  const bg=hBGS.find(b=>b.id===hBgSel)||hBGS[0];
+  const sticker=hSTICKERS.find(s=>s.id===hStickerSel)||hSTICKERS[0];
+  const tag=hTAGS.find(t=>t.id===hTagSel)||hTAGS[0];
+  hStories.unshift({id:Date.now(),user:nombre,ini:nombre.substring(0,2).toUpperCase(),av:Math.floor(Math.random()*6),time:'ahora mismo',bg:bg.bg,sticker:sticker.v,texto,tag:{label:tag.label,bg:tag.bg,c:tag.c},reacciones:{fuego:0,estrella:0,dale:0,campeon:0},misReacc:{}});
+  hCerrarCreator();hRenderRow();hRenderFeed();
+  document.getElementById('hcNombre').value='';document.getElementById('hcTexto').value='';
+}
+hRenderRow();hRenderFeed();
+
+</script>
+</body>
+</html>
