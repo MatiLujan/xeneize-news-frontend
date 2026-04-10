@@ -52,6 +52,9 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .xn-streak-fuego{font-size:14px;line-height:1;}
 .xn-streak-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--oro);}
 .xn-streak-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.5px;}
+.xn-pts{display:none;align-items:center;gap:4px;background:rgba(245,168,0,0.12);border:1px solid rgba(245,168,0,0.3);border-radius:20px;padding:4px 10px;cursor:default;}
+.xn-pts-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--oro);}
+.xn-pts-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.5px;}
 /* TOAST */
 .xn-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--azul2);border:2px solid var(--oro);border-radius:12px;padding:14px 20px;min-width:280px;max-width:340px;z-index:999;box-shadow:0 8px 32px rgba(0,0,64,0.4);opacity:0;transition:opacity 0.4s,transform 0.4s;pointer-events:none;}
 .xn-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -475,6 +478,19 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .rank-apodo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--txt);}
 .rank-pts{font-size:11px;color:var(--txt3);}
 .rank-total{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--azul);}
+/* COMPARTIR X */
+.xn-share-x{background:none;border:1px solid rgba(0,32,96,0.15);border-radius:6px;padding:4px 10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--txt3);cursor:pointer;margin-top:6px;transition:all 0.15s;}
+.xn-share-x:hover{background:#000;color:white;border-color:#000;}
+/* MISIONES */
+.mision-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(0,32,96,0.06);}
+.mision-item:last-child{border-bottom:none;}
+.mision-ico{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+.mision-info{flex:1;}
+.mision-tit{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt);line-height:1.2;}
+.mision-prog{font-size:11px;color:var(--txt3);margin-top:2px;}
+.mision-bar{height:3px;background:var(--gris2);border-radius:2px;margin-top:4px;}
+.mision-bar-fill{height:100%;background:var(--oro);border-radius:2px;transition:width 0.4s;}
+.mision-check{font-size:16px;flex-shrink:0;}
 /* SKELETON LOADERS */
 @keyframes skelShimmer{0%{background-position:-200% center}100%{background-position:200% center}}
 .skel{background:linear-gradient(90deg,rgba(245,168,0,0.06) 25%,rgba(245,168,0,0.16) 50%,rgba(245,168,0,0.06) 75%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite;border-radius:6px;display:block;}
@@ -612,6 +628,10 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
     <div class="xn-streak" id="xnStreak">
       <span class="xn-streak-fuego">🔥</span>
       <div><div class="xn-streak-txt"><span id="xnStreakN">1</span> días</div><div class="xn-streak-lbl">racha</div></div>
+    </div>
+    <div class="xn-pts" id="navPts">
+      <span style="font-size:14px;line-height:1;">⭐</span>
+      <div><div class="xn-pts-txt"><span id="navPtsN">0</span> pts</div><div class="xn-pts-lbl">fuego</div></div>
     </div>
     <div class="xn-live">En vivo</div>
     <button class="auth-btn" id="authBtn" onclick="abrirAuth()">
@@ -759,21 +779,25 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
             <div class="xn-nota-img" style="background:linear-gradient(135deg,#001440 0%,#003399 100%);"><div class="xn-nota-img-ico">&#9878;</div></div>
             <div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div>
             <div class="xn-nota-footer"><div class="xn-nota-meta">hace 2h &middot; 4 min</div><div class="xn-nota-vistas">&#128065; 3.2K</div></div>
+            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River">𝕏 Compartir</button>
           </div>
           <div class="xn-nota">
             <div class="xn-nota-img" style="background:linear-gradient(135deg,#0a3d1a 0%,#1a7a3a 100%);"><div class="xn-nota-img-ico">&#128202;</div></div>
             <div class="xn-tag verde">Stats</div><div class="xn-nota-titulo">Merentiel supera a Palermo en goles en un solo torneo</div>
             <div class="xn-nota-footer"><div class="xn-nota-meta">hace 4h &middot; 3 min</div><div class="xn-nota-vistas">&#128065; 5.8K</div></div>
+            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Merentiel supera a Palermo en goles en un solo torneo">𝕏 Compartir</button>
           </div>
           <div class="xn-nota">
             <div class="xn-nota-img" style="background:linear-gradient(135deg,#1a1a2e 0%,#334477 100%);"><div class="xn-nota-img-ico">&#128176;</div></div>
             <div class="xn-tag gris">Mercado</div><div class="xn-nota-titulo">Cavani abre la puerta a renovar hasta fin de 2025</div>
             <div class="xn-nota-footer"><div class="xn-nota-meta">hace 5h &middot; 2 min</div><div class="xn-nota-vistas">&#128065; 2.1K</div></div>
+            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Cavani abre la puerta a renovar hasta fin de 2025">𝕏 Compartir</button>
           </div>
           <div class="xn-nota">
             <div class="xn-nota-img" style="background:linear-gradient(135deg,#4a0a00 0%,#cc2200 100%);"><div class="xn-nota-img-ico">&#9889;</div></div>
             <div class="xn-tag rojo">Informe</div><div class="xn-nota-titulo">Los 5 jugadores que mas corrieron en el Superclasico</div>
             <div class="xn-nota-footer"><div class="xn-nota-meta">ayer &middot; 5 min</div><div class="xn-nota-vistas">&#128065; 8.4K</div></div>
+            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Los 5 jugadores que mas corrieron en el Superclasico">𝕏 Compartir</button>
           </div>
         </div>
       </div>
@@ -882,6 +906,10 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
           <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Top Xeneizes</div></div>
           <div id="rankingLista" style="margin-top:8px;"><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:80%;height:9px;margin:0;"></span></div></div><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:65%;height:9px;margin:0;"></span></div></div><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:55%;height:9px;margin:0;"></span></div></div></div>
           <button class="xn-btn" onclick="abrirAuth()" id="rankingLoginBtn" style="margin-top:10px;display:none;">&#9733; Entrar para competir</button>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Misiones del día</div></div>
+          <div id="misionesList" style="margin-top:8px;"></div>
         </div>
       </div>
     </div>
@@ -1131,6 +1159,41 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 <div class="h-feed2" id="hFeed"></div>
 </div>
 
+<!-- PERFIL -->
+<div class="xn-sec" id="sec-perfil">
+  <div style="background:var(--azul);padding:24px;border-bottom:4px solid var(--oro);text-align:center;">
+    <div id="perfAvatar" style="width:64px;height:64px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;border:3px solid var(--oro);margin-bottom:8px;">?</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:white;" id="perfApodo">-</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Miembro Xeneize</div>
+  </div>
+  <div style="padding:20px 24px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:white;border-radius:10px;padding:14px;text-align:center;border-top:3px solid var(--oro);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--azul);" id="perfPtsQuiz">0</div>
+        <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Pts Quiz</div>
+      </div>
+      <div style="background:white;border-radius:10px;padding:14px;text-align:center;border-top:3px solid var(--azul3);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--azul);" id="perfPtsForo">0</div>
+        <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Pts Foro</div>
+      </div>
+      <div style="background:white;border-radius:10px;padding:14px;text-align:center;border-top:3px solid var(--rojo);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--azul);" id="perfRacha">0</div>
+        <div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Racha</div>
+      </div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:16px;margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--azul);margin-bottom:10px;">🏆 Total de fuego</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:800;color:var(--oro);text-align:center;" id="perfTotal">0</div>
+      <div style="font-size:11px;color:var(--txt3);text-align:center;">puntos acumulados</div>
+    </div>
+    <div id="perfMisionesDia" style="background:white;border-radius:10px;padding:16px;margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--azul);margin-bottom:10px;">🎯 Misiones de hoy</div>
+      <div id="perfMisionesLista"></div>
+    </div>
+    <button onclick="logoutUser();ir('home',null);" style="width:100%;background:none;border:2px solid var(--gris2);border-radius:8px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--txt3);cursor:pointer;">Cerrar sesión</button>
+  </div>
+</div>
+
 <footer class="xn-footer">
   <div class="xn-footer-logo">XENEIZE <span>NEWS!</span></div>
   <div class="xn-footer-txt">El medio digital mas innovador de Boca Juniors &middot; 2026</div>
@@ -1150,9 +1213,9 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
       <span class="xn-mnav-ico">🏠</span>
       <span class="xn-mnav-lbl">Inicio</span>
     </button>
-    <button class="xn-mnav-btn" data-sec="historias" onclick="ir('historias',null);mnav(this)">
-      <span class="xn-mnav-ico">📖</span>
-      <span class="xn-mnav-lbl">Historias</span>
+    <button class="xn-mnav-btn" data-sec="perfil" onclick="ir('perfil',null);mnav(this)" id="mnavPerfil">
+      <span class="xn-mnav-ico">👤</span>
+      <span class="xn-mnav-lbl">Perfil</span>
     </button>
     <button class="xn-mnav-btn" data-sec="stats" onclick="ir('stats',null);mnav(this)">
       <span class="xn-mnav-ico">📊</span>
@@ -1454,7 +1517,7 @@ async function darLike(id,btn){
   const h=HILOS_DB.find(x=>x.id===id);
   if(h){h.likes++;document.getElementById('flk-'+id).textContent=h.likes;}
   try{ await fetch(BACKEND+'/api/foro?action=like&tabla=posts&id='+id,{method:'PATCH'}); }catch(e){}
-  desbloquearLogro('like1');
+  desbloquearLogro('like1');sumarMision('like');
   const n=lgrStat('likes',1);if(n>=10)desbloquearLogro('like10');
 }
 async function responder(id){
@@ -1467,7 +1530,7 @@ async function responder(id){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({post_id:id,contenido:txt,autor})
     });
-    desbloquearLogro('resp1');sumarPtsForo();
+    desbloquearLogro('resp1');sumarPtsForo();sumarMision('foro');
     await toggleHilo(id);await toggleHilo(id);
   }catch(e){}
   inp.disabled=false;
@@ -1490,7 +1553,7 @@ async function publicar(){
     filtroActivo='todos';
     document.querySelectorAll('.f-filtro').forEach((f,i)=>f.classList.toggle('activo',i===0));
     await cargarForo();
-    desbloquearLogro('hilo1');sumarPtsForo();
+    desbloquearLogro('hilo1');sumarPtsForo();sumarMision('foro');
   }catch(e){}
 }
 function abrirModal(){document.getElementById('fModal').classList.add('open');}
@@ -1498,8 +1561,126 @@ function cerrarModal(){document.getElementById('fModal').classList.remove('open'
 function selFlair(el){document.querySelectorAll('.f-flair-opt').forEach(f=>f.classList.remove('sel'));el.classList.add('sel');}
 document.getElementById('fModal').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
 
+// ── CEREBRO XENEIZE ──────────────────────────────────────────────
+let cxPensando=false;
+function cxMsg(txt,tipo){
+  const chat=document.getElementById('cxChat');if(!chat)return;
+  const ini=tipo==='user'?'Vos':'CX';
+  const div=document.createElement('div');
+  div.className='cx-msg'+(tipo==='user'?' user':'');
+  div.innerHTML='<div class="cx-av '+(tipo==='user'?'usr':'bot')+'">'+ini+'</div><div><div class="cx-bubble '+(tipo==='user'?'usr':'bot')+'">'+txt+'</div></div>';
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+}
+function cxTyping(show){
+  const existing=document.getElementById('cxTypingEl');
+  if(show&&!existing){
+    const chat=document.getElementById('cxChat');if(!chat)return;
+    const div=document.createElement('div');div.className='cx-typing';div.id='cxTypingEl';
+    div.innerHTML='<div class="cx-av bot">CX</div><div class="cx-typing-dots"><span></span><span></span><span></span></div>';
+    chat.appendChild(div);chat.scrollTop=chat.scrollHeight;
+  } else if(!show&&existing){existing.remove();}
+}
+async function cxEnviar(){
+  if(cxPensando)return;
+  const inp=document.getElementById('cxInp');
+  const txt=(inp.value||'').trim();if(!txt)return;
+  inp.value='';cxMsg(txt,'user');
+  sumarMision('cerebro');
+  desbloquearLogro('cerebro1');
+  const n=lgrStat('cerebro',1);if(n>=5)desbloquearLogro('cerebro5');
+  cxPensando=true;cxTyping(true);
+  try{
+    const r=await fetch(BACKEND+'/api/cerebro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pregunta:txt})});
+    cxTyping(false);
+    if(r.ok){const d=await r.json();cxMsg(d.respuesta||d.response||'No pude responder eso.','')}
+    else{cxMsg('Hubo un error. Intentá de nuevo.','');}
+  }catch(e){cxTyping(false);cxMsg('Sin conexión al Cerebro. Intentá en un momento.','');}
+  cxPensando=false;
+}
+function cxPreguntar(q){
+  const inp=document.getElementById('cxInp');
+  if(inp){inp.value=q;}
+  ir('cerebro',null);
+  setTimeout(cxEnviar,100);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('cxInp');
+  if(inp){inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();cxEnviar();}});}
+});
+
+// COMPARTIR EN X
+function compartirEnX(btn){
+  const titulo=btn.getAttribute('data-titulo')||'Noticias de Boca';
+  const url=encodeURIComponent('https://xeneizenews.com.ar');
+  const txt=encodeURIComponent(titulo+' #XeneizeNews #BocaJuniors');
+  window.open('https://twitter.com/intent/tweet?text='+txt+'&url='+url,'_blank','noopener');
+}
+
+// HELPER TOAST
+function mostrarToast(ico,tit,msg){
+  const t=document.getElementById('xnToast');
+  document.getElementById('xnToastIco').textContent=ico;
+  document.getElementById('xnToastTit').textContent=tit;
+  document.getElementById('xnToastMsg').textContent=msg;
+  if(t){t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);}
+}
+
+// MISIONES DIARIAS
+const MISIONES_DEF=[
+  {id:'m_quiz',ico:'🧠',tit:'Respondé el Quiz del día',meta:1,campo:'quiz',pts:50},
+  {id:'m_foro3',ico:'💬',tit:'Participá 3 veces en el foro',meta:3,campo:'foro',pts:75},
+  {id:'m_cerebro',ico:'🔮',tit:'Preguntale al Cerebro',meta:1,campo:'cerebro',pts:30},
+  {id:'m_like',ico:'❤️',tit:'Dale like a un post',meta:1,campo:'like',pts:20},
+];
+
+function getMisionesData(){
+  const hoy=new Date().toDateString();
+  const d=JSON.parse(localStorage.getItem('xn_misiones')||'{}');
+  if(d.fecha!==hoy){
+    const nuevo={fecha:hoy,prog:{}};
+    MISIONES_DEF.forEach(m=>{nuevo.prog[m.campo]=0;});
+    localStorage.setItem('xn_misiones',JSON.stringify(nuevo));
+    return nuevo;
+  }
+  return d;
+}
+
+function sumarMision(campo,inc){
+  inc=inc||1;
+  const d=getMisionesData();
+  const m=MISIONES_DEF.find(x=>x.campo===campo);
+  if(!m)return;
+  const anterior=d.prog[campo]||0;
+  d.prog[campo]=Math.min(m.meta,(anterior)+inc);
+  localStorage.setItem('xn_misiones',JSON.stringify(d));
+  if(anterior<m.meta && d.prog[campo]>=m.meta){
+    mostrarToast('🎯','Misión completada',''+m.tit+' (+'+m.pts+' pts)');
+    sumarPtsQuiz(m.pts);
+  }
+  renderMisiones();
+}
+
+function renderMisiones(){
+  const lista=document.getElementById('misionesList');if(!lista)return;
+  const d=getMisionesData();
+  lista.innerHTML=MISIONES_DEF.map(m=>{
+    const prog=d.prog[m.campo]||0;
+    const done=prog>=m.meta;
+    const pct=Math.min(100,Math.round((prog/m.meta)*100));
+    return '<div class="mision-item">'
+      +'<div class="mision-ico">'+m.ico+'</div>'
+      +'<div class="mision-info"><div class="mision-tit">'+m.tit+'</div>'
+      +'<div class="mision-prog">'+prog+' / '+m.meta+(done?' ✓':'')+'</div>'
+      +'<div class="mision-bar"><div class="mision-bar-fill" style="width:'+pct+'%;'+(done?'background:#1a8a3a;':'')+'"></div></div></div>'
+      +'<div class="mision-check">'+(done?'✅':'')+'</div>'
+      +'</div>';
+  }).join('');
+}
+
 cargarForo();
 cargarStats();
+renderMisiones();
 
 // SISTEMA DE LOGROS
 const LOGROS=[
@@ -1832,6 +2013,12 @@ let authPerfil=null;
     const data=await r.json();
     authSession={token};
     authPerfil=data.perfil;
+    // Sincronizar racha del día con servidor
+    const rachaLocal=JSON.parse(localStorage.getItem('xn_racha')||'{}');
+    if(rachaLocal.racha&&authPerfil){
+      const tok=localStorage.getItem('xn_auth_token');
+      if(tok) fetch(BACKEND+'/api/auth?action=actualizar_racha',{method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({racha:rachaLocal.racha})}).catch(()=>{});
+    }
     actualizarNavAuth();
     if(!authPerfil){
       // Usuario logueado pero sin apodo → mostrar modal de apodo
@@ -1864,6 +2051,46 @@ function actualizarNavAuth(){
     txt.textContent=authPerfil.apodo;
     const rankBtn=document.getElementById('rankingLoginBtn');
     if(rankBtn)rankBtn.style.display='none';
+    // Mostrar puntos en nav
+    const ptsEl=document.getElementById('navPts');
+    const ptsN=document.getElementById('navPtsN');
+    if(ptsEl&&ptsN){
+      ptsN.textContent=((authPerfil.pts_quiz||0)+(authPerfil.pts_foro||0)).toLocaleString('es-AR');
+      ptsEl.style.display='flex';
+    }
+    // Click en authBtn lleva al perfil
+    btn.onclick=function(){ir('perfil',null);};
+    // Actualizar sección perfil
+    const pa=document.getElementById('perfAvatar');
+    const pp=document.getElementById('perfApodo');
+    const pq=document.getElementById('perfPtsQuiz');
+    const pf=document.getElementById('perfPtsForo');
+    const pr=document.getElementById('perfRacha');
+    const pt=document.getElementById('perfTotal');
+    if(pa){
+      pa.style.background=avc.bg;pa.style.color=avc.c;
+      pa.textContent=authPerfil.apodo.substring(0,2).toUpperCase();
+      if(pp)pp.textContent=authPerfil.apodo;
+      if(pq)pq.textContent=(authPerfil.pts_quiz||0).toLocaleString('es-AR');
+      if(pf)pf.textContent=(authPerfil.pts_foro||0).toLocaleString('es-AR');
+      if(pr)pr.textContent=authPerfil.racha||0;
+      if(pt)pt.textContent=((authPerfil.pts_quiz||0)+(authPerfil.pts_foro||0)).toLocaleString('es-AR');
+    }
+    // Misiones en perfil
+    const pm=document.getElementById('perfMisionesLista');
+    if(pm&&typeof getMisionesData==='function'&&typeof MISIONES_DEF!=='undefined'){
+      const d=getMisionesData();
+      pm.innerHTML=MISIONES_DEF.map(m=>{
+        const prog=d.prog[m.campo]||0;
+        const done=prog>=m.meta;
+        return '<div class="mision-item"><div class="mision-ico">'+m.ico+'</div><div class="mision-info"><div class="mision-tit">'+m.tit+'</div><div class="mision-prog">'+prog+' / '+m.meta+'</div><div class="mision-bar"><div class="mision-bar-fill" style="width:'+Math.min(100,Math.round((prog/m.meta)*100))+'%;'+(done?'background:#1a8a3a;':'')+'"></div></div></div><div class="mision-check">'+(done?'✅':'')+'</div></div>';
+      }).join('');
+    }
+  } else {
+    // No logueado: click abre modal
+    btn.onclick=abrirAuth;
+    const ptsEl2=document.getElementById('navPts');
+    if(ptsEl2)ptsEl2.style.display='none';
   }
 }
 
@@ -1930,6 +2157,8 @@ function logoutUser(){
   const txt=document.getElementById('authBtnTxt');
   av.style.background='var(--oro)';av.style.color='var(--azul)';av.textContent='?';
   txt.textContent='Entrar';
+  const ptsEl2=document.getElementById('navPts');if(ptsEl2)ptsEl2.style.display='none';
+  const btn=document.getElementById('authBtn');if(btn)btn.onclick=abrirAuth;
   cerrarAuth();
   mostrarRankingLoginBtn();
 }
@@ -1959,7 +2188,9 @@ async function cargarRanking(){
 }
 
 // Sumar pts al servidor cuando se responde quiz correctamente
+let _sumarPtsQuizActivo=false;
 async function sumarPtsQuiz(pts){
+  if(!_sumarPtsQuizActivo){_sumarPtsQuizActivo=true;sumarMision('quiz');_sumarPtsQuizActivo=false;}
   const token=localStorage.getItem('xn_auth_token');
   if(!token||!authPerfil)return;
   try{
