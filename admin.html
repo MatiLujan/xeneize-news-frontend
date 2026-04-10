@@ -154,6 +154,27 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx
 .empty-ico{font-size:36px;margin-bottom:10px;}
 .empty-txt{font-size:14px;font-weight:600;}
 
+/* IMAGE UPLOAD */
+.img-tabs{display:flex;gap:0;margin-bottom:10px;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;}
+.img-tab{flex:1;padding:7px;border:none;background:#f5f7fc;cursor:pointer;font-size:12px;font-weight:600;color:var(--txt2);transition:all .15s;}
+.img-tab.active{background:var(--navy2);color:#fff;}
+.drop-area{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .15s;background:#fafbfe;font-size:13px;color:var(--txt3);}
+.drop-area:hover,.drop-area.drag{border-color:var(--navy3);background:#f0f4ff;color:var(--navy2);}
+.drop-area.has-img{padding:12px;border-style:solid;border-color:#9ae6b4;background:#f0fff4;}
+.upload-progress{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;}
+.upload-bar{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;width:0;}
+
+/* EMOJI PICKER */
+.emoji-field{display:flex;gap:6px;align-items:center;position:relative;}
+.emoji-input{width:70px!important;text-align:center;font-size:20px!important;padding:6px!important;}
+.emoji-picker{position:absolute;top:calc(100% + 4px);left:0;z-index:200;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.15);padding:10px;width:280px;}
+.emoji-groups{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap;}
+.emoji-group-btn{background:none;border:1.5px solid var(--border);border-radius:5px;padding:3px 7px;font-size:12px;cursor:pointer;color:var(--txt2);}
+.emoji-group-btn.active{background:var(--navy2);color:#fff;border-color:var(--navy2);}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;}
+.ep-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;border-radius:5px;line-height:1;transition:background .1s;}
+.ep-btn:hover{background:var(--bg);}
+
 /* RESPONSIVE */
 @media(max-width:960px){.two-col{grid-template-columns:1fr;}.stats-row{display:none;}}
 @media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr;}.news-grid{grid-template-columns:1fr 1fr;}}
@@ -265,15 +286,44 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx
           </div>
 
           <div class="field">
-            <label>URL de imagen <span style="font-weight:400;color:var(--txt3);text-transform:none;">(opcional)</span></label>
-            <input type="text" id="fImgUrl" placeholder="https://example.com/imagen.jpg" oninput="syncPreview()"/>
-            <div class="field-note">Si se completa, se usa como imagen de portada en lugar del emoji.</div>
+            <label>Imagen de portada <span style="font-weight:400;color:var(--txt3);text-transform:none;">(opcional)</span></label>
+            <div class="img-tabs">
+              <button type="button" class="img-tab active" id="tabUpload" onclick="setImgTab('upload')">📁 Subir archivo</button>
+              <button type="button" class="img-tab" id="tabUrl" onclick="setImgTab('url')">🔗 URL externa</button>
+            </div>
+            <div id="imgUploadArea">
+              <div class="drop-area" id="dropArea" onclick="$('fileInput').click()" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
+                <div id="dropContent">
+                  <div style="font-size:28px;margin-bottom:6px;">📷</div>
+                  <div style="font-weight:600;">Click o arrastrá una imagen aquí</div>
+                  <div style="font-size:11px;margin-top:3px;">JPG, PNG, GIF, WEBP — máx 3MB</div>
+                </div>
+                <div id="uploadedContent" style="display:none;">
+                  <img id="uploadedImg" style="max-height:100px;border-radius:6px;margin-bottom:6px;"/>
+                  <div id="uploadStatus" style="font-size:12px;font-weight:600;"></div>
+                </div>
+                <div class="upload-progress" id="uploadProgressWrap" style="display:none;"><div class="upload-bar" id="uploadBar"></div></div>
+              </div>
+              <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(this.files[0])"/>
+            </div>
+            <div id="imgUrlArea" style="display:none;">
+              <input type="text" id="fImgUrl" placeholder="https://example.com/imagen.jpg" oninput="syncPreview()"/>
+              <div class="field-note">URL de imagen externa (se muestra como portada).</div>
+            </div>
+            <input type="hidden" id="fImgUrlHidden"/>
           </div>
 
           <div class="grid2">
             <div class="field">
-              <label>Emoji (si no hay imagen)</label>
-              <input type="text" id="fEmoji" value="⚽" placeholder="⚽" oninput="syncPreview()"/>
+              <label>Emoji <span style="font-weight:400;color:var(--txt3);text-transform:none;">(si no hay imagen)</span></label>
+              <div class="emoji-field">
+                <input type="text" id="fEmoji" value="⚽" placeholder="⚽" oninput="syncPreview()" class="emoji-input"/>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="toggleEmojiPicker(event)" style="white-space:nowrap;">▼ Elegir</button>
+                <div class="emoji-picker" id="emojiPicker" style="display:none;">
+                  <div class="emoji-groups" id="emojiGroups"></div>
+                  <div class="emoji-grid" id="emojiGrid"></div>
+                </div>
+              </div>
             </div>
             <div class="field">
               <label>Fondo de imagen</label>
@@ -343,7 +393,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx
 
 <script>
 const BACKEND='https://xeneize-backend.vercel.app';
-let editId=null, confCb=null, noticias=[];
+let editId=null, confCb=null, noticias=[], uploadedUrl='', emojiTab=0;
+
+const EMOJI_GROUPS=[
+  {label:'⚽ Fútbol', emojis:['⚽','🏆','🥅','🎯','🥇','🏅','🎖️','🏟️','👟','🧤','🟡','🟢']},
+  {label:'🔥 Acción',  emojis:['🔥','⚡','💥','🌟','⭐','💫','✨','🚀','💪','👊','✊','🤜']},
+  {label:'📰 Noticias',emojis:['📰','📢','📣','🗞️','📋','📝','🔔','💬','🗣️','📸','🎬','📡']},
+  {label:'💰 Mercado', emojis:['💰','💵','💸','🏦','📊','📈','📉','⚖️','🤝','📜','🖊️','✅']},
+  {label:'😀 Caras',   emojis:['😤','😡','🥳','😱','🤩','😎','🤔','😢','🔥','👑','🎭','🤯']},
+  {label:'🌍 Mundo',   emojis:['🌍','🌎','🌐','✈️','🏙️','🌃','🌄','🎪','🏠','🏛️','🗺️','📍']},
+];
 
 const BGS={
   azul:'linear-gradient(135deg,#001440,#003399)',
@@ -384,6 +443,106 @@ function cc(inputId,labelId,max){
   el.className='cc'+(v>max*.9?' w':'')+(v>=max?' o':'');
 }
 
+// ── Image tab ──
+function setImgTab(tab){
+  const isUpload=tab==='upload';
+  $('imgUploadArea').style.display=isUpload?'':'none';
+  $('imgUrlArea').style.display=isUpload?'none':'';
+  $('tabUpload').classList.toggle('active',isUpload);
+  $('tabUrl').classList.toggle('active',!isUpload);
+  syncPreview();
+}
+
+function onDrag(e,on){e.preventDefault();$('dropArea').classList.toggle('drag',on);}
+function onDrop(e){e.preventDefault();$('dropArea').classList.remove('drag');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))handleFile(f);}
+
+function handleFile(file){
+  if(!file)return;
+  if(!file.type.startsWith('image/')){toast('Solo se permiten imágenes.','err');return;}
+  if(file.size>3*1024*1024){toast('Imagen muy grande (máx 3MB).','err');return;}
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const b64=e.target.result.split(',')[1];
+    // Show local preview immediately
+    $('dropContent').style.display='none';
+    $('uploadedContent').style.display='block';
+    $('uploadedImg').src=e.target.result;
+    $('uploadStatus').textContent='Subiendo...';
+    $('uploadStatus').style.color='var(--txt2)';
+    $('uploadProgressWrap').style.display='block';
+    $('uploadBar').style.width='30%';
+    try{
+      $('uploadBar').style.width='60%';
+      const r=await fetch(BACKEND+'/api/noticias?action=upload',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-admin-key':getKey()},
+        body:JSON.stringify({imageBase64:b64,fileName:file.name,contentType:file.type})
+      });
+      $('uploadBar').style.width='100%';
+      if(r.ok){
+        const d=await r.json();
+        uploadedUrl=d.url;
+        $('fImgUrlHidden').value=d.url;
+        $('uploadStatus').textContent='✓ Imagen subida';
+        $('uploadStatus').style.color='var(--green)';
+        $('dropArea').classList.add('has-img');
+        syncPreview();
+      }else{
+        const d=await r.json();
+        $('uploadStatus').textContent='Error: '+(d.error||r.status);
+        $('uploadStatus').style.color='var(--red)';
+        uploadedUrl='';
+      }
+    }catch(ex){
+      $('uploadStatus').textContent='Error de conexión';
+      $('uploadStatus').style.color='var(--red)';
+      uploadedUrl='';
+    }
+    setTimeout(()=>{$('uploadProgressWrap').style.display='none';$('uploadBar').style.width='0';},600);
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearUpload(){
+  uploadedUrl='';
+  $('fImgUrlHidden').value='';
+  $('dropContent').style.display='block';
+  $('uploadedContent').style.display='none';
+  $('uploadedImg').src='';
+  $('uploadStatus').textContent='';
+  $('dropArea').classList.remove('has-img');
+  syncPreview();
+}
+
+// ── Emoji picker ──
+function buildEmojiPicker(){
+  const grp=$('emojiGroups');
+  grp.innerHTML=EMOJI_GROUPS.map((g,i)=>'<button type="button" class="emoji-group-btn'+(i===0?' active':'')+'" onclick="showEmojiGroup('+i+',this)">'+g.label+'</button>').join('');
+  showEmojiGroup(0,grp.firstChild);
+}
+
+function showEmojiGroup(i,btn){
+  document.querySelectorAll('.emoji-group-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  emojiTab=i;
+  $('emojiGrid').innerHTML=EMOJI_GROUPS[i].emojis.map(e=>'<button type="button" class="ep-btn" onclick="pickEmoji(\''+e+'\')">'+e+'</button>').join('');
+}
+
+function pickEmoji(e){$('fEmoji').value=e;syncPreview();closeEmojiPicker();}
+
+function toggleEmojiPicker(evt){
+  evt.stopPropagation();
+  const p=$('emojiPicker');
+  if(p.style.display==='none'){buildEmojiPicker();p.style.display='block';}
+  else closeEmojiPicker();
+}
+function closeEmojiPicker(){$('emojiPicker').style.display='none';}
+
+function getImgUrl(){
+  const tab=$('tabUpload').classList.contains('active');
+  return tab ? uploadedUrl : ($('fImgUrl').value.trim());
+}
+
 function syncPreview(){
   const titulo=$('fTitulo').value.trim();
   const bajada=$('fBajada').value.trim();
@@ -391,7 +550,7 @@ function syncPreview(){
   const tc_key=$('fTagColor').value;
   const emoji=$('fEmoji').value||'⚽';
   const bg=$('fBg').value||'azul';
-  const imgUrl=$('fImgUrl').value.trim();
+  const imgUrl=getImgUrl();
   const dest=$('fDest').checked;
   const tc=TCS[tc_key]||TCS.azul;
   const grad=BGS[bg]||BGS.azul;
@@ -450,6 +609,8 @@ function resetForm(){
   $('fTag').value='General';$('fTagColor').value='azul';
   $('fEmoji').value='⚽';$('fBg').value='azul';
   $('fImgUrl').value='';$('fDest').checked=false;
+  clearUpload();
+  setImgTab('upload');
   cc('fTitulo','ccT',200);cc('fBajada','ccB',500);
   syncPreview();
 }
@@ -470,7 +631,13 @@ function loadEdit(n){
   $('fTagColor').value=n.tag_color||'azul';
   $('fEmoji').value=n.imagen_emoji||'⚽';
   $('fBg').value=n.imagen_bg||'azul';
-  $('fImgUrl').value=n.imagen_url||'';
+  if(n.imagen_url){
+    setImgTab('url');
+    $('fImgUrl').value=n.imagen_url;
+  } else {
+    setImgTab('upload');
+    clearUpload();
+  }
   $('fDest').checked=!!n.destacada;
   $('editBanner').style.display='flex';
   $('formTitle').textContent='✎ Editar noticia';
@@ -487,7 +654,7 @@ async function submitForm(){
   const tag_color=$('fTagColor').value;
   const imagen_emoji=$('fEmoji').value.trim()||'⚽';
   const imagen_bg=$('fBg').value;
-  const imagen_url=$('fImgUrl').value.trim();
+  const imagen_url=getImgUrl();
   const destacada=$('fDest').checked;
   const errEl=$('formErr');
   errEl.style.display='none';
@@ -586,6 +753,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(key){$('adminKey').value=key;login();}
   $('adminKey').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
   document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&$('panel').style.display!=='none')submitForm();});
+  document.addEventListener('click',e=>{if(!e.target.closest('.emoji-field'))closeEmojiPicker();});
   syncPreview();
 });
 </script>
