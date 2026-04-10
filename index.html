@@ -1745,8 +1745,23 @@ let authPerfil=null;
   const token=localStorage.getItem('xn_auth_token');
   if(!token)return mostrarRankingLoginBtn();
   try{
-    const r=await fetch(BACKEND+'/api/auth?action=perfil',{headers:{'Authorization':'Bearer '+token}});
-    if(!r.ok){localStorage.removeItem('xn_auth_token');return mostrarRankingLoginBtn();}
+    let r=await fetch(BACKEND+'/api/auth?action=perfil',{headers:{'Authorization':'Bearer '+token}});
+    if(!r.ok){
+      // Intentar renovar con refresh token
+      const refresh=localStorage.getItem('xn_auth_refresh');
+      if(!refresh){localStorage.removeItem('xn_auth_token');return mostrarRankingLoginBtn();}
+      const refR=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{
+        method:'POST',
+        headers:{'apikey':SUPABASE_ANON,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token:refresh})
+      });
+      if(!refR.ok){localStorage.removeItem('xn_auth_token');localStorage.removeItem('xn_auth_refresh');return mostrarRankingLoginBtn();}
+      const refData=await refR.json();
+      localStorage.setItem('xn_auth_token',refData.access_token);
+      if(refData.refresh_token)localStorage.setItem('xn_auth_refresh',refData.refresh_token);
+      r=await fetch(BACKEND+'/api/auth?action=perfil',{headers:{'Authorization':'Bearer '+refData.access_token}});
+      if(!r.ok){localStorage.removeItem('xn_auth_token');localStorage.removeItem('xn_auth_refresh');return mostrarRankingLoginBtn();}
+    }
     const data=await r.json();
     authSession={token};
     authPerfil=data.perfil;
