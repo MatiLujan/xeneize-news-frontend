@@ -1,0 +1,50 @@
+{
+  "name": "Xeneize News",
+  "short_name": "Xeneize",
+  "description": "El medio digital más innovador de Boca Juniors. Noticias, foro, estadísticas y el Cerebro Xeneize.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#001440",
+  "theme_color": "#002060",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "categories": ["news", "sports"],
+  "shortcuts": [
+    {
+      "name": "Foro Xeneize",
+      "short_name": "Foro",
+      "description": "Ir al foro de Boca",
+      "url": "/#foro",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cerebro Xeneize",
+      "short_name": "Cerebro",
+      "description": "Preguntale al Cerebro Xeneize",
+      "url": "/#cerebro",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

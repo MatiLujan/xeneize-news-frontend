@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Xeneize News — El mundo azul y oro</title>
 <meta name="description" content="El medio digital más innovador de Boca Juniors. Noticias, foro, estadísticas y el Cerebro Xeneize."/>
+<meta name="theme-color" content="#002060"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Xeneize"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
@@ -17,7 +24,7 @@
   --rojo:#cc2200;
 }
 html{scroll-behavior:smooth;}
-body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min-height:100vh;}
+body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min-height:100vh;overflow-x:hidden;}
 .xn-wrapper{max-width:960px;margin:0 auto;background:var(--gris);}
 
 @keyframes ticker{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
@@ -41,6 +48,17 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .xn-navlink:hover{color:var(--oro);background:rgba(245,168,0,0.1);}
 .xn-navlink.activo{color:var(--oro);background:rgba(245,168,0,0.15);border-bottom:2px solid var(--oro);}
 .xn-live{background:var(--rojo);color:white;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:4px;animation:pulseGold 1.5s infinite;text-transform:uppercase;}
+.xn-streak{display:none;align-items:center;gap:4px;background:rgba(245,168,0,0.12);border:1px solid rgba(245,168,0,0.3);border-radius:20px;padding:4px 10px;cursor:default;}
+.xn-streak-fuego{font-size:14px;line-height:1;}
+.xn-streak-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--oro);}
+.xn-streak-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.5px;}
+/* TOAST */
+.xn-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--azul2);border:2px solid var(--oro);border-radius:12px;padding:14px 20px;min-width:280px;max-width:340px;z-index:999;box-shadow:0 8px 32px rgba(0,0,64,0.4);opacity:0;transition:opacity 0.4s,transform 0.4s;pointer-events:none;}
+.xn-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.xn-toast-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.xn-toast-ico{font-size:22px;line-height:1;}
+.xn-toast-tit{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--oro);}
+.xn-toast-msg{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.4;}
 
 /* TICKER */
 .xn-ticker{background:var(--oro);height:34px;overflow:hidden;display:flex;align-items:center;}
@@ -87,10 +105,24 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .xn-sec-label-line{width:4px;height:20px;background:var(--oro);border-radius:2px;}
 .xn-sec-label-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--azul);letter-spacing:2px;text-transform:uppercase;}
 .xn-hero-wrap{padding:20px 24px;border-bottom:2px solid var(--gris);}
-.xn-hero-card{background:var(--azul);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:14px;transition:opacity 0.2s;}
-.xn-hero-card:hover{opacity:0.93;}
-.xn-hero-img{height:175px;background:var(--azul2);display:flex;align-items:flex-end;padding:18px;position:relative;}
-.xn-hero-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,20,64,0.95) 0%,rgba(0,32,96,0.3) 100%);}
+.xn-hero-card{background:var(--azul);border-radius:10px;overflow:hidden;cursor:pointer;margin-bottom:14px;transition:transform 0.2s,box-shadow 0.2s;}
+.xn-hero-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,20,64,0.18);}
+.xn-hero-leyendo{position:absolute;top:12px;left:12px;z-index:3;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);border-radius:20px;padding:4px 10px;}
+.xn-hero-leyendo-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:onlinePulse 2s infinite;flex-shrink:0;}
+.xn-hero-leyendo-txt{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:white;letter-spacing:0.3px;}
+.xn-nota-footer{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.xn-nota-vistas{font-size:11px;color:var(--txt3);font-weight:500;display:flex;align-items:center;gap:3px;}
+.xn-nota{border:1.5px solid var(--gris);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.2s;overflow:hidden;opacity:0;transform:translateY(16px);}
+.xn-nota.visible{opacity:1;transform:translateY(0);}
+.xn-nota:hover{border-color:var(--oro);background:#fffbf0;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,20,64,0.08);}
+.xn-hero-exclusivo{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:var(--rojo);color:white;margin-right:6px;position:relative;z-index:2;vertical-align:middle;}
+.xn-hero-img{height:210px;background:var(--azul2);background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:18px;position:relative;}
+.xn-hero-img::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(245,168,0,0.03) 0px,rgba(245,168,0,0.03) 1px,transparent 1px,transparent 12px),repeating-linear-gradient(-45deg,rgba(0,51,153,0.06) 0px,rgba(0,51,153,0.06) 1px,transparent 1px,transparent 12px);}
+.xn-hero-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,20,64,0.97) 0%,rgba(0,32,96,0.5) 60%,rgba(0,20,64,0.15) 100%);}
+.xn-nota-img{height:88px;border-radius:5px 5px 0 0;background-size:cover;background-position:center;position:relative;overflow:hidden;margin:-12px -12px 10px -12px;}
+.xn-nota-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,20,64,0.6) 0%,transparent 60%);}
+.xn-nota-img-ico{position:absolute;bottom:8px;left:10px;font-size:22px;z-index:2;line-height:1;}
+.xn-nota{border:1.5px solid var(--gris);border-radius:8px;padding:12px;cursor:pointer;transition:all 0.15s;overflow:hidden;}
 .xn-hero-star{position:absolute;top:12px;right:12px;z-index:2;}
 .xn-hero-star svg{width:38px;height:38px;fill:none;stroke:rgba(245,168,0,0.3);stroke-width:1.5;}
 .xn-tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;margin-bottom:8px;position:relative;z-index:2;}
@@ -328,20 +360,174 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .cx-send svg{width:16px;height:16px;}
 .cx-disc{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:600;color:var(--txt3);text-align:center;padding:8px 24px 16px;background:white;border-top:1px solid var(--gris);letter-spacing:0.3px;}
 
+/* DATO DEL DIA */
+.xn-dato-dia{padding:16px 24px;background:linear-gradient(135deg,var(--azul2) 0%,var(--azul) 100%);border-top:2px solid var(--gris);}
+.xn-dato-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.xn-dato-badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--oro);background:rgba(245,168,0,0.12);border:1px solid rgba(245,168,0,0.3);padding:3px 10px;border-radius:4px;}
+.xn-dato-num{font-size:11px;color:rgba(255,255,255,0.35);margin-left:auto;}
+.xn-dato-txt{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;font-style:italic;color:white;line-height:1.4;margin-bottom:12px;}
+.xn-dato-share{background:none;border:1px solid rgba(245,168,0,0.35);border-radius:6px;padding:5px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--oro);cursor:pointer;transition:all 0.15s;letter-spacing:0.5px;}
+.xn-dato-share:hover{background:rgba(245,168,0,0.12);}
+/* PREDICTOR */
+.xn-predictor{padding:18px 24px;background:#f5f7fc;border-top:2px solid var(--gris);}
+.xn-pred-sub{font-size:13px;color:var(--txt2);margin-bottom:10px;}
+.xn-pred-matchlbl{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--azul);text-align:center;margin-bottom:14px;padding:8px;background:white;border-radius:7px;border:1.5px solid var(--gris2);}
+.xn-pred-opts{display:flex;gap:8px;margin-bottom:10px;}
+.xn-pred-opt{flex:1;border:2px solid var(--gris2);border-radius:10px;padding:12px 6px;text-align:center;cursor:pointer;transition:all 0.2s;background:white;}
+.xn-pred-opt:hover{border-color:var(--azul);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,20,64,0.1);}
+.xn-pred-opt.sel{border-color:var(--oro);background:rgba(245,168,0,0.06);}
+.xn-pred-opt.disabled{pointer-events:none;}
+.xn-pred-opt-ico{font-size:24px;margin-bottom:5px;line-height:1;}
+.xn-pred-opt-lbl{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:var(--txt);text-transform:uppercase;margin-bottom:4px;}
+.xn-pred-bar{height:4px;border-radius:2px;background:var(--gris2);overflow:hidden;margin:4px 0;}
+.xn-pred-bar-fill{height:100%;border-radius:2px;background:var(--azul);transition:width 0.8s ease;}
+.xn-pred-bar-fill.win{background:#1a7a3a;}
+.xn-pred-bar-fill.draw{background:#7a5000;}
+.xn-pred-bar-fill.lose{background:var(--rojo);}
+.xn-pred-opt-pct{font-size:11px;color:var(--txt3);font-weight:600;}
+.xn-pred-footer{text-align:center;font-size:12px;color:var(--txt3);font-weight:500;}
+/* QUIZ */
+.xn-quiz{padding:18px 24px;background:white;border-top:2px solid var(--gris);}
+.xn-quiz-card{background:linear-gradient(135deg,var(--azul2) 0%,var(--azul) 100%);border-radius:12px;padding:18px 18px 14px;color:white;position:relative;overflow:hidden;}
+.xn-quiz-card::before{content:'?';position:absolute;right:-10px;top:-10px;font-family:'Barlow Condensed',sans-serif;font-size:120px;font-weight:800;color:rgba(255,255,255,0.04);line-height:1;pointer-events:none;}
+.xn-quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.xn-quiz-badge{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--oro);background:rgba(245,168,0,0.12);border:1px solid rgba(245,168,0,0.3);padding:3px 10px;border-radius:4px;}
+.xn-quiz-pts{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:rgba(255,255,255,0.55);}
+.xn-quiz-pts span{color:var(--oro);}
+.xn-quiz-pregunta{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;font-style:italic;line-height:1.3;margin-bottom:16px;}
+.xn-quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.xn-quiz-opt{background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:white;cursor:pointer;transition:all 0.18s;text-align:left;line-height:1.3;}
+.xn-quiz-opt:hover:not(.disabled){background:rgba(255,255,255,0.14);border-color:var(--oro);}
+.xn-quiz-opt.correct{background:rgba(26,122,58,0.5);border-color:#4ade80;color:white;}
+.xn-quiz-opt.wrong{background:rgba(204,34,0,0.4);border-color:var(--rojo);color:white;}
+.xn-quiz-opt.reveal-correct{background:rgba(26,122,58,0.3);border-color:#4ade80;}
+.xn-quiz-opt.disabled{pointer-events:none;}
+.xn-quiz-result{text-align:center;padding:10px 0 4px;}
+.xn-quiz-result-ico{font-size:36px;line-height:1;margin-bottom:4px;}
+.xn-quiz-result-msg{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:white;line-height:1.2;}
+.xn-quiz-result-sub{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px;}
+.xn-quiz-score-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);}
+.xn-quiz-score-box{text-align:center;}
+.xn-quiz-score-n{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--oro);line-height:1;}
+.xn-quiz-score-lbl{font-size:10px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;}
+/* LOGROS */
+.lgr-overlay{position:fixed;inset:0;background:rgba(0,20,64,0.85);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;}
+.lgr-overlay.open{display:flex;animation:fadeUp 0.2s ease;}
+.lgr-modal{background:white;border-radius:14px;max-width:440px;width:100%;border-top:4px solid var(--oro);max-height:88vh;overflow-y:auto;}
+.lgr-header{background:var(--azul);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+.lgr-tit{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;font-style:italic;color:white;}
+.lgr-tit span{color:var(--oro);}
+.lgr-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer;line-height:1;}
+.lgr-prog{padding:12px 20px;background:#f5f7fc;border-bottom:1.5px solid var(--gris);display:flex;align-items:center;gap:10px;}
+.lgr-prog-bar{flex:1;height:8px;background:var(--gris2);border-radius:4px;overflow:hidden;}
+.lgr-prog-fill{height:100%;background:linear-gradient(90deg,var(--azul),var(--oro));border-radius:4px;transition:width 0.8s ease;}
+.lgr-prog-txt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--azul);white-space:nowrap;}
+.lgr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;}
+.lgr-item{border:1.5px solid var(--gris);border-radius:10px;padding:14px 12px;text-align:center;transition:all 0.2s;}
+.lgr-item.ok{border-color:var(--oro);background:rgba(245,168,0,0.06);}
+.lgr-item.lock{opacity:0.4;}
+.lgr-item-ico{font-size:30px;line-height:1;margin-bottom:6px;}
+.lgr-item-tit{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--txt);margin-bottom:3px;}
+.lgr-item-desc{font-size:11px;color:var(--txt3);line-height:1.35;}
+.lgr-item-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-top:5px;}
+.lgr-item-badge.ok{background:rgba(245,168,0,0.18);color:#7a5000;}
+.lgr-item-badge.lock{background:#e8edf5;color:var(--txt3);}
+/* Toast de logro (aparece arriba a la derecha) */
+.xn-toast-logro{position:fixed;top:76px;right:16px;background:var(--azul2);border:2px solid var(--oro);border-radius:12px;padding:12px 16px;width:260px;z-index:998;box-shadow:0 8px 32px rgba(0,20,64,0.5);transform:translateX(calc(100% + 32px));transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;}
+.xn-toast-logro.show{transform:translateX(0);}
+.xn-toast-logro-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--oro);margin-bottom:5px;}
+.xn-toast-logro-row{display:flex;align-items:center;gap:10px;}
+.xn-toast-logro-ico{font-size:26px;line-height:1;flex-shrink:0;}
+.xn-toast-logro-tit{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:white;line-height:1.2;}
+.xn-toast-logro-desc{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
 /* FOOTER */
 .xn-footer{background:var(--azul2);padding:22px 24px;text-align:center;border-top:4px solid var(--oro);}
 .xn-footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;font-style:italic;color:var(--oro);margin-bottom:5px;}
 .xn-footer-logo span{color:white;}
 .xn-footer-txt{font-size:11px;color:rgba(255,255,255,0.35);font-weight:500;}
 
+/* PROXIMO PARTIDO COUNTDOWN */
+#xn-proximo{background:var(--azul2);border-bottom:3px solid var(--oro);display:none;}
+.prox-wrap{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;flex-wrap:wrap;gap:10px;}
+.prox-badge{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--oro);background:rgba(245,168,0,0.12);border:1px solid rgba(245,168,0,0.3);padding:3px 10px;border-radius:4px;flex-shrink:0;}
+.prox-match{display:flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:white;}
+.prox-vs{color:var(--oro);font-size:13px;font-weight:700;letter-spacing:1px;}
+.prox-fecha{font-size:12px;color:rgba(255,255,255,0.5);font-weight:500;}
+.prox-countdown{display:flex;align-items:center;gap:6px;}
+.prox-unit{display:flex;flex-direction:column;align-items:center;gap:1px;}
+.prox-unit span:first-child{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:white;line-height:1;}
+.prox-unit span:last-child{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;}
+.prox-sep{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--oro);line-height:1;margin-bottom:8px;}
+
 @media(max-width:680px){
-  .xn-pulso-grid,.px-stats-grid{grid-template-columns:repeat(2,1fr);}
+  /* NAV: logo arriba, links abajo */
+  .xn-nav{height:auto;flex-wrap:wrap;padding:8px 14px 0;gap:0;}
+  .xn-logo{padding-bottom:8px;}
+  .xn-live{margin-bottom:8px;}
+  .xn-navlinks{width:100%;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.1);padding:4px 0;}
+  .xn-navlink{padding:6px 0;font-size:11px;flex:1;text-align:center;border-radius:0;}
+  .xn-logo-txt{font-size:24px;}
+  .xn-logo-news{font-size:18px;}
+
+  /* TICKER */
+  .xn-ticker-inner{font-size:12px;}
+
+  /* COUNTDOWN */
+  .prox-wrap{flex-direction:column;align-items:flex-start;padding:10px 16px;gap:8px;}
+  .prox-match{font-size:16px;}
+  .prox-unit span:first-child{font-size:22px;}
+  .prox-sep{font-size:18px;}
+
+  /* PULSO STATS */
+  .px-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .px-header{padding:10px 16px;}
+
+  /* HOME BODY */
   .xn-body{grid-template-columns:1fr;}
   .xn-main{border-right:none;border-bottom:2px solid var(--gris);}
-  .xn-notas-grid,.xn-stats-home{grid-template-columns:1fr;}
-  .xn-navlink{padding:5px 9px;font-size:12px;}
-  .f-rangos,.f-header,.f-toolbar,.f-hilo{padding-left:16px;padding-right:16px;}
-  .cx-header,.cx-sugs,.cx-chat,.cx-inp-area,.cx-disc{padding-left:16px;padding-right:16px;}
+  .xn-hero-wrap{padding:14px 16px;}
+  .xn-hero-img{height:180px;}
+  .xn-hero-titulo{font-size:18px;}
+  .xn-notas-grid{grid-template-columns:1fr 1fr;}
+  .xn-nota-img{height:72px;}
+  .xn-nota-titulo{font-size:13px;}
+  .xn-stats-home{grid-template-columns:1fr;}
+  .xn-stats-col:first-child{border-right:none;border-bottom:1.5px solid var(--gris);}
+  .xn-encuesta{padding:14px 16px;}
+  .xn-sidebar{display:none;}
+
+  /* STATS SECTION */
+  #sec-stats > div[style]{display:block !important;}
+  #sec-stats > div[style] > div{border-right:none !important;border-bottom:1.5px solid var(--gris);}
+
+  /* FORO */
+  .f-header{padding:14px 16px;flex-wrap:wrap;gap:8px;}
+  .f-stats{gap:12px;}
+  .f-rangos{padding:8px 16px;}
+  .f-toolbar{padding:8px 16px;}
+  .f-filtros{gap:4px;}
+  .f-filtro{font-size:11px;padding:4px 9px;}
+  .f-hilo{padding:12px 16px;}
+  .f-nuevo-form{padding:14px 16px;}
+
+  /* CEREBRO */
+  .cx-header{padding:14px 16px;gap:10px;}
+  .cx-status{display:none;}
+  .cx-brain{width:40px;height:40px;font-size:18px;}
+  .cx-tit{font-size:20px;}
+  .cx-sugs{padding:10px 16px;}
+  .cx-sug-grid{gap:4px;}
+  .cx-sug{font-size:12px;padding:4px 10px;}
+  .cx-chat{padding:14px 16px;min-height:280px;}
+  .cx-inp-area{padding:10px 16px;}
+  .cx-disc{padding:8px 16px 14px;}
+
+  /* HISTORIAS */
+  .h-header2{padding:12px 16px;}
+  .h-stories-row2{padding:12px 16px;}
+
+  /* MODAL */
+  .f-modal{padding:20px 18px;}
 }
 </style>
 </head>
@@ -361,13 +547,70 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
     <button class="xn-navlink" onclick="ir('foro',this)">Foro</button>
     <button class="xn-navlink" onclick="ir('cerebro',this)">Cerebro</button>
   </div>
-  <div class="xn-live">En vivo</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="xn-streak" id="xnStreak">
+      <span class="xn-streak-fuego">🔥</span>
+      <div><div class="xn-streak-txt"><span id="xnStreakN">1</span> días</div><div class="xn-streak-lbl">racha</div></div>
+    </div>
+    <div class="xn-live">En vivo</div>
+  </div>
 </nav>
+<div class="xn-toast" id="xnToast">
+</div>
+
+<!-- TOAST LOGRO -->
+<div class="xn-toast-logro" id="xnToastLogro">
+  <div class="xn-toast-logro-lbl">&#127942; Logro desbloqueado</div>
+  <div class="xn-toast-logro-row">
+    <div class="xn-toast-logro-ico" id="lgrToastIco"></div>
+    <div><div class="xn-toast-logro-tit" id="lgrToastTit"></div><div class="xn-toast-logro-desc" id="lgrToastDesc"></div></div>
+  </div>
+</div>
+
+<!-- MODAL LOGROS -->
+<div class="lgr-overlay" id="lgrOverlay">
+  <div class="lgr-modal">
+    <div class="lgr-header">
+      <div class="lgr-tit">Mis <span>Logros</span></div>
+      <button class="lgr-close" onclick="cerrarLogros()">&#10005;</button>
+    </div>
+    <div class="lgr-prog">
+      <div class="lgr-prog-bar"><div class="lgr-prog-fill" id="lgrProgFill" style="width:0%"></div></div>
+      <div class="lgr-prog-txt"><span id="lgrProgN">0</span> / <span id="lgrProgTotal">0</span></div>
+    </div>
+    <div class="lgr-grid" id="lgrGrid"></div>
+  </div>
+</div>
+  <div class="xn-toast-top"><div class="xn-toast-ico" id="xnToastIco">🔥</div><div class="xn-toast-tit" id="xnToastTit"></div></div>
+  <div class="xn-toast-msg" id="xnToastMsg"></div>
+</div>
 
 <div class="xn-ticker">
   <div class="xn-ticker-lbl">Ahora</div>
   <div class="xn-ticker-track">
     <div class="xn-ticker-inner" id="tickerInner">Cargando datos en tiempo real... &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+  </div>
+</div>
+
+<!-- PROXIMO PARTIDO -->
+<div id="xn-proximo">
+  <div class="prox-wrap">
+    <div class="prox-badge">Próximo partido</div>
+    <div class="prox-match">
+      <span id="proxLocal">-</span>
+      <span class="prox-vs">VS</span>
+      <span id="proxVisita">-</span>
+    </div>
+    <div class="prox-fecha" id="proxFecha">-</div>
+    <div class="prox-countdown">
+      <div class="prox-unit"><span id="proxDias">00</span><span>días</span></div>
+      <div class="prox-sep">:</div>
+      <div class="prox-unit"><span id="proxHoras">00</span><span>hs</span></div>
+      <div class="prox-sep">:</div>
+      <div class="prox-unit"><span id="proxMins">00</span><span>min</span></div>
+      <div class="prox-sep">:</div>
+      <div class="prox-unit"><span id="proxSegs">00</span><span>seg</span></div>
+    </div>
   </div>
 </div>
 
@@ -399,18 +642,35 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
         <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Ultimas noticias</div></div>
         <div class="xn-hero-card">
           <div class="xn-hero-img">
+            <div class="xn-hero-leyendo"><div class="xn-hero-leyendo-dot"></div><span class="xn-hero-leyendo-txt"><span id="heroLeyendo">847</span> leyendo ahora</span></div>
             <div class="xn-hero-star"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></div>
             <div>
-              <div class="xn-tag oro">Fichajes</div>
+              <span class="xn-hero-exclusivo">Exclusivo</span><div class="xn-tag oro" style="display:inline-block;">Fichajes</div>
               <div class="xn-hero-titulo">Boca va con todo por refuerzo europeo: negociacion avanzada con club de LaLiga</div>
             </div>
           </div>
         </div>
         <div class="xn-notas-grid">
-          <div class="xn-nota"><div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div><div class="xn-nota-meta">hace 2h &middot; 4 min</div></div>
-          <div class="xn-nota"><div class="xn-tag verde">Stats</div><div class="xn-nota-titulo">Merentiel supera a Palermo en goles en un solo torneo</div><div class="xn-nota-meta">hace 4h &middot; 3 min</div></div>
-          <div class="xn-nota"><div class="xn-tag gris">Mercado</div><div class="xn-nota-titulo">Cavani abre la puerta a renovar hasta fin de 2025</div><div class="xn-nota-meta">hace 5h &middot; 2 min</div></div>
-          <div class="xn-nota"><div class="xn-tag rojo">Informe</div><div class="xn-nota-titulo">Los 5 jugadores que mas corrieron en el Superclasico</div><div class="xn-nota-meta">ayer &middot; 5 min</div></div>
+          <div class="xn-nota">
+            <div class="xn-nota-img" style="background:linear-gradient(135deg,#001440 0%,#003399 100%);"><div class="xn-nota-img-ico">&#9878;</div></div>
+            <div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div>
+            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 2h &middot; 4 min</div><div class="xn-nota-vistas">&#128065; 3.2K</div></div>
+          </div>
+          <div class="xn-nota">
+            <div class="xn-nota-img" style="background:linear-gradient(135deg,#0a3d1a 0%,#1a7a3a 100%);"><div class="xn-nota-img-ico">&#128202;</div></div>
+            <div class="xn-tag verde">Stats</div><div class="xn-nota-titulo">Merentiel supera a Palermo en goles en un solo torneo</div>
+            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 4h &middot; 3 min</div><div class="xn-nota-vistas">&#128065; 5.8K</div></div>
+          </div>
+          <div class="xn-nota">
+            <div class="xn-nota-img" style="background:linear-gradient(135deg,#1a1a2e 0%,#334477 100%);"><div class="xn-nota-img-ico">&#128176;</div></div>
+            <div class="xn-tag gris">Mercado</div><div class="xn-nota-titulo">Cavani abre la puerta a renovar hasta fin de 2025</div>
+            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 5h &middot; 2 min</div><div class="xn-nota-vistas">&#128065; 2.1K</div></div>
+          </div>
+          <div class="xn-nota">
+            <div class="xn-nota-img" style="background:linear-gradient(135deg,#4a0a00 0%,#cc2200 100%);"><div class="xn-nota-img-ico">&#9889;</div></div>
+            <div class="xn-tag rojo">Informe</div><div class="xn-nota-titulo">Los 5 jugadores que mas corrieron en el Superclasico</div>
+            <div class="xn-nota-footer"><div class="xn-nota-meta">ayer &middot; 5 min</div><div class="xn-nota-vistas">&#128065; 8.4K</div></div>
+          </div>
         </div>
       </div>
 
@@ -435,6 +695,71 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
         </div>
         <div class="xn-votos" id="enc-total">4.382 votos</div>
       </div>
+
+      <div class="xn-dato-dia" id="datoDia">
+        <div class="xn-dato-top">
+          <div class="xn-dato-badge">&#128161; Dato Xeneize del día</div>
+          <div class="xn-dato-share" onclick="compartirDato()">&#128257; Compartir</div>
+        </div>
+        <div class="xn-dato-txt" id="datoTxt">Cargando dato...</div>
+      </div>
+
+      <div class="xn-predictor" id="predictorSec">
+        <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Predictor Xeneize</div></div>
+        <div class="xn-pred-sub">¿Qué resultado esperás en el próximo partido?</div>
+        <div class="xn-pred-matchlbl" id="predMatchLbl">Boca Juniors vs ...</div>
+        <div class="xn-pred-opts">
+          <div class="xn-pred-opt" id="predOptW" onclick="predVotar('W')">
+            <div style="font-size:22px;">&#129351;</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);text-transform:uppercase;letter-spacing:.5px;">Ganamos</div>
+          </div>
+          <div class="xn-pred-opt" id="predOptD" onclick="predVotar('D')">
+            <div style="font-size:22px;">&#9876;&#65039;</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);text-transform:uppercase;letter-spacing:.5px;">Empate</div>
+          </div>
+          <div class="xn-pred-opt" id="predOptL" onclick="predVotar('L')">
+            <div style="font-size:22px;">&#128532;</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);text-transform:uppercase;letter-spacing:.5px;">Perdemos</div>
+          </div>
+        </div>
+        <div id="predResults" style="display:none;">
+          <div style="margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--txt3);">Comunidad Xeneize vota:</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--txt2);width:72px;">Ganamos</div>
+            <div class="xn-pred-bar"><div class="xn-pred-bar-fill win" id="predBarW" style="width:0%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);" id="predPctW">0%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--txt2);width:72px;">Empate</div>
+            <div class="xn-pred-bar"><div class="xn-pred-bar-fill draw" id="predBarD" style="width:0%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);" id="predPctD">0%</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--txt2);width:72px;">Perdemos</div>
+            <div class="xn-pred-bar"><div class="xn-pred-bar-fill lose" id="predBarL" style="width:0%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:var(--txt);" id="predPctL">0%</div>
+          </div>
+          <div style="margin-top:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--txt3);" id="predTotalVotos"></div>
+        </div>
+      </div>
+
+      <div class="xn-quiz">
+        <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Quiz Xeneize del día</div></div>
+        <div class="xn-quiz-card" id="quizCard">
+          <div class="xn-quiz-top">
+            <div class="xn-quiz-badge">&#129504; Trivia Boca</div>
+            <div class="xn-quiz-pts">Pts totales: <span id="quizPtsTotal">0</span></div>
+          </div>
+          <div class="xn-quiz-pregunta" id="quizPregunta">Cargando pregunta...</div>
+          <div class="xn-quiz-opts" id="quizOpts"></div>
+          <div class="xn-quiz-result" id="quizResult" style="display:none;"></div>
+          <div class="xn-quiz-score-row" id="quizScoreRow" style="display:none;">
+            <div class="xn-quiz-score-box"><div class="xn-quiz-score-n" id="quizRacha">0</div><div class="xn-quiz-score-lbl">Racha aciertos</div></div>
+            <div class="xn-quiz-score-box"><div class="xn-quiz-score-n" id="quizCorrectas">0</div><div class="xn-quiz-score-lbl">Correctas totales</div></div>
+            <div class="xn-quiz-score-box"><div class="xn-quiz-score-n" id="quizStreak">0</div><div class="xn-quiz-score-lbl">Días jugados</div></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="xn-sidebar">
@@ -448,6 +773,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
         </div>
         <button class="xn-btn" onclick="ir('foro',null)">Entrar al foro</button>
         <button class="xn-btn oro" onclick="ir('cerebro',null)">&#129504; Cerebro Xeneize</button>
+        <button class="xn-btn" onclick="abrirLogros()" style="background:#1a1a2e;margin-top:6px;">&#127942; Mis Logros</button>
       </div>
     </div>
   </div>
@@ -698,7 +1024,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 
 <footer class="xn-footer">
   <div class="xn-footer-logo">XENEIZE <span>NEWS!</span></div>
-  <div class="xn-footer-txt">El medio digital mas innovador de Boca Juniors &middot; 2025</div>
+  <div class="xn-footer-txt">El medio digital mas innovador de Boca Juniors &middot; 2026</div>
 </footer>
 </div>
 
@@ -727,8 +1053,35 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 
 <script>
 const BACKEND='https://xeneize-backend.vercel.app';
-const BOCA_ID=451;
+const BOCA_ID=773;
 let statsData=null;
+let proxMatchDate=null,proxCountdownInterval=null;
+
+function tickCountdown(){
+  if(!proxMatchDate)return;
+  const diff=proxMatchDate-new Date();
+  const pad=n=>String(Math.max(0,n)).padStart(2,'0');
+  if(diff<=0){['proxDias','proxHoras','proxMins','proxSegs'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='00';});return;}
+  document.getElementById('proxDias').textContent=pad(Math.floor(diff/86400000));
+  document.getElementById('proxHoras').textContent=pad(Math.floor((diff%86400000)/3600000));
+  document.getElementById('proxMins').textContent=pad(Math.floor((diff%3600000)/60000));
+  document.getElementById('proxSegs').textContent=pad(Math.floor((diff%60000)/1000));
+}
+
+function setProximoPartido(matches){
+  const prox=matches.find(m=>m.status==='SCHEDULED');
+  if(!prox)return;
+  proxMatchDate=new Date(prox.utcDate);
+  document.getElementById('proxLocal').textContent=acortar(prox.homeTeam.name);
+  document.getElementById('proxVisita').textContent=acortar(prox.awayTeam.name);
+  const fecha=proxMatchDate.toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'long'});
+  const hora=proxMatchDate.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('proxFecha').textContent=fecha+' · '+hora+'h';
+  document.getElementById('xn-proximo').style.display='block';
+  if(proxCountdownInterval)clearInterval(proxCountdownInterval);
+  tickCountdown();
+  proxCountdownInterval=setInterval(tickCountdown,1000);
+}
 
 function ir(sec,btn){
   document.querySelectorAll('.xn-sec').forEach(s=>s.classList.remove('visible'));
@@ -814,6 +1167,7 @@ async function cargarStats(){
     renderTabla(table,'tablaFull',28);
     renderPartidos(matches,'partidosHome');
     renderPartidos(matches,'partidosFull');
+    setProximoPartido(matches);
 
     const tickerParts=[];
     if(boca)tickerParts.push('Boca #'+boca.position+' con '+boca.points+' pts');
@@ -834,8 +1188,13 @@ async function cargarStats(){
   }
 }
 
-let eV=[62,24,14],eT=4382,eVotado=false;
-function votar(i){if(eVotado)return;eVotado=true;eV[i]++;eT++;const s=eV.reduce((a,b)=>a+b,0);eV.forEach((v,j)=>{const p=Math.round((v/s)*100);document.getElementById('ef'+j).style.width=p+'%';document.getElementById('ep'+j).textContent=p+'%';});document.getElementById('enc-total').textContent=eT.toLocaleString('es-AR')+' votos';}
+(function(){
+  const saved=JSON.parse(localStorage.getItem('xn_enc_v1')||'null');
+  var eV=saved?saved.v:[62,24,14],eT=saved?saved.t:4382,eVotado=saved?saved.voted:false;
+  function renderEnc(){const s=eV.reduce((a,b)=>a+b,0);eV.forEach((v,j)=>{const p=Math.round((v/s)*100);const ef=document.getElementById('ef'+j);const ep=document.getElementById('ep'+j);if(ef)ef.style.width=p+'%';if(ep)ep.textContent=p+'%';});const et=document.getElementById('enc-total');if(et)et.textContent=eT.toLocaleString('es-AR')+' votos';}
+  renderEnc();
+  window.votar=function(i){if(eVotado)return;eVotado=true;eV[i]++;eT++;renderEnc();localStorage.setItem('xn_enc_v1',JSON.stringify({v:eV,t:eT,voted:true}));desbloquearLogro('voto1');};
+})();
 
 const AVC=[{bg:'#dbeafe',c:'#1e40af'},{bg:'#fce7f3',c:'#9d174d'},{bg:'#d1fae5',c:'#065f46'},{bg:'#ede9fe',c:'#5b21b6'},{bg:'rgba(245,168,0,0.2)',c:'#7a5000'},{bg:'#fee2e2',c:'#991b1b'}];
 const RNG=[{min:0,max:20,cls:'u-rookie',badge:'rb-r',label:'Rookie'},{min:21,max:100,cls:'u-hincha',badge:'rb-h',label:'Hincha'},{min:101,max:300,cls:'u-fanatico',badge:'rb-f',label:'Fanatico'},{min:301,max:9999,cls:'u-xeneize',badge:'rb-x',label:'Xeneize de Ley'},{min:-1,max:-1,cls:'u-socio',badge:'rb-s',label:'Socio Digital'}];
@@ -857,12 +1216,13 @@ let filtroActivo='todos',catSel='superclasico';
 function rHilo(h){const c=calor(h.calidad);const pct=Math.min(100,h.calidad);return '<div class="f-hilo'+(h.pinned?' pinned':'')+'" id="fh-'+h.id+'">'+(h.pinned?'<div class="f-pin-lbl">Anclado - Socio Digital</div>':'')+'<div class="f-hilo-top"><div class="f-av-wrap"><div class="f-av'+(h.socio?' socio':'')+'" style="'+avS(h.av)+'">'+h.ini+'</div>'+(h.socio&&h.flair?'<div class="f-flair">'+h.flair+'</div>':'')+'</div><div class="f-hilo-main"><div class="f-hilo-meta">'+uHTML(h.user,h.pts,h.socio,h.flair,14)+'<span class="f-tiempo">'+h.tiempo+'</span><span class="f-bcalor" id="fb-'+h.id+'" style="background:'+c.bg+';color:'+c.color+';">'+c.txt+'</span>'+catB(h.cat)+'</div><div class="f-titulo" onclick="toggleHilo('+h.id+')">'+h.titulo+'</div><div class="f-preview">'+h.preview+'</div><div class="f-acciones"><button class="f-acc'+(h.misLike?' liked':'')+'" onclick="darLike('+h.id+',this)"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2C6.8 3.5 4 4.5 4 7.5c0 2.2 1.8 4 4 4s4-1.8 4-4C12 4.5 9.2 3.5 8 2z"/><rect x="5" y="11.5" width="6" height="1.2" rx="0.6"/><rect x="5.5" y="12.7" width="5" height="1" rx="0.5"/></svg><span id="flk-'+h.id+'">'+h.likes+'</span></button><button class="f-acc" onclick="toggleHilo('+h.id+')"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12v7.5a1 1 0 01-1 1H3a1 1 0 01-1-1V3z"/><path d="M5 11.5v2l3-2"/></svg><span id="frc-'+h.id+'">'+h.resps.length+' resps.</span></button></div><div class="f-calor-wrap"><div class="f-calor-track"><div class="f-calor-fill" id="fbar-'+h.id+'" style="width:'+pct+'%;background:'+c.bar+';"></div></div><div class="f-calor-pct">'+pct+'</div></div></div></div><div class="f-exp" id="fexp-'+h.id+'"><div class="f-resps" id="frlist-'+h.id+'">'+rResps(h)+'</div><div class="f-resp-inp"><input id="fri-'+h.id+'" placeholder="Tu respuesta..."/><button class="f-resp-send" onclick="responder('+h.id+')">Responder</button></div></div></div>';}
 function renderForo(){const lista=document.getElementById('fLista');let arr=filtroActivo==='todos'?[...HILOS]:filtroActivo==='fuego'?HILOS.filter(h=>h.calidad>=80):HILOS.filter(h=>h.cat===filtroActivo);arr.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));lista.innerHTML=arr.length?arr.map(rHilo).join(''):'<div style="padding:28px;text-align:center;color:var(--txt3);font-family:Barlow Condensed,sans-serif;font-size:16px;font-weight:700;">No hay hilos en esta categoria.</div>';}
 function toggleHilo(id){const e=document.getElementById('fexp-'+id);if(!e)return;const o=e.classList.contains('open');document.querySelectorAll('.f-exp.open').forEach(x=>x.classList.remove('open'));if(!o)e.classList.add('open');}
-function darLike(id,btn){const h=HILOS.find(x=>x.id===id);if(!h)return;h.misLike=!h.misLike;h.likes+=h.misLike?1:-1;h.calidad=Math.min(100,Math.max(0,h.calidad+(h.misLike?3:-3)));btn.classList.toggle('liked');const c=calor(h.calidad);document.getElementById('flk-'+id).textContent=h.likes;const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}}
-function responder(id){const inp=document.getElementById('fri-'+id);const txt=inp.value.trim();if(!txt)return;const h=HILOS.find(x=>x.id===id);h.resps.push({user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',txt});h.calidad=Math.min(100,h.calidad+4);inp.value='';document.getElementById('frlist-'+id).innerHTML=rResps(h);document.getElementById('frc-'+id).textContent=h.resps.length+' resps.';const c=calor(h.calidad);const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}}
+function darLike(id,btn){const h=HILOS.find(x=>x.id===id);if(!h)return;h.misLike=!h.misLike;h.likes+=h.misLike?1:-1;h.calidad=Math.min(100,Math.max(0,h.calidad+(h.misLike?3:-3)));btn.classList.toggle('liked');const c=calor(h.calidad);document.getElementById('flk-'+id).textContent=h.likes;const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}
+  if(h.misLike){desbloquearLogro('like1');const n=lgrStat('likes',1);if(n>=10)desbloquearLogro('like10');}}
+function responder(id){const inp=document.getElementById('fri-'+id);const txt=inp.value.trim();if(!txt)return;const h=HILOS.find(x=>x.id===id);h.resps.push({user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',txt});desbloquearLogro('resp1');h.calidad=Math.min(100,h.calidad+4);inp.value='';document.getElementById('frlist-'+id).innerHTML=rResps(h);document.getElementById('frc-'+id).textContent=h.resps.length+' resps.';const c=calor(h.calidad);const bar=document.getElementById('fbar-'+id);if(bar){bar.style.width=Math.min(100,h.calidad)+'%';bar.style.background=c.bar;}const badge=document.getElementById('fb-'+id);if(badge){badge.style.background=c.bg;badge.style.color=c.color;badge.textContent=c.txt;}}
 function filtrar(el,tipo){document.querySelectorAll('.f-filtro').forEach(f=>f.classList.remove('activo'));el.classList.add('activo');filtroActivo=tipo;renderForo();}
 function toggleForm(){const f=document.getElementById('nuevoForm');f.classList.toggle('visible');if(f.classList.contains('visible'))document.getElementById('nTitulo').focus();}
 function selCat(el){document.querySelectorAll('.f-cat').forEach(c=>{c.classList.remove('sel','superclasico','mercado','debate','historia','tactica');});el.classList.add('sel',el.dataset.cat);catSel=el.dataset.cat;}
-function publicar(){const t=document.getElementById('nTitulo').value.trim();const tx=document.getElementById('nTexto').value.trim();if(!t)return;HILOS.unshift({id:Date.now(),user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',tiempo:'ahora mismo',cat:catSel,calidad:10,titulo:t,preview:tx||'Hilo recien publicado.',likes:0,misLike:false,pinned:false,resps:[]});document.getElementById('nTitulo').value='';document.getElementById('nTexto').value='';toggleForm();filtroActivo='todos';document.querySelectorAll('.f-filtro').forEach((f,i)=>f.classList.toggle('activo',i===0));renderForo();}
+function publicar(){const t=document.getElementById('nTitulo').value.trim();const tx=document.getElementById('nTexto').value.trim();if(!t)return;HILOS.unshift({id:Date.now(),user:'Vos',ini:'TU',av:4,pts:50,socio:false,flair:'',tiempo:'ahora mismo',cat:catSel,calidad:10,titulo:t,preview:tx||'Hilo recien publicado.',likes:0,misLike:false,pinned:false,resps:[]});document.getElementById('nTitulo').value='';document.getElementById('nTexto').value='';toggleForm();filtroActivo='todos';document.querySelectorAll('.f-filtro').forEach((f,i)=>f.classList.toggle('activo',i===0));renderForo();desbloquearLogro('hilo1');}
 function abrirModal(){document.getElementById('fModal').classList.add('open');}
 function cerrarModal(){document.getElementById('fModal').classList.remove('open');}
 function selFlair(el){document.querySelectorAll('.f-flair-opt').forEach(f=>f.classList.remove('sel'));el.classList.add('sel');}
@@ -888,14 +1248,134 @@ const cxChatEl=document.getElementById('cxChat');
 const cxInpEl=document.getElementById('cxInp');
 function cxAdd(rol,html){const isBot=rol==='bot';const div=document.createElement('div');div.className='cx-msg'+(isBot?'':' user');div.innerHTML='<div class="cx-av '+(isBot?'bot':'usr')+'">'+(isBot?'CX':'Vos')+'</div><div><div class="cx-bubble '+(isBot?'bot':'usr')+'">'+html+'</div></div>';cxChatEl.appendChild(div);cxChatEl.scrollTop=cxChatEl.scrollHeight;}
 function cxTyping(show){const ex=document.getElementById('cxT');if(show&&!ex){const d=document.createElement('div');d.id='cxT';d.className='cx-typing';d.innerHTML='<div class="cx-av bot">CX</div><div class="cx-typing-dots"><span></span><span></span><span></span></div>';cxChatEl.appendChild(d);cxChatEl.scrollTop=cxChatEl.scrollHeight;}else if(!show&&ex)ex.remove();}
-function cxEnviar(){const txt=cxInpEl.value.trim();if(!txt)return;cxAdd('usr',txt);cxInpEl.value='';cxInpEl.style.height='auto';cxTyping(true);setTimeout(()=>{cxTyping(false);const res=buscar(txt);cxAdd('bot',res?fmtResp(res):FALLBACK[Math.floor(Math.random()*FALLBACK.length)]);},900+Math.random()*600);}
+function cxEnviar(){const txt=cxInpEl.value.trim();if(!txt)return;cxAdd('usr',txt);cxInpEl.value='';cxInpEl.style.height='auto';cxTyping(true);desbloquearLogro('cerebro1');const n=lgrStat('cerebro',1);if(n>=5)desbloquearLogro('cerebro5');setTimeout(()=>{cxTyping(false);const res=buscar(txt);cxAdd('bot',res?fmtResp(res):FALLBACK[Math.floor(Math.random()*FALLBACK.length)]);},900+Math.random()*600);}
 function cxPreguntar(txt){cxInpEl.value=txt;cxEnviar();}
 cxInpEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();cxEnviar();}});
 cxInpEl.addEventListener('input',()=>{cxInpEl.style.height='auto';cxInpEl.style.height=Math.min(cxInpEl.scrollHeight,110)+'px';});
 
 renderForo();
 cargarStats();
+
+// SISTEMA DE LOGROS
+const LOGROS=[
+  {id:'bienvenido',ico:'⭐',tit:'Primer Paso',desc:'Primera visita a Xeneize News'},
+  {id:'racha3',ico:'🔥',tit:'En Racha',desc:'3 días seguidos visitando'},
+  {id:'racha7',ico:'🏅',tit:'Xeneize Fiel',desc:'7 días de racha'},
+  {id:'racha14',ico:'💛',tit:'Hincha de Ley',desc:'14 días de racha'},
+  {id:'racha30',ico:'🏆',tit:'La Doce',desc:'30 días de racha'},
+  {id:'voto1',ico:'🗳️',tit:'Voz del Pueblo',desc:'Votaste en tu primera encuesta'},
+  {id:'cerebro1',ico:'🧠',tit:'Sabelotodo',desc:'Usaste el Cerebro Xeneize'},
+  {id:'hilo1',ico:'📢',tit:'Periodista Xeneize',desc:'Publicaste tu primer hilo'},
+  {id:'resp1',ico:'💬',tit:'Debatidor',desc:'Respondiste en el foro'},
+  {id:'like1',ico:'❤️',tit:'Dale Bo',desc:'Le diste like a un post'},
+  {id:'like10',ico:'🔥',tit:'Fanático del Foro',desc:'Diste 10 likes en total'},
+  {id:'cerebro5',ico:'💎',tit:'El que Sabe',desc:'Hiciste 5 preguntas al Cerebro'},
+  {id:'predictor1',ico:'🎯',tit:'Adivino Xeneize',desc:'Hiciste tu primera predicción de partido'},
+  {id:'quiz1',ico:'🧩',tit:'Primer Acierto',desc:'Respondiste bien el Quiz del día'},
+  {id:'quiz_racha5',ico:'🔥',tit:'Cerebrito Xeneize',desc:'5 respuestas correctas seguidas'},
+  {id:'quiz10',ico:'🏅',tit:'Sabelotodo del Foro',desc:'10 respuestas correctas en total'},
+  {id:'pwa_instalada',ico:'📲',tit:'Xeneize en el Celu',desc:'Instalaste Xeneize News en tu pantalla de inicio'},
+];
+
+function lgrData(){return JSON.parse(localStorage.getItem('xn_logros')||'{"unlocked":[],"stats":{}}');}
+function lgrSave(d){localStorage.setItem('xn_logros',JSON.stringify(d));}
+
+let lgrToastQ=[];let lgrToastRunning=false;
+function mostrarToastLogro(logro){
+  lgrToastQ.push(logro);
+  if(!lgrToastRunning)procesarToastLogro();
+}
+function procesarToastLogro(){
+  if(!lgrToastQ.length){lgrToastRunning=false;return;}
+  lgrToastRunning=true;
+  const l=lgrToastQ.shift();
+  const t=document.getElementById('xnToastLogro');
+  document.getElementById('lgrToastIco').textContent=l.ico;
+  document.getElementById('lgrToastTit').textContent=l.tit;
+  document.getElementById('lgrToastDesc').textContent=l.desc;
+  t.classList.add('show');
+  setTimeout(()=>{t.classList.remove('show');setTimeout(procesarToastLogro,400);},3800);
+}
+
+function desbloquearLogro(id){
+  const d=lgrData();
+  if(d.unlocked.includes(id))return;
+  d.unlocked.push(id);
+  lgrSave(d);
+  const l=LOGROS.find(x=>x.id===id);
+  if(l)mostrarToastLogro(l);
+}
+
+function lgrStat(key,inc){
+  const d=lgrData();
+  d.stats=d.stats||{};
+  d.stats[key]=(d.stats[key]||0)+inc;
+  lgrSave(d);
+  return d.stats[key];
+}
+
+function abrirLogros(){
+  const d=lgrData();
+  const total=LOGROS.length;
+  const desbloqueados=d.unlocked.length;
+  document.getElementById('lgrProgN').textContent=desbloqueados;
+  document.getElementById('lgrProgTotal').textContent=total;
+  document.getElementById('lgrProgFill').style.width=Math.round((desbloqueados/total)*100)+'%';
+  document.getElementById('lgrGrid').innerHTML=LOGROS.map(l=>{
+    const ok=d.unlocked.includes(l.id);
+    return '<div class="lgr-item '+(ok?'ok':'lock')+'">'
+      +'<div class="lgr-item-ico">'+l.ico+'</div>'
+      +'<div class="lgr-item-tit">'+l.tit+'</div>'
+      +'<div class="lgr-item-desc">'+l.desc+'</div>'
+      +'<span class="lgr-item-badge '+(ok?'ok':'lock')+'">'+(ok?'Desbloqueado':'Bloqueado')+'</span>'
+      +'</div>';
+  }).join('');
+  document.getElementById('lgrOverlay').classList.add('open');
+}
+function cerrarLogros(){document.getElementById('lgrOverlay').classList.remove('open');}
+document.getElementById('lgrOverlay').addEventListener('click',function(e){if(e.target===this)cerrarLogros();});
+
+// RACHA XENEIZE
+(function(){
+  const hoy=new Date().toDateString();
+  const ayer=new Date();ayer.setDate(ayer.getDate()-1);const ayerStr=ayer.toDateString();
+  const d=JSON.parse(localStorage.getItem('xn_racha')||'{}');
+  let racha=d.racha||0,ultima=d.ultima||null,toast=null;
+
+  if(!ultima){racha=1;toast={ico:'⭐',tit:'¡Bienvenido, xeneize!',msg:'Tu racha arranca hoy. Entrá todos los días y desbloqueá logros.'};setTimeout(()=>desbloquearLogro('bienvenido'),1200);}
+  else if(ultima===hoy){/* ya visitó hoy, no tocar */}
+  else if(ultima===ayerStr){racha++;
+    if(racha===3){toast={ico:'🔥',tit:'¡3 días seguidos!',msg:'Estás en racha. Seguí así y vas a ser Xeneize de Ley.'};setTimeout(()=>desbloquearLogro('racha3'),1200);}
+    else if(racha===7){toast={ico:'🏆',tit:'¡Una semana de racha!',msg:'7 días seguidos. Sos más fiel que Riquelme al 10.'};setTimeout(()=>desbloquearLogro('racha7'),1200);}
+    else if(racha===14){toast={ico:'⚡',tit:'¡14 días! Imparable.',msg:'Dos semanas seguidas. La Bombonera te espera.'};setTimeout(()=>desbloquearLogro('racha14'),1200);}
+    else if(racha===30){toast={ico:'💎',tit:'¡30 días de racha!',msg:'Sos el 12 del mes. Nadie te para.'};setTimeout(()=>desbloquearLogro('racha30'),1200);}
+    else toast={ico:'🔥',tit:'Racha activa: '+racha+' días',msg:'Seguís en racha. No la rompas ahora.'};
+  }else{
+    const ant=racha;racha=1;
+    if(ant>2)toast={ico:'😓',tit:'Rompiste la racha de '+ant+' días',msg:'No pasa nada. Arrancás de nuevo hoy.'};
+  }
+
+  localStorage.setItem('xn_racha',JSON.stringify({racha,ultima:hoy}));
+  const badge=document.getElementById('xnStreak');
+  const num=document.getElementById('xnStreakN');
+  if(badge&&num&&racha>0){num.textContent=racha;badge.style.display='flex';}
+
+  if(toast){
+    const t=document.getElementById('xnToast');
+    document.getElementById('xnToastIco').textContent=toast.ico;
+    document.getElementById('xnToastTit').textContent=toast.tit;
+    document.getElementById('xnToastMsg').textContent=toast.msg;
+    if(t){setTimeout(()=>t.classList.add('show'),800);setTimeout(()=>t.classList.remove('show'),5500);}
+  }
+})();
 setInterval(()=>{const el=document.getElementById('f-online');if(el){const n=parseInt(el.textContent)||34;el.textContent=Math.max(18,n+Math.floor(Math.random()*5)-2);}},4000);
+
+// Contador "leyendo ahora" en hero
+setInterval(()=>{const el=document.getElementById('heroLeyendo');if(el){const n=parseInt(el.textContent.replace(/\./g,'').replace(/,/g,''))||847;el.textContent=(Math.max(600,n+Math.floor(Math.random()*9)-4)).toLocaleString('es-AR');}},3500);
+
+// Scroll reveal en notas
+const revealObs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});},{threshold:0.12});
+document.querySelectorAll('.xn-nota').forEach((el,i)=>{el.style.transitionDelay=(i*80)+'ms';revealObs.observe(el);});
 
 const hBGS=[{id:'azul',bg:'#002060'},{id:'azul-oro',bg:'linear-gradient(135deg,#002060 60%,#e09500)'},{id:'noche',bg:'#000814'},{id:'bombonera',bg:'linear-gradient(160deg,#001440 0%,#003399 100%)'},{id:'campeon',bg:'linear-gradient(135deg,#001440 0%,#7a5000 100%)'},{id:'superclasico',bg:'linear-gradient(135deg,#002060 0%,#aa1100 100%)'}];
 const hSTICKERS=[{id:'estrella',v:'&#9733;'},{id:'fuego',v:'&#128293;'},{id:'trofeo',v:'&#127942;'},{id:'pelota',v:'&#9917;'},{id:'corazon',v:'&#128153;'},{id:'punyo',v:'&#9994;'},{id:'micro',v:'&#127891;'},{id:'cohete',v:'&#128640;'}];
@@ -917,7 +1397,7 @@ function hRenderRow(){
 }
 function hRenderFeed(){
   const feed=document.getElementById('hFeed');if(!feed)return;
-  feed.innerHTML=hStories.map((s,i)=>'<div class="h-feed-item2"><div class="h-feed-header2"><div class="h-feed-av2" style="'+hAvStyle(s.av)+'" onclick="hAbrirViewer('+i+')">'+s.ini+'</div><div style="flex:1;"><div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:800;color:var(--txt);">'+s.user+'</div><div style="font-size:11px;color:var(--txt3);">'+s.time+'</div></div></div><div class="h-feed-card2" style="background:'+s.bg+';" onclick="hAbrirViewer('+i+')"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.15;">'+s.sticker+'</div><div class="h-feed-texto2">'+s.texto+'</div></div><div class="h-feed-reactions-row2">'+hREACC.map(r=>'<div class="h-feed-react2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarFeed('+s.id+',''+r.id+'',this)"><span style="font-size:14px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:var(--txt2);">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:800;color:var(--txt3);" id="hfr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('')+'</div></div>').join('');
+  feed.innerHTML=hStories.map((s,i)=>'<div class="h-feed-item2"><div class="h-feed-header2"><div class="h-feed-av2" style="'+hAvStyle(s.av)+'" onclick="hAbrirViewer('+i+')">'+s.ini+'</div><div style="flex:1;"><div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:800;color:var(--txt);">'+s.user+'</div><div style="font-size:11px;color:var(--txt3);">'+s.time+'</div></div></div><div class="h-feed-card2" style="background:'+s.bg+';" onclick="hAbrirViewer('+i+')"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:0.15;">'+s.sticker+'</div><div class="h-feed-texto2">'+s.texto+'</div></div><div class="h-feed-reactions-row2">'+hREACC.map(r=>'<div class="h-feed-react2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarFeed('+s.id+',\''+r.id+'\',this)"><span style="font-size:14px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:700;color:var(--txt2);">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:800;color:var(--txt3);" id="hfr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('')+'</div></div>').join('');
 }
 function hReaccionarFeed(sid,rid,el){const s=hStories.find(x=>x.id===sid);if(!s)return;if(s.misReacc[rid]){s.reacciones[rid]--;delete s.misReacc[rid];el.classList.remove('reacted');}else{s.reacciones[rid]=(s.reacciones[rid]||0)+1;s.misReacc[rid]=true;el.classList.add('reacted');}const c=document.getElementById('hfr'+sid+rid);if(c)c.textContent=s.reacciones[rid]||0;}
 function hBuildCard(s){return '<div style="position:absolute;inset:0;background:'+s.bg+';"></div><div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:48px;opacity:0.2;">'+s.sticker+'</div><div style="position:relative;z-index:2;padding:20px;width:100%;text-align:center;"><div style="display:inline-block;font-family:Barlow Condensed,sans-serif;font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;background:'+s.tag.bg+';color:'+s.tag.c+';margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">'+s.tag.label+'</div><div class="h-story-texto2">'+s.texto+'</div></div><div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:52px;">'+s.sticker+'</div>';}
@@ -929,7 +1409,7 @@ function hRenderViewer(){
   document.getElementById('hViewerTime').textContent=s.time;
   document.getElementById('hViewerCard').innerHTML=hBuildCard(s);
   document.getElementById('hViewerProgress').innerHTML=hStories.map((_,i)=>'<div class="h-prog-bar2"><div class="h-prog-fill2'+(i<hViewerIdx?' done':i===hViewerIdx?' active':'')+'"></div></div>').join('');
-  document.getElementById('hViewerReactions').innerHTML=hREACC.map(r=>'<div class="h-reaction2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarViewer('+s.id+',''+r.id+'',this)"><span style="font-size:16px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:700;color:white;">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;color:rgba(255,255,255,0.7);" id="hvr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('');
+  document.getElementById('hViewerReactions').innerHTML=hREACC.map(r=>'<div class="h-reaction2'+(s.misReacc[r.id]?' reacted':'')+'" onclick="hReaccionarViewer('+s.id+',\''+r.id+'\',this)"><span style="font-size:16px;">'+r.emoji+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:13px;font-weight:700;color:white;">'+r.label+'</span><span style="font-family:Barlow Condensed,sans-serif;font-size:12px;color:rgba(255,255,255,0.7);" id="hvr'+s.id+r.id+'">'+(s.reacciones[r.id]||0)+'</span></div>').join('');
   if(hViewerTimer)clearTimeout(hViewerTimer);
   hViewerTimer=setTimeout(()=>{if(hViewerIdx<hStories.length-1){hViewerIdx++;hRenderViewer();}else{hCerrarViewer();}},5000);
 }
@@ -947,9 +1427,9 @@ function hActualizarPreview(){
   p.innerHTML='<div style="position:absolute;inset:0;background:'+bg.bg+';"></div><div style="position:absolute;top:15px;left:50%;transform:translateX(-50%);font-size:36px;opacity:0.2;">'+sticker.v+'</div><div style="position:relative;z-index:2;padding:16px;width:100%;text-align:center;"><div style="display:inline-block;font-family:Barlow Condensed,sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px;background:'+tag.bg+';color:'+tag.c+';margin-bottom:10px;text-transform:uppercase;">'+tag.label+'</div><div style="font-family:Barlow Condensed,sans-serif;font-size:17px;font-weight:800;font-style:italic;color:white;line-height:1.3;">'+texto+'</div></div><div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:40px;">'+sticker.v+'</div>';
 }
 function hInitPickers(){
-  const bp=document.getElementById('hBgPicker');if(bp)bp.innerHTML=hBGS.map(b=>'<div class="h-bg-opt2'+(b.id===hBgSel?' sel':'')+'" style="background:'+b.bg+';" onclick="hSelBg(''+b.id+'',this)"></div>').join('');
-  const sp=document.getElementById('hStickerPicker');if(sp)sp.innerHTML=hSTICKERS.map(s=>'<div class="h-sticker-opt2'+(s.id===hStickerSel?' sel':'')+'" onclick="hSelSticker(''+s.id+'',this)">'+s.v+'</div>').join('');
-  const tp=document.getElementById('hTagPicker');if(tp)tp.innerHTML=hTAGS.map(t=>'<div class="h-tag-opt2'+(t.id===hTagSel?' sel':'')+'" style="background:'+t.bg+';color:'+t.c+';border-color:'+t.bg+';" onclick="hSelTag(''+t.id+'',this)">'+t.label+'</div>').join('');
+  const bp=document.getElementById('hBgPicker');if(bp)bp.innerHTML=hBGS.map(b=>'<div class="h-bg-opt2'+(b.id===hBgSel?' sel':'')+'" style="background:'+b.bg+';" onclick="hSelBg(\''+b.id+'\',this)"></div>').join('');
+  const sp=document.getElementById('hStickerPicker');if(sp)sp.innerHTML=hSTICKERS.map(s=>'<div class="h-sticker-opt2'+(s.id===hStickerSel?' sel':'')+'" onclick="hSelSticker(\''+s.id+'\',this)">'+s.v+'</div>').join('');
+  const tp=document.getElementById('hTagPicker');if(tp)tp.innerHTML=hTAGS.map(t=>'<div class="h-tag-opt2'+(t.id===hTagSel?' sel':'')+'" style="background:'+t.bg+';color:'+t.c+';border-color:'+t.bg+';" onclick="hSelTag(\''+t.id+'\',this)">'+t.label+'</div>').join('');
 }
 function hSelBg(id,el){hBgSel=id;document.querySelectorAll('.h-bg-opt2').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');hActualizarPreview();}
 function hSelSticker(id,el){hStickerSel=id;document.querySelectorAll('.h-sticker-opt2').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');hActualizarPreview();}
@@ -967,6 +1447,278 @@ function hPublicarHistoria(){
 }
 hRenderRow();hRenderFeed();
 
+// ── DATO XENEIZE DEL DÍA ──────────────────────────────────────────
+const DATOS_DIA=[
+  'Boca Juniors es el club argentino con más títulos internacionales: 18 trofeos oficiales.',
+  'La Bombonera fue inaugurada el 25 de mayo de 1940 con una victoria de Boca 2-0 sobre San Lorenzo.',
+  'Juan Román Riquelme convirtió 40 goles con la camiseta de Boca en torneos locales e internacionales.',
+  'Boca ganó la Copa Libertadores 6 veces: 1977, 2000, 2001, 2003, 2007 y 2023.',
+  'Martín Palermo es el máximo goleador histórico de Boca con 236 goles oficiales.',
+  'La canción "Dale Bo" se escucha en La Bombonera desde la década del 60.',
+  'Boca Juniors fue fundado el 3 de abril de 1905 por jóvenes inmigrantes en el barrio de La Boca.',
+  'El estadio Alberto J. Armando (La Bombonera) tiene capacidad para 57.395 espectadores.',
+  'Carlos Tevez vistió la camiseta azul y oro en tres etapas: 2001-04, 2015-16 y 2018-19.',
+  'Boca ganó su primera Copa Intercontinental en 1977 venciendo al Borussia Mönchengladbach.',
+  'Roman Riquelme anotó un golazo de tiro libre en la final de la Libertadores 2000 contra el Palmeiras.',
+  'La Bombonera es famosa por sus tribunas casi verticales que amplifican el ruido de la hinchada.',
+  'Boca ganó 34 títulos del campeonato argentino, más que ningún otro club del país.',
+  'El Superclásico entre Boca y River es considerado uno de los derbis más apasionantes del mundo.',
+  'En el Mundial de Clubes 2003, Boca venció al Milan en la final por penales.',
+  'Hugo Gatti fue el arquero más largo de la historia del club con más de 300 partidos.',
+  'Guillermo Barros Schelotto y Martín Palermo formaron el dúo goleador más temido de los 90.',
+  'La camiseta de Boca tiene el azul y el amarillo desde 1907, colors elegidos en el mástil de un barco sueco.',
+  'El gol de Palermo a Ecuador en 1999 fue anulado, pero él convirtió 3 penales en la Copa América.',
+  'Boca es el único club argentino en ganar la Copa Libertadores de forma consecutiva (2000 y 2001).',
+  'El hincha más famoso de Boca en el mundo fue Diego Maradona, xeneize de corazón.',
+  'La primera transmisión televisiva de un partido de Boca fue en 1951.',
+  'Boca Juniors tiene más de 65 peñas oficiales repartidas por todo el mundo.',
+  'En 2023 Boca volvió a ganar la Copa Libertadores tras 16 años, en el estadio Maracaná.',
+  'Sebastián Villa fue el jugador más rápido del plantel en 2021 con picos de 34 km/h.',
+  'El apodo "Xeneize" viene del genovés "zenéize", que significa "de Génova".',
+  'Boca ganó la Recopa Sudamericana en 4 oportunidades: 2005, 2006, 2008 y 2024.',
+  'La hinchada de Boca, La 12, es considerada una de las más influyentes del fútbol mundial.',
+  'El primer gol de la historia del club lo convirtió Alfredo Elli en 1905.',
+  'Fernando Gago fue el volante más elegante del fútbol argentino de su generación.',
+  'Tevez marcó el gol del título en la Libertadores 2003 en la tanda de penales contra el Santos.',
+  'La Bombonera tiene una forma especial: tres lados normales y uno con balcones casi verticales.',
+  'En los 90, Boca ganó tres Copas Libertadores en menos de una década.',
+  'Edinson Cavani llegó a Boca en 2023 para darle experiencia internacional al ataque.',
+  'El estadio de Boca lleva el nombre de Alberto José Armando, presidente del club entre 1954 y 1980.',
+  'Boca jugó 6 finales de Copa Libertadores y ganó 5: una marca histórica en el continente.',
+  'El primer clásico contra River se jugó en 1913, con victoria de Boca 2-1.',
+  'Marcelo Delgado, "El Chelo", fue pieza clave en los títulos internacionales de 2000 y 2001.',
+  'La Bombonera tembla literalmente con los saltos de la hinchada, algo único en el mundo.',
+  'Boca es el único club argentino con presencia en el Top 10 del ranking IFFHS de clubes del siglo XX.',
+];
+(function initDato(){
+  const el=document.getElementById('datoTxt');if(!el)return;
+  const doy=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+  el.textContent=DATOS_DIA[doy%DATOS_DIA.length];
+})();
+window.compartirDato=function(){
+  const txt=document.getElementById('datoTxt');if(!txt)return;
+  const msg='🔵🟡 Dato Xeneize del día:\n"'+txt.textContent+'"\n\nvía xeneizenews.com.ar';
+  if(navigator.share){navigator.share({text:msg}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(msg).then(()=>{const t=document.getElementById('xnToast');document.getElementById('xnToastIco').textContent='📋';document.getElementById('xnToastTit').textContent='¡Copiado!';document.getElementById('xnToastMsg').textContent='Pegalo donde quieras y compartilo.';if(t){t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}});}
+};
+
+// ── PREDICTOR ─────────────────────────────────────────────────────
+(function initPredictor(){
+  const today=new Date().toISOString().slice(0,10);
+  const saved=JSON.parse(localStorage.getItem('xn_pred_v1')||'null');
+  // Seed community votes (simulate base)
+  let votes=saved?saved.votes:{W:347,D:89,L:42};
+  if(saved&&saved.voto)renderPredResults(votes,saved.voto);
+  // Try to set match label from next fixture data already loaded
+  function trySetLabel(){
+    const lbl=document.getElementById('predMatchLbl');if(!lbl)return;
+    const ps=document.getElementById('proxLocal');
+    const pv=document.getElementById('proxVisita');
+    if(ps&&pv&&ps.textContent&&ps.textContent!=='-'){lbl.textContent=ps.textContent+' vs '+pv.textContent;}
+  }
+  setTimeout(trySetLabel,2500);
+})();
+function predVotar(opt){
+  const saved=JSON.parse(localStorage.getItem('xn_pred_v1')||'null');
+  let votes=saved?saved.votes:{W:347,D:89,L:42};
+  if(saved&&saved.voto){renderPredResults(votes,saved.voto);return;}
+  votes[opt]=(votes[opt]||0)+1;
+  localStorage.setItem('xn_pred_v1',JSON.stringify({votes,voto:opt,fecha:new Date().toISOString().slice(0,10)}));
+  renderPredResults(votes,opt);
+  desbloquearLogro('predictor1');
+}
+function renderPredResults(votes,miVoto){
+  const total=(votes.W||0)+(votes.D||0)+(votes.L||0);
+  const pct=function(v){return total?Math.round((v/total)*100):0;};
+  const pw=pct(votes.W),pd=pct(votes.D),pl=pct(votes.L);
+  document.getElementById('predBarW').style.width=pw+'%';
+  document.getElementById('predBarD').style.width=pd+'%';
+  document.getElementById('predBarL').style.width=pl+'%';
+  document.getElementById('predPctW').textContent=pw+'%';
+  document.getElementById('predPctD').textContent=pd+'%';
+  document.getElementById('predPctL').textContent=pl+'%';
+  document.getElementById('predTotalVotos').textContent=total.toLocaleString('es-AR')+' xeneizes votaron';
+  document.getElementById('predResults').style.display='block';
+  ['W','D','L'].forEach(o=>{
+    const el=document.getElementById('predOpt'+o);
+    if(el){el.classList.toggle('sel',o===miVoto);el.style.cursor='default';}
+  });
+}
+
+// ── QUIZ XENEIZE DEL DÍA ─────────────────────────────────────────
+const QUIZ=[
+  {p:'¿En qué año fue fundado Boca Juniors?',opts:['1903','1905','1908','1910'],r:1},
+  {p:'¿Cuántas Copas Libertadores ganó Boca?',opts:['4','5','6','7'],r:2},
+  {p:'¿Quién es el máximo goleador histórico de Boca?',opts:['Riquelme','Palermo','Maradona','Tevez'],r:1},
+  {p:'¿Cómo se llama oficialmente el estadio de Boca?',opts:['La Bombonera','Estadio Boca','Alberto J. Armando','Pedro Bidegaín'],r:2},
+  {p:'¿En qué año inauguraron La Bombonera?',opts:['1935','1938','1940','1945'],r:2},
+  {p:'¿De qué colores es la camiseta titular de Boca?',opts:['Azul y blanco','Azul y amarillo','Azul y negro','Verde y oro'],r:1},
+  {p:'¿Contra quién ganó Boca la Intercontinental 2000?',opts:['Real Madrid','Bayern Munich','Manchester Utd','Juventus'],r:0},
+  {p:'¿Qué número usaba Riquelme en Boca?',opts:['8','10','11','5'],r:1},
+  {p:'¿Cómo se apoda a la hinchada de Boca?',opts:['La Barra','La 12','Los de Siempre','La Fiel'],r:1},
+  {p:'¿En qué barrio está La Bombonera?',opts:['San Telmo','Palermo','La Boca','Barracas'],r:2},
+  {p:'¿Cuántos goles marcó Palermo con Boca?',opts:['198','220','236','251'],r:2},
+  {p:'¿Contra quién jugó Boca la final de la Libertadores 2023?',opts:['Fluminense','Flamengo','Palmeiras','Atlético Mineiro'],r:0},
+  {p:'¿En qué ciudad se jugó la final de la Libertadores 2023?',opts:['Buenos Aires','Santiago','Lima','Río de Janeiro'],r:3},
+  {p:'¿Quién fue DT de Boca en los títulos de 2000 y 2001?',opts:['Carlos Bianchi','Alfio Basile','Diego Maradona','Miguel Angel Russo'],r:0},
+  {p:'¿Cuál es el apodo de Boca Juniors?',opts:['El Millonario','El Xeneize','El Ciclón','El Pincha'],r:1},
+  {p:'¿En qué año Boca ganó su primera Copa Libertadores?',opts:['1970','1975','1977','1980'],r:2},
+  {p:'¿Contra quién ganó Boca la Libertadores 2001?',opts:['Cruz Azul','América de México','Peñarol','Santos'],r:0},
+  {p:'¿Qué jugador hizo el penal decisivo en la Libertadores 2003?',opts:['Palermo','Riquelme','Tevez','Cascini'],r:2},
+  {p:'¿Cuántas estrellas tiene la camiseta de Boca?',opts:['5','6','7','8'],r:1},
+  {p:'¿Qué significa "Xeneize"?',opts:['Campeón','De Génova','Hincha fiel','Azul y oro'],r:1},
+  {p:'¿Quién anotó el gol del título en la Libertadores 2007?',opts:['Palermo','Riquelme','Giménez','Battaglia'],r:0},
+  {p:'¿Qué resultado hubo en el Mundial de Clubes 2003 contra el Milan?',opts:['3-1 Boca','1-0 Boca','Empate y penales a favor de Boca','2-0 Boca'],r:2},
+  {p:'¿Cuántos socios tiene Boca aproximadamente?',opts:['50.000','80.000','130.000','200.000'],r:2},
+  {p:'¿Qué DT ganó la Libertadores con Boca en 2003?',opts:['Carlos Bianchi','Miguel Angel Russo','Alfio Basile','Jorge Bermúdez'],r:1},
+  {p:'¿Cuál fue el rival de Boca en la Libertadores 2000?',opts:['Nacional','Peñarol','Palmeiras','Flamengo'],r:2},
+  {p:'¿Qué jugador llegó a Boca desde el PSG en 2023?',opts:['Cavani','Insigne','Mertens','Higuaín'],r:0},
+  {p:'¿Cuántos títulos locales tiene Boca aproximadamente?',opts:['25','30','34','38'],r:2},
+  {p:'¿En qué año Carlos Tevez debutó en Boca?',opts:['1999','2001','2003','2005'],r:1},
+  {p:'¿Cómo se llama el clásico entre Boca y River?',opts:['El Clásico','El Superclásico','El Gran Clásico','La Final'],r:1},
+  {p:'¿Qué apodo tiene Martín Palermo?',opts:['El Titán','El Loco','El Toro','El Bomba'],r:1},
+  {p:'¿Quién fue presidente de Boca en los títulos internacionales de los 2000?',opts:['Mauricio Macri','Alberto Fernández','Pedro Pompilio','Jorge Amor Ameal'],r:0},
+  {p:'¿En qué posición juega/jugaba Riquelme?',opts:['Mediapunta','Lateral','Delantero centro','Mediocampista defensivo'],r:0},
+  {p:'¿Qué número usaba Palermo en Boca?',opts:['7','9','10','11'],r:1},
+  {p:'¿Cuál es la capacidad aproximada de La Bombonera?',opts:['40.000','49.000','57.000','65.000'],r:2},
+  {p:'¿Cómo se llama el barrio donde nació el club Boca Juniors?',opts:['Barracas','San Telmo','La Boca','Constitución'],r:2},
+  {p:'¿En qué año Diego Maradona jugó en Boca por primera vez?',opts:['1979','1981','1984','1986'],r:0},
+  {p:'¿Cuántos clubes argentinos ganaron más Libertadores que Boca?',opts:['0','1','2','3'],r:0},
+  {p:'¿Qué institución administra la Copa Libertadores?',opts:['FIFA','CONMEBOL','AFA','CAF'],r:1},
+  {p:'¿Cuántos títulos ganó Bianchi con Boca en total?',opts:['4','5','6','7'],r:2},
+  {p:'¿Qué número usaba Carlos Tevez en su primera etapa en Boca?',opts:['10','11','32','9'],r:2},
+  {p:'¿Con qué apodo se conoce a La Bombonera por su forma?',opts:['El Coliseo','La Caja de Bombones','La Catedral','El Fortín'],r:1},
+  {p:'¿Qué jugador usó el número 10 antes que Riquelme en Boca?',opts:['Diego Maradona','Claudio Caniggia','Norberto Alonso','Roberto Cherro'],r:0},
+  {p:'¿En qué categoría ocupa Boca en el ranking IFFHS del siglo XX?',opts:['Top 3','Top 5','Top 10','Top 20'],r:2},
+  {p:'¿Quién fue el arquero titular de Boca en la Libertadores 2000?',opts:['Abbondanzieri','Córdoba','Gatti','Navarro Montoya'],r:1},
+  {p:'¿En qué año Boca ganó la Recopa Sudamericana por primera vez?',opts:['2001','2003','2005','2008'],r:2},
+  {p:'¿Cómo se llama la cancha de entrenamiento de Boca?',opts:['El Fortín','Casa Amarilla','La Fortaleza','El Talar'],r:1},
+  {p:'¿Cuántos jugadores hay en el campo en un partido de fútbol por equipo?',opts:['9','10','11','12'],r:2},
+  {p:'¿Qué apodo tiene el estadio de Boca entre los hinchas?',opts:['La Catedral','El Fortín','La Fortaleza','El Gigante'],r:0},
+  {p:'¿En qué año Boca ganó el último título local antes de la era Bianchi?',opts:['1996','1997','1998','1999'],r:2},
+  {p:'¿Cuál es el color principal del escudo de Boca Juniors?',opts:['Rojo y blanco','Azul y amarillo','Verde y blanco','Negro y blanco'],r:1},
+  {p:'¿Quién marcó el gol del ascenso de Boca en 1912?',opts:['No hay registro','Alfredo Elli','Esteban Baglietto','Carlos Isola'],r:0},
+  {p:'¿Cuántas veces Boca fue campeón del mundo a nivel de clubes?',opts:['1','2','3','4'],r:1},
+  {p:'¿Qué rival histórico de Boca tiene su estadio en Núñez?',opts:['San Lorenzo','Independiente','Racing','River Plate'],r:3},
+  {p:'¿En qué torneo Boca ganó el título en 1992 con Maradona?',opts:['Libertadores','Clausura','Apertura','Copa Argentina'],r:2},
+  {p:'¿Qué significa el escudo de Boca con el ancla?',opts:['Barrio portuario','Fuerza','Victoria','Tradición marinera'],r:0},
+  {p:'¿Quién es el presidente actual de Boca (2024)?',opts:['Riquelme','Macri','Ameal','Gribaudo'],r:0},
+  {p:'¿Cuántos mundiales de clubes jugó Boca?',opts:['2','3','4','5'],r:1},
+  {p:'¿Qué jugador lleva el apodo "Topo Gigio"?',opts:['Palermo','Tevez','Riquelme','Abbondanzieri'],r:2},
+  {p:'¿En qué estadio se jugó la final de la Libertadores 2000?',opts:['El Monumental','La Bombonera','Maracaná','Estadio Nacional Lima'],r:3},
+  {p:'¿Qué año Boca ganó la Copa Argentina más recientemente?',opts:['2019','2020','2021','2022'],r:0},
+  {p:'¿Cuántas veces Boca fue subcampeón de la Copa Libertadores?',opts:['1','2','3','4'],r:1},
+];
+
+(function initQuiz(){
+  const today=new Date().toISOString().slice(0,10);
+  const doy=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+  const q=QUIZ[doy%QUIZ.length];
+  const saved=JSON.parse(localStorage.getItem('xn_quiz_v1')||'{}');
+  const yaRespondioHoy=saved.fecha===today;
+
+  document.getElementById('quizPtsTotal').textContent=saved.pts||0;
+
+  const pregEl=document.getElementById('quizPregunta');
+  const optsEl=document.getElementById('quizOpts');
+  if(pregEl)pregEl.textContent=q.p;
+  if(optsEl){
+    optsEl.innerHTML=q.opts.map((o,i)=>'<button class="xn-quiz-opt'+(yaRespondioHoy?' disabled':'')+'" onclick="quizResponder('+i+')" id="qopt'+i+'">'+o+'</button>').join('');
+  }
+  if(yaRespondioHoy&&saved.ultimaResp!==undefined){
+    quizMostrarResultado(saved.ultimaResp===q.r,saved.ultimaResp,q.r);
+  }
+  actualizarQuizScore(saved.rachaAciertos||0,saved.correctas||0,saved.dias||0);
+})();
+
+window.quizResponder=function(idx){
+  const today=new Date().toISOString().slice(0,10);
+  const doy=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+  const q=QUIZ[doy%QUIZ.length];
+  const saved=JSON.parse(localStorage.getItem('xn_quiz_v1')||'{}');
+  if(saved.fecha===today)return;
+
+  const correcto=idx===q.r;
+  const nuevosPts=(saved.pts||0)+(correcto?100:0);
+  const nuevaRacha=correcto?(saved.rachaAciertos||0)+1:0;
+  const nuevasCorrectas=(saved.correctas||0)+(correcto?1:0);
+  const nuevosDias=(saved.dias||0)+1;
+
+  localStorage.setItem('xn_quiz_v1',JSON.stringify({
+    pts:nuevosPts,rachaAciertos:nuevaRacha,correctas:nuevasCorrectas,
+    dias:nuevosDias,fecha:today,ultimaResp:idx
+  }));
+
+  document.getElementById('quizPtsTotal').textContent=nuevosPts;
+  quizMostrarResultado(correcto,idx,q.r);
+  actualizarQuizScore(nuevaRacha,nuevasCorrectas,nuevosDias);
+
+  if(correcto)desbloquearLogro('quiz1');
+  if(nuevaRacha>=5)desbloquearLogro('quiz_racha5');
+  if(nuevasCorrectas>=10)desbloquearLogro('quiz10');
+};
+
+function quizMostrarResultado(correcto,elegido,correcto_idx){
+  const doy=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+  const q=QUIZ[doy%QUIZ.length];
+  document.querySelectorAll('.xn-quiz-opt').forEach((el,i)=>{
+    el.classList.add('disabled');
+    if(i===correcto_idx)el.classList.add(correcto&&i===elegido?'correct':'reveal-correct');
+    else if(i===elegido&&!correcto)el.classList.add('wrong');
+  });
+  const resEl=document.getElementById('quizResult');
+  if(resEl){
+    resEl.style.display='block';
+    resEl.innerHTML=correcto
+      ?'<div class="xn-quiz-result-ico">&#127881;</div><div class="xn-quiz-result-msg">¡Correcto! +100 pts</div><div class="xn-quiz-result-sub">Sos un xeneize de pura cepa</div>'
+      :'<div class="xn-quiz-result-ico">&#128532;</div><div class="xn-quiz-result-msg">Respuesta incorrecta</div><div class="xn-quiz-result-sub">La correcta era: <strong style="color:var(--oro)">'+q.opts[correcto_idx]+'</strong></div>';
+  }
+  document.getElementById('quizScoreRow').style.display='flex';
+}
+
+function actualizarQuizScore(racha,correctas,dias){
+  const r=document.getElementById('quizRacha');
+  const c=document.getElementById('quizCorrectas');
+  const d=document.getElementById('quizStreak');
+  if(r)r.textContent=racha;
+  if(c)c.textContent=correctas;
+  if(d)d.textContent=dias;
+  document.getElementById('quizScoreRow').style.display='flex';
+}
+
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg=>console.log('SW registrado:',reg.scope))
+      .catch(err=>console.warn('SW error:',err));
+  });
+  // Prompt de instalación (banner "Agregar a inicio")
+  let deferredPrompt=null;
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    // Mostrar banner después de 30s si no lo instaló
+    setTimeout(()=>{
+      if(!deferredPrompt)return;
+      const t=document.getElementById('xnToast');
+      document.getElementById('xnToastIco').textContent='📲';
+      document.getElementById('xnToastTit').textContent='Instalá Xeneize News';
+      document.getElementById('xnToastMsg').textContent='Agregala a tu pantalla de inicio y entrá con un toque.';
+      if(t){
+        t.style.cursor='pointer';
+        t.onclick=()=>{deferredPrompt.prompt();deferredPrompt=null;t.classList.remove('show');t.style.cursor='';t.onclick=null;};
+        t.classList.add('show');
+        setTimeout(()=>t.classList.remove('show'),8000);
+      }
+    },30000);
+  });
+  window.addEventListener('appinstalled',()=>{
+    deferredPrompt=null;
+    desbloquearLogro('pwa_instalada');
+  });
+}
 </script>
 </body>
 </html>
