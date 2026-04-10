@@ -440,6 +440,41 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .xn-toast-logro-ico{font-size:26px;line-height:1;flex-shrink:0;}
 .xn-toast-logro-tit{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:white;line-height:1.2;}
 .xn-toast-logro-desc{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+/* AUTH */
+.auth-btn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:5px 12px;cursor:pointer;transition:all 0.2s;color:white;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;}
+.auth-btn:hover{background:rgba(255,255,255,0.18);}
+.auth-btn-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;}
+.auth-overlay{position:fixed;inset:0;background:rgba(0,20,64,0.88);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+.auth-overlay.open{display:flex;animation:fadeUp 0.2s ease;}
+.auth-modal{background:white;border-radius:16px;max-width:380px;width:100%;border-top:4px solid var(--oro);overflow:hidden;}
+.auth-hdr{background:var(--azul);padding:20px 24px;text-align:center;}
+.auth-hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;font-style:italic;color:var(--oro);}
+.auth-hdr-sub{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px;}
+.auth-body{padding:24px;}
+.auth-google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;border:2px solid #e8edf5;border-radius:10px;background:white;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--txt);transition:all 0.15s;margin-bottom:16px;}
+.auth-google-btn:hover{border-color:var(--azul);background:#f5f7fc;}
+.auth-apodo-form{display:none;}
+.auth-apodo-form.visible{display:block;}
+.auth-apodo-input{width:100%;padding:12px 14px;border:2px solid var(--gris2);border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--txt);outline:none;transition:border 0.15s;margin-bottom:8px;}
+.auth-apodo-input:focus{border-color:var(--azul);}
+.auth-apodo-hint{font-size:11px;color:var(--txt3);margin-bottom:14px;}
+.auth-apodo-btn{width:100%;padding:12px;background:var(--azul);border:none;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:white;cursor:pointer;}
+.auth-error{font-size:12px;color:var(--rojo);margin-bottom:10px;display:none;}
+/* RANKING */
+.xn-ranking{padding:18px 24px;background:white;border-top:2px solid var(--gris);}
+.rank-tabla{margin-top:10px;}
+.rank-fila{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;transition:background 0.15s;}
+.rank-fila:hover{background:#f5f7fc;}
+.rank-fila.me{background:rgba(245,168,0,0.08);border:1px solid rgba(245,168,0,0.25);}
+.rank-pos{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--txt3);width:28px;text-align:center;flex-shrink:0;}
+.rank-pos.oro{color:#F5A800;}
+.rank-pos.plata{color:#aab0c0;}
+.rank-pos.bronce{color:#cd7f32;}
+.rank-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.rank-info{flex:1;min-width:0;}
+.rank-apodo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--txt);}
+.rank-pts{font-size:11px;color:var(--txt3);}
+.rank-total{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--azul);}
 /* FOOTER */
 .xn-footer{background:var(--azul2);padding:22px 24px;text-align:center;border-top:4px solid var(--oro);}
 .xn-footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;font-style:italic;color:var(--oro);margin-bottom:5px;}
@@ -553,8 +588,51 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
       <div><div class="xn-streak-txt"><span id="xnStreakN">1</span> días</div><div class="xn-streak-lbl">racha</div></div>
     </div>
     <div class="xn-live">En vivo</div>
+    <button class="auth-btn" id="authBtn" onclick="abrirAuth()">
+      <div class="auth-btn-av" id="authAvBtn" style="background:var(--oro);color:var(--azul);">?</div>
+      <span id="authBtnTxt">Entrar</span>
+    </button>
   </div>
 </nav>
+
+<!-- MODAL AUTH -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <div class="auth-hdr">
+      <div class="auth-hdr-logo">XENEIZE&#9733;NEWS</div>
+      <div class="auth-hdr-sub">Unite a la comunidad xeneize</div>
+    </div>
+    <div class="auth-body">
+      <div id="authLoginPanel">
+        <button class="auth-google-btn" onclick="loginGoogle()">
+          <svg class="auth-google-ico" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Entrar con Google
+        </button>
+        <div style="font-size:11px;color:var(--txt3);text-align:center;">Al entrar aceptás los términos de uso</div>
+      </div>
+      <div class="auth-apodo-form" id="authApodoPanel">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--azul);margin-bottom:6px;">&#127942; Elegí tu apodo xeneize</div>
+        <div style="font-size:12px;color:var(--txt3);margin-bottom:14px;">Este nombre va a aparecer en el ranking y el foro</div>
+        <div class="auth-error" id="authError"></div>
+        <input class="auth-apodo-input" id="authApodoInp" placeholder="Ej: RiqueXeneize, BocaEterno..." maxlength="20"/>
+        <div class="auth-apodo-hint">Entre 3 y 20 caracteres. Solo letras, números y guiones.</div>
+        <button class="auth-apodo-btn" onclick="guardarApodo()">&#9917; Confirmar apodo</button>
+      </div>
+      <div id="authPerfilPanel" style="display:none;text-align:center;">
+        <div style="font-size:36px;margin-bottom:8px;">&#127942;</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:var(--azul);" id="authPerfilApodo"></div>
+        <div style="font-size:12px;color:var(--txt3);margin:6px 0 16px;">Tu perfil xeneize</div>
+        <div style="display:flex;justify-content:center;gap:20px;margin-bottom:16px;">
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--azul);" id="authPerfilPtsQuiz">0</div><div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Pts Quiz</div></div>
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--azul);" id="authPerfilPtsForo">0</div><div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Pts Foro</div></div>
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--azul);" id="authPerfilRacha">0</div><div style="font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:.5px;">Racha</div></div>
+        </div>
+        <button onclick="cerrarAuth()" style="background:var(--azul);border:none;border-radius:8px;padding:10px 24px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:white;cursor:pointer;width:100%;">Cerrar</button>
+        <button onclick="logoutUser()" style="background:none;border:none;font-size:12px;color:var(--txt3);cursor:pointer;margin-top:10px;text-decoration:underline;">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="xn-toast" id="xnToast">
 </div>
 
@@ -774,6 +852,11 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
         <button class="xn-btn" onclick="ir('foro',null)">Entrar al foro</button>
         <button class="xn-btn oro" onclick="ir('cerebro',null)">&#129504; Cerebro Xeneize</button>
         <button class="xn-btn" onclick="abrirLogros()" style="background:#1a1a2e;margin-top:6px;">&#127942; Mis Logros</button>
+        <div style="margin-top:16px;">
+          <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Top Xeneizes</div></div>
+          <div id="rankingLista" style="margin-top:8px;"><div style="font-size:12px;color:var(--txt3);padding:8px 0;">Cargando ranking...</div></div>
+          <button class="xn-btn" onclick="abrirAuth()" id="rankingLoginBtn" style="margin-top:10px;display:none;">&#9733; Entrar para competir</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1317,7 +1400,7 @@ async function responder(id){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({post_id:id,contenido:txt,autor})
     });
-    desbloquearLogro('resp1');
+    desbloquearLogro('resp1');sumarPtsForo();
     await toggleHilo(id);await toggleHilo(id);
   }catch(e){}
   inp.disabled=false;
@@ -1340,7 +1423,7 @@ async function publicar(){
     filtroActivo='todos';
     document.querySelectorAll('.f-filtro').forEach((f,i)=>f.classList.toggle('activo',i===0));
     await cargarForo();
-    desbloquearLogro('hilo1');
+    desbloquearLogro('hilo1');sumarPtsForo();
   }catch(e){}
 }
 function abrirModal(){document.getElementById('fModal').classList.add('open');}
@@ -1640,6 +1723,185 @@ function renderPredResults(votes,miVoto){
   });
 }
 
+// ── AUTH / RANKING ───────────────────────────────────────────────
+const SUPABASE_URL='https://wwxfgxkqfjvukyiysixp.supabase.co';
+const SUPABASE_ANON='sb_publishable_Hvp3sg-Hw6JULdHMGn6YDg_3_NMW7hY';
+let authSession=null;
+let authPerfil=null;
+
+// Inicializar: revisar si hay sesión activa
+(async function initAuth(){
+  // Manejar callback de OAuth (hash con access_token)
+  if(window.location.hash.includes('access_token')){
+    const params=new URLSearchParams(window.location.hash.replace('#',''));
+    const token=params.get('access_token');
+    const refresh=params.get('refresh_token');
+    if(token){
+      localStorage.setItem('xn_auth_token',token);
+      if(refresh)localStorage.setItem('xn_auth_refresh',refresh);
+      window.location.hash='';
+    }
+  }
+  const token=localStorage.getItem('xn_auth_token');
+  if(!token)return mostrarRankingLoginBtn();
+  try{
+    const r=await fetch(BACKEND+'/api/auth?action=perfil',{headers:{'Authorization':'Bearer '+token}});
+    if(!r.ok){localStorage.removeItem('xn_auth_token');return mostrarRankingLoginBtn();}
+    const data=await r.json();
+    authSession={token};
+    authPerfil=data.perfil;
+    actualizarNavAuth();
+    if(!authPerfil){
+      // Usuario logueado pero sin apodo → mostrar modal de apodo
+      setTimeout(()=>{
+        document.getElementById('authLoginPanel').style.display='none';
+        document.getElementById('authApodoPanel').classList.add('visible');
+        document.getElementById('authOverlay').classList.add('open');
+      },800);
+    }
+  }catch(e){mostrarRankingLoginBtn();}
+  cargarRanking();
+})();
+
+function mostrarRankingLoginBtn(){
+  const btn=document.getElementById('rankingLoginBtn');
+  if(btn)btn.style.display='block';
+  cargarRanking();
+}
+
+function actualizarNavAuth(){
+  const btn=document.getElementById('authBtn');
+  const av=document.getElementById('authAvBtn');
+  const txt=document.getElementById('authBtnTxt');
+  if(!btn)return;
+  if(authPerfil){
+    const ini=authPerfil.apodo.substring(0,2).toUpperCase();
+    const avc=AVC[authPerfil.avatar_idx%AVC.length];
+    av.style.background=avc.bg;av.style.color=avc.c;
+    av.textContent=ini;
+    txt.textContent=authPerfil.apodo;
+    const rankBtn=document.getElementById('rankingLoginBtn');
+    if(rankBtn)rankBtn.style.display='none';
+  }
+}
+
+function abrirAuth(){
+  const overlay=document.getElementById('authOverlay');
+  if(!overlay)return;
+  if(authPerfil){
+    // Mostrar perfil
+    document.getElementById('authLoginPanel').style.display='none';
+    document.getElementById('authApodoPanel').classList.remove('visible');
+    document.getElementById('authPerfilPanel').style.display='block';
+    document.getElementById('authPerfilApodo').textContent=authPerfil.apodo;
+    document.getElementById('authPerfilPtsQuiz').textContent=authPerfil.pts_quiz||0;
+    document.getElementById('authPerfilPtsForo').textContent=authPerfil.pts_foro||0;
+    document.getElementById('authPerfilRacha').textContent=authPerfil.racha||0;
+  } else {
+    document.getElementById('authLoginPanel').style.display='block';
+    document.getElementById('authApodoPanel').classList.remove('visible');
+    document.getElementById('authPerfilPanel').style.display='none';
+  }
+  overlay.classList.add('open');
+}
+function cerrarAuth(){document.getElementById('authOverlay').classList.remove('open');}
+document.getElementById('authOverlay').addEventListener('click',function(e){if(e.target===this)cerrarAuth();});
+
+function loginGoogle(){
+  const redirectTo=encodeURIComponent(window.location.href.split('#')[0]);
+  window.location.href=SUPABASE_URL+'/auth/v1/authorize?provider=google&redirect_to='+redirectTo;
+}
+
+async function guardarApodo(){
+  const inp=document.getElementById('authApodoInp');
+  const err=document.getElementById('authError');
+  const apodo=inp.value.trim();
+  err.style.display='none';
+  if(!apodo||apodo.length<3){err.textContent='Mínimo 3 caracteres';err.style.display='block';return;}
+  const token=localStorage.getItem('xn_auth_token');
+  if(!token)return;
+  try{
+    const r=await fetch(BACKEND+'/api/auth?action=crear_perfil',{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({apodo})
+    });
+    const data=await r.json();
+    if(!r.ok){err.textContent=data.error||'Error al guardar';err.style.display='block';return;}
+    authPerfil=data;
+    actualizarNavAuth();
+    cerrarAuth();
+    cargarRanking();
+    // Toast de bienvenida
+    const t=document.getElementById('xnToast');
+    document.getElementById('xnToastIco').textContent='⭐';
+    document.getElementById('xnToastTit').textContent='¡Bienvenido, '+apodo+'!';
+    document.getElementById('xnToastMsg').textContent='Ya sos parte de la comunidad xeneize. ¡Dale Bo!';
+    if(t){t.classList.add('show');setTimeout(()=>t.classList.remove('show'),4000);}
+  }catch(e){err.textContent='Error de conexión';err.style.display='block';}
+}
+
+function logoutUser(){
+  localStorage.removeItem('xn_auth_token');
+  localStorage.removeItem('xn_auth_refresh');
+  authSession=null;authPerfil=null;
+  const av=document.getElementById('authAvBtn');
+  const txt=document.getElementById('authBtnTxt');
+  av.style.background='var(--oro)';av.style.color='var(--azul)';av.textContent='?';
+  txt.textContent='Entrar';
+  cerrarAuth();
+  mostrarRankingLoginBtn();
+}
+
+async function cargarRanking(){
+  const lista=document.getElementById('rankingLista');
+  if(!lista)return;
+  try{
+    const r=await fetch(BACKEND+'/api/auth?action=ranking');
+    const data=await r.json();
+    if(!data||!data.length){lista.innerHTML='<div style="font-size:12px;color:var(--txt3);padding:4px 0;">Sé el primero en el ranking.</div>';return;}
+    lista.innerHTML=data.slice(0,5).map((u,i)=>{
+      const total=(u.pts_quiz||0)+(u.pts_foro||0);
+      const avc=AVC[(u.avatar_idx||0)%AVC.length];
+      const ini=u.apodo.substring(0,2).toUpperCase();
+      const posClass=i===0?'oro':i===1?'plata':i===2?'bronce':'';
+      const posLabel=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'°';
+      const esYo=authPerfil&&authPerfil.apodo===u.apodo;
+      return '<div class="rank-fila'+(esYo?' me':'')+'">'+
+        '<div class="rank-pos '+posClass+'">'+posLabel+'</div>'+
+        '<div class="rank-av" style="background:'+avc.bg+';color:'+avc.c+';">'+ini+'</div>'+
+        '<div class="rank-info"><div class="rank-apodo">'+u.apodo+(esYo?' (vos)':'')+'</div>'+
+        '<div class="rank-pts">Quiz: '+(u.pts_quiz||0)+' · Foro: '+(u.pts_foro||0)+'</div></div>'+
+        '<div class="rank-total">'+total+'</div></div>';
+    }).join('');
+  }catch(e){lista.innerHTML='<div style="font-size:11px;color:var(--txt3);">Error al cargar</div>';}
+}
+
+// Sumar pts al servidor cuando se responde quiz correctamente
+async function sumarPtsQuiz(pts){
+  const token=localStorage.getItem('xn_auth_token');
+  if(!token||!authPerfil)return;
+  try{
+    await fetch(BACKEND+'/api/auth?action=sumar_pts',{
+      method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({tipo:'quiz',pts})
+    });
+    if(authPerfil)authPerfil.pts_quiz=(authPerfil.pts_quiz||0)+pts;
+    cargarRanking();
+  }catch(e){}
+}
+async function sumarPtsForo(){
+  const token=localStorage.getItem('xn_auth_token');
+  if(!token||!authPerfil)return;
+  try{
+    await fetch(BACKEND+'/api/auth?action=sumar_pts',{
+      method:'PATCH',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({tipo:'foro',pts:20})
+    });
+    if(authPerfil)authPerfil.pts_foro=(authPerfil.pts_foro||0)+20;
+    cargarRanking();
+  }catch(e){}
+}
+
 // ── QUIZ XENEIZE DEL DÍA ─────────────────────────────────────────
 const QUIZ=[
   {p:'¿En qué año fue fundado Boca Juniors?',opts:['1903','1905','1908','1910'],r:1},
@@ -1748,7 +2010,7 @@ window.quizResponder=function(idx){
   quizMostrarResultado(correcto,idx,q.r);
   actualizarQuizScore(nuevaRacha,nuevasCorrectas,nuevosDias);
 
-  if(correcto)desbloquearLogro('quiz1');
+  if(correcto){desbloquearLogro('quiz1');sumarPtsQuiz(100);}
   if(nuevaRacha>=5)desbloquearLogro('quiz_racha5');
   if(nuevasCorrectas>=10)desbloquearLogro('quiz10');
 };
