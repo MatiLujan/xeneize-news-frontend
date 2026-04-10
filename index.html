@@ -1257,7 +1257,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 
 <script>
 const BACKEND='https://xeneize-backend.vercel.app';
-const BOCA_ID=773;
+const BOCA_ID='135156';
 let statsData=null;
 let proxMatchDate=null,proxCountdownInterval=null;
 
@@ -1317,13 +1317,13 @@ function acortar(n){const m={'Club Atletico Boca Juniors':'Boca Juniors','Club A
 function renderTabla(table,containerId,limit){
   const top=table.slice(0,limit||10);
   const html='<table class="p-tabla"><thead><tr><th>#</th><th style="text-align:left;">Equipo</th><th>PTS</th><th>PJ</th><th>GF</th></tr></thead><tbody>'+
-  top.map(t=>{const b=t.team.id===BOCA_ID;return '<tr class="'+(b?'boca-row':'')+'"><td><span class="p-pos '+(b?'boca':'')+'">'+t.position+'</span></td><td><span class="p-team-name">'+(b?'&#9733; ':'')+acortar(t.team.name)+'</span></td><td><strong>'+t.points+'</strong></td><td>'+t.playedGames+'</td><td>'+t.goalsFor+'</td></tr>';}).join('')+
+  top.map(t=>{const b=String(t.team.id)===String(BOCA_ID);return '<tr class="'+(b?'boca-row':'')+'"><td><span class="p-pos '+(b?'boca':'')+'">'+t.position+'</span></td><td><span class="p-team-name">'+(b?'&#9733; ':'')+acortar(t.team.name)+'</span></td><td><strong>'+t.points+'</strong></td><td>'+t.playedGames+'</td><td>'+t.goalsFor+'</td></tr>';}).join('')+
   '</tbody></table>';
   const el=document.getElementById(containerId);if(el)el.innerHTML=html;
 }
 
 function renderPartidos(matches,containerId){
-  const bocaM=matches.filter(m=>m.homeTeam&&m.awayTeam&&(m.homeTeam.id===BOCA_ID||m.awayTeam.id===BOCA_ID)).slice(-6);
+  const bocaM=matches.filter(m=>m.homeTeam&&m.awayTeam&&(String(m.homeTeam.id)===String(BOCA_ID)||String(m.awayTeam.id)===String(BOCA_ID))).slice(-6);
   if(!bocaM.length){const el=document.getElementById(containerId);if(el)el.innerHTML='<div style="font-family:Barlow Condensed,sans-serif;font-size:14px;font-weight:700;color:var(--txt3);text-align:center;padding:20px;">Sin partidos disponibles</div>';return;}
   const html='<div class="p-partidos">'+bocaM.map(m=>{
     const fecha=new Date(m.utcDate).toLocaleDateString('es-AR',{day:'2-digit',month:'short'});
@@ -1362,7 +1362,7 @@ async function cargarStats(){
     const nData=nRes.ok?await nRes.json():{response:[]};
     const standing=sData.response?.[0]?.league?.standings?.[0]||[];
     const table=standing.map(t=>({position:t.rank,team:{id:t.team.id,name:t.team.name},points:t.points,playedGames:t.all.played,goalsFor:t.all.goals.for,goalsAgainst:t.all.goals.against,won:t.all.win,draw:t.all.draw,lost:t.all.lose}));
-    const boca=table.find(t=>t.team.id===BOCA_ID);
+    const boca=table.find(t=>String(t.team.id)===String(BOCA_ID));
     const allM=[...(fData.response||[]),...(nData.response||[])].sort((a,b)=>new Date(a.fixture.date)-new Date(b.fixture.date));
     const matches=allM.map(m=>({homeTeam:{id:m.teams.home.id,name:m.teams.home.name},awayTeam:{id:m.teams.away.id,name:m.teams.away.name},utcDate:m.fixture.date,status:m.fixture.status.short==='FT'?'FINISHED':m.fixture.status.short==='1H'||m.fixture.status.short==='2H'?'IN_PLAY':'SCHEDULED',score:{fullTime:{home:m.goals.home,away:m.goals.away}}}));
     const now=new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
@@ -1386,7 +1386,8 @@ async function cargarStats(){
     if(boca)tickerParts.push('Boca #'+boca.position+' con '+boca.points+' pts');
     const ultimo=matches.filter(m=>m.status==='FINISHED').slice(-1)[0];
     if(ultimo){const gh=ultimo.score?.fullTime?.home,ga=ultimo.score?.fullTime?.away,h=acortar(ultimo.homeTeam.name),a=acortar(ultimo.awayTeam.name);tickerParts.push('Ultimo: '+h+' '+gh+'-'+ga+' '+a);}
-    const prox=bocaM.find(m=>m.status==='SCHEDULED');
+    const bocaMatches=matches.filter(m=>m.homeTeam&&m.awayTeam&&(String(m.homeTeam.id)===String(BOCA_ID)||String(m.awayTeam.id)===String(BOCA_ID)));
+    const prox=bocaMatches.find(m=>m.status==='SCHEDULED');
     if(prox){const h=acortar(prox.homeTeam.name),a=acortar(prox.awayTeam.name),fecha=new Date(prox.utcDate).toLocaleDateString('es-AR',{day:'2-digit',month:'short'});tickerParts.push('Proximo: '+h+' vs '+a+' '+fecha);}
     tickerParts.push('Stats actualizados '+now);
     const ticker=document.getElementById('tickerInner');
