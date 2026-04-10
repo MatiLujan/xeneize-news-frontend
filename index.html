@@ -1481,7 +1481,7 @@ async function cargarNoticias(){
 
 function renderNoticias(noticias){
   const dest=noticias.find(n=>n.destacada)||noticias[0];
-  const resto=noticias.filter(n=>n.id!==dest.id).slice(0,4);
+  const resto=noticias.length<=4?noticias.slice(0,4):noticias.filter(n=>n.id!==dest.id).slice(0,4);
 
   const heroTit=document.getElementById('heroTitulo');
   if(heroTit&&dest)heroTit.textContent=dest.titulo;
