@@ -475,6 +475,29 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .rank-apodo{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:var(--txt);}
 .rank-pts{font-size:11px;color:var(--txt3);}
 .rank-total{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:var(--azul);}
+/* SKELETON LOADERS */
+@keyframes skelShimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+.skel{background:linear-gradient(90deg,rgba(245,168,0,0.06) 25%,rgba(245,168,0,0.16) 50%,rgba(245,168,0,0.06) 75%);background-size:200% 100%;animation:skelShimmer 1.6s ease-in-out infinite;border-radius:6px;display:block;}
+.skel-line{height:11px;margin-bottom:8px;}
+.skel-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(245,168,0,0.07);}
+.skel-av{width:30px;height:30px;border-radius:50%;flex-shrink:0;}
+.skel-body{flex:1;display:flex;flex-direction:column;gap:6px;}
+
+/* BOTÓN FLOTANTE CEREBRO */
+.cx-fab{position:fixed;bottom:24px;right:20px;z-index:300;display:flex;align-items:center;gap:8px;background:var(--azul);border:2px solid var(--oro);border-radius:28px;padding:10px 16px 10px 12px;cursor:pointer;box-shadow:0 4px 20px rgba(0,32,96,0.5);transition:transform 0.18s,box-shadow 0.18s;text-decoration:none;}
+.cx-fab:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,32,96,0.6);}
+.cx-fab-ico{font-size:20px;line-height:1;}
+.cx-fab-txt{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--oro);letter-spacing:0.5px;white-space:nowrap;}
+
+/* NAV MOBILE BOTTOM */
+.xn-mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--azul);border-top:3px solid var(--oro);padding:6px 0 env(safe-area-inset-bottom,6px);}
+.xn-mobile-nav-inner{display:flex;justify-content:space-around;align-items:center;}
+.xn-mnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;min-width:52px;transition:opacity 0.15s;}
+.xn-mnav-ico{font-size:18px;line-height:1;}
+.xn-mnav-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:0.3px;text-transform:uppercase;transition:color 0.15s;}
+.xn-mnav-btn.activo .xn-mnav-lbl{color:var(--oro);}
+.xn-mnav-btn.activo .xn-mnav-ico{filter:drop-shadow(0 0 4px rgba(245,168,0,0.7));}
+
 /* FOOTER */
 .xn-footer{background:var(--azul2);padding:22px 24px;text-align:center;border-top:4px solid var(--oro);}
 .xn-footer-logo{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;font-style:italic;color:var(--oro);margin-bottom:5px;}
@@ -495,14 +518,17 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .prox-sep{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--oro);line-height:1;margin-bottom:8px;}
 
 @media(max-width:680px){
-  /* NAV: logo arriba, links abajo */
-  .xn-nav{height:auto;flex-wrap:wrap;padding:8px 14px 0;gap:0;}
-  .xn-logo{padding-bottom:8px;}
-  .xn-live{margin-bottom:8px;}
-  .xn-navlinks{width:100%;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.1);padding:4px 0;}
-  .xn-navlink{padding:6px 0;font-size:11px;flex:1;text-align:center;border-radius:0;}
+  /* NAV: simplificado, sin links (van abajo) */
+  .xn-nav{height:52px;padding:0 14px;}
+  .xn-navlinks{display:none;}
   .xn-logo-txt{font-size:24px;}
   .xn-logo-news{font-size:18px;}
+  /* Mostrar nav mobile inferior */
+  .xn-mobile-nav{display:block;}
+  /* Padding para que el contenido no quede detrás de la nav inferior */
+  .xn-wrapper{padding-bottom:70px;}
+  /* Ocultar fab en mobile (la nav inferior ya tiene Cerebro) */
+  .cx-fab{display:none;}
 
   /* TICKER */
   .xn-ticker-inner{font-size:12px;}
@@ -755,7 +781,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
       <div class="xn-stats-home" id="statsHome">
         <div class="xn-stats-col">
           <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Tabla de posiciones</div></div>
-          <div id="tablaHome"><div class="stats-loading"><div class="stats-mini-spinner"></div><div class="stats-loading-txt">Cargando tabla...</div></div></div>
+          <div id="tablaHome"><div style="padding:12px 0;"><div class="skel-row"><span class="skel" style="width:18px;height:9px;border-radius:4px;flex-shrink:0;"></span><div class="skel-body"><span class="skel skel-line" style="width:60%;height:9px;margin:0;"></span></div><span class="skel" style="width:28px;height:9px;border-radius:4px;flex-shrink:0;"></span></div><div class="skel-row"><span class="skel" style="width:18px;height:9px;border-radius:4px;flex-shrink:0;"></span><div class="skel-body"><span class="skel skel-line" style="width:55%;height:9px;margin:0;"></span></div><span class="skel" style="width:28px;height:9px;border-radius:4px;flex-shrink:0;"></span></div><div class="skel-row"><span class="skel" style="width:18px;height:9px;border-radius:4px;flex-shrink:0;"></span><div class="skel-body"><span class="skel skel-line" style="width:65%;height:9px;margin:0;"></span></div><span class="skel" style="width:28px;height:9px;border-radius:4px;flex-shrink:0;"></span></div><div class="skel-row"><span class="skel" style="width:18px;height:9px;border-radius:4px;flex-shrink:0;"></span><div class="skel-body"><span class="skel skel-line" style="width:50%;height:9px;margin:0;"></span></div><span class="skel" style="width:28px;height:9px;border-radius:4px;flex-shrink:0;"></span></div></div></div>
         </div>
         <div class="xn-stats-col">
           <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Partidos de Boca</div></div>
@@ -854,7 +880,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
         <button class="xn-btn" onclick="abrirLogros()" style="background:#1a1a2e;margin-top:6px;">&#127942; Mis Logros</button>
         <div style="margin-top:16px;">
           <div class="xn-sec-label"><div class="xn-sec-label-line"></div><div class="xn-sec-label-txt">Top Xeneizes</div></div>
-          <div id="rankingLista" style="margin-top:8px;"><div style="font-size:12px;color:var(--txt3);padding:8px 0;">Cargando ranking...</div></div>
+          <div id="rankingLista" style="margin-top:8px;"><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:80%;height:9px;margin:0;"></span></div></div><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:65%;height:9px;margin:0;"></span></div></div><div class="skel-row"><span class="skel skel-av" style="width:24px;height:24px;"></span><div class="skel-body"><span class="skel skel-line" style="width:55%;height:9px;margin:0;"></span></div></div></div>
           <button class="xn-btn" onclick="abrirAuth()" id="rankingLoginBtn" style="margin-top:10px;display:none;">&#9733; Entrar para competir</button>
         </div>
       </div>
@@ -1111,6 +1137,38 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 </footer>
 </div>
 
+<!-- BOTÓN FLOTANTE CEREBRO -->
+<button class="cx-fab" id="cxFab" onclick="ir('cerebro',null)" title="Preguntale al Cerebro Xeneize">
+  <span class="cx-fab-ico">🧠</span>
+  <span class="cx-fab-txt">Cerebro Xeneize</span>
+</button>
+
+<!-- NAV MOBILE BOTTOM -->
+<nav class="xn-mobile-nav" id="mobileNav">
+  <div class="xn-mobile-nav-inner">
+    <button class="xn-mnav-btn activo" data-sec="home" onclick="ir('home',null);mnav(this)">
+      <span class="xn-mnav-ico">🏠</span>
+      <span class="xn-mnav-lbl">Inicio</span>
+    </button>
+    <button class="xn-mnav-btn" data-sec="historias" onclick="ir('historias',null);mnav(this)">
+      <span class="xn-mnav-ico">📖</span>
+      <span class="xn-mnav-lbl">Historias</span>
+    </button>
+    <button class="xn-mnav-btn" data-sec="stats" onclick="ir('stats',null);mnav(this)">
+      <span class="xn-mnav-ico">📊</span>
+      <span class="xn-mnav-lbl">Stats</span>
+    </button>
+    <button class="xn-mnav-btn" data-sec="foro" onclick="ir('foro',null);mnav(this)">
+      <span class="xn-mnav-ico">💬</span>
+      <span class="xn-mnav-lbl">Foro</span>
+    </button>
+    <button class="xn-mnav-btn" data-sec="cerebro" onclick="ir('cerebro',null);mnav(this)">
+      <span class="xn-mnav-ico">🧠</span>
+      <span class="xn-mnav-lbl">Cerebro</span>
+    </button>
+  </div>
+</nav>
+
 <div class="f-modal-overlay" id="fModal">
   <div class="f-modal">
     <div class="f-modal-h"><div class="f-modal-ico">&#128142;</div><div class="f-modal-tit">Socio Digital Xeneize</div><div class="f-modal-sub">Lleva tu experiencia al siguiente nivel</div></div>
@@ -1172,6 +1230,15 @@ function ir(sec,btn){
   window.scrollTo({top:0,behavior:'smooth'});
   if(btn){document.querySelectorAll('.xn-navlink').forEach(b=>b.classList.remove('activo'));btn.classList.add('activo');}
   else{document.querySelectorAll('.xn-navlink').forEach(b=>{const t=b.textContent.trim().toLowerCase();b.classList.toggle('activo',(sec==='home'&&t==='inicio')||(sec==='historias'&&t==='historias')||(sec==='stats'&&t==='stats')||(sec==='foro'&&t==='foro')||(sec==='cerebro'&&t==='cerebro'));});}
+  // Sincronizar nav mobile
+  document.querySelectorAll('.xn-mnav-btn').forEach(b=>b.classList.toggle('activo',b.dataset.sec===sec));
+  // Ocultar fab en cerebro
+  const fab=document.getElementById('cxFab');if(fab)fab.style.display=sec==='cerebro'?'none':'';
+}
+
+function mnav(btn){
+  document.querySelectorAll('.xn-mnav-btn').forEach(b=>b.classList.remove('activo'));
+  btn.classList.add('activo');
 }
 
 function mostrarPulso(estado){
@@ -1341,7 +1408,7 @@ function rHilo(h){
 }
 async function cargarForo(){
   const lista=document.getElementById('fLista');
-  lista.innerHTML='<div style="padding:24px;text-align:center;color:var(--txt3);font-family:Barlow Condensed,sans-serif;font-size:14px;">Cargando foro...</div>';
+  lista.innerHTML=[1,2,3].map(()=>`<div class="skel-row" style="padding:14px 18px;border-bottom:1px solid rgba(245,168,0,0.08);"><span class="skel skel-av"></span><div class="skel-body"><span class="skel skel-line" style="width:70%;"></span><span class="skel skel-line" style="width:40%;height:9px;"></span></div></div>`).join('');
   try{
     const r=await fetch(BACKEND+'/api/foro?action=posts');
     HILOS_DB=await r.json();
