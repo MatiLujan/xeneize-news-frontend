@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Xeneize News</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--azul:#002060;--azul2:#001440;--azul3:#003399;--oro:#F5A800;--rojo:#cc2200;--txt:#001440;--gris:#e8edf5;}
+body{font-family:Arial,sans-serif;background:var(--gris);color:var(--txt);min-height:100vh;}
+h1{font-size:22px;font-weight:800;color:var(--azul);margin-bottom:4px;}
+h2{font-size:16px;font-weight:700;color:var(--azul);margin-bottom:12px;border-bottom:2px solid var(--oro);padding-bottom:6px;}
+.header{background:var(--azul);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid var(--oro);}
+.header-title{font-family:Arial,sans-serif;font-size:20px;font-weight:800;color:var(--oro);letter-spacing:1px;}
+.header-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+#btnLogout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:13px;}
+#btnLogout:hover{background:rgba(255,255,255,0.2);}
+.container{max-width:900px;margin:0 auto;padding:24px 16px;}
+.login-wrap{max-width:360px;margin:80px auto;background:white;border-radius:10px;padding:32px;box-shadow:0 4px 24px rgba(0,32,96,0.12);border-top:4px solid var(--oro);}
+.login-wrap h2{border:none;font-size:20px;margin-bottom:16px;color:var(--azul);}
+label{display:block;font-size:13px;font-weight:600;color:var(--azul);margin-bottom:4px;}
+input[type=text],input[type=password],textarea,select{width:100%;padding:9px 12px;border:1.5px solid #c8d0e0;border-radius:6px;font-size:14px;color:var(--txt);background:white;margin-bottom:14px;transition:border-color 0.15s;}
+input[type=text]:focus,input[type=password]:focus,textarea:focus,select:focus{outline:none;border-color:var(--azul3);}
+textarea{height:80px;resize:vertical;}
+.btn{padding:10px 20px;border-radius:6px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.15s;}
+.btn-primary{background:var(--azul);color:white;}
+.btn-primary:hover{background:var(--azul3);}
+.btn-oro{background:var(--oro);color:var(--azul2);}
+.btn-oro:hover{opacity:0.9;}
+.btn-rojo{background:var(--rojo);color:white;font-size:12px;padding:5px 11px;}
+.btn-rojo:hover{opacity:0.85;}
+.btn-azul{background:var(--azul3);color:white;font-size:12px;padding:5px 11px;}
+.btn-azul:hover{opacity:0.85;}
+.error-msg{background:#fff0f0;border:1px solid #ffcccc;color:var(--rojo);padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:14px;display:none;}
+.error-msg.show{display:block;}
+.card{background:white;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,32,96,0.07);margin-bottom:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;cursor:pointer;}
+.checkbox-row label{margin:0;cursor:pointer;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:8px 10px;background:var(--gris);color:var(--txt);font-weight:700;border-bottom:2px solid #c8d0e0;}
+td{padding:8px 10px;border-bottom:1px solid #e8edf5;vertical-align:middle;}
+tr:hover td{background:#f8faff;}
+.tag-badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+.tag-azul{background:#003399;color:white;}
+.tag-oro{background:#F5A800;color:#001440;}
+.tag-verde{background:#1a7a3a;color:white;}
+.tag-rojo{background:#cc2200;color:white;}
+.tag-gris{background:#667799;color:white;}
+.dest-badge{background:#F5A800;color:#001440;font-size:10px;font-weight:800;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.btn-row{display:flex;gap:6px;}
+#loadingOverlay{display:none;position:fixed;inset:0;background:rgba(0,20,64,0.35);z-index:999;align-items:center;justify-content:center;}
+#loadingOverlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(245,168,0,0.3);border-top-color:var(--oro);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.success-msg{background:#f0fff4;border:1px solid #9ae6b4;color:#1a7a3a;padding:10px 14px;border-radius:6px;font-size:13px;margin-bottom:14px;display:none;}
+.success-msg.show{display:block;}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay"><div class="spinner"></div></div>
+
+<!-- LOGIN -->
+<div id="loginWrap" class="login-wrap">
+  <h2>Xeneize News — Admin</h2>
+  <div id="loginError" class="error-msg">Clave incorrecta. Intentá de nuevo.</div>
+  <label for="adminKey">Clave de administrador</label>
+  <input type="password" id="adminKey" placeholder="••••••••" autocomplete="current-password"/>
+  <button class="btn btn-primary" style="width:100%;" onclick="login()">Ingresar</button>
+</div>
+
+<!-- PANEL -->
+<div id="panel" style="display:none;">
+  <div class="header">
+    <div>
+      <div class="header-title">XENEIZE NEWS — ADMIN</div>
+      <div class="header-sub">Panel de administración de noticias</div>
+    </div>
+    <button id="btnLogout" onclick="logout()">Cerrar sesión</button>
+  </div>
+
+  <div class="container">
+
+    <!-- CREAR NOTICIA -->
+    <div class="card">
+      <h2>Publicar noticia</h2>
+      <div id="createError" class="error-msg"></div>
+      <div id="createSuccess" class="success-msg"></div>
+
+      <label for="fTitulo">Título *</label>
+      <input type="text" id="fTitulo" placeholder="Ej: Boca va por un refuerzo europeo"/>
+
+      <label for="fBajada">Bajada / copete</label>
+      <textarea id="fBajada" placeholder="Subtítulo o resumen corto de la noticia..."></textarea>
+
+      <div class="form-row">
+        <div>
+          <label for="fTag">Tag</label>
+          <select id="fTag">
+            <option value="Fichajes">Fichajes</option>
+            <option value="Análisis">Análisis</option>
+            <option value="Stats">Stats</option>
+            <option value="Mercado">Mercado</option>
+            <option value="Informe">Informe</option>
+            <option value="General" selected>General</option>
+          </select>
+        </div>
+        <div>
+          <label for="fTagColor">Color del tag</label>
+          <select id="fTagColor">
+            <option value="oro">Oro</option>
+            <option value="azul" selected>Azul</option>
+            <option value="verde">Verde</option>
+            <option value="rojo">Rojo</option>
+            <option value="gris">Gris</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div>
+          <label for="fEmoji">Emoji de imagen</label>
+          <input type="text" id="fEmoji" value="⚽" placeholder="⚽"/>
+        </div>
+        <div>
+          <label for="fBg">Fondo de imagen</label>
+          <select id="fBg">
+            <option value="azul">Azul oscuro</option>
+            <option value="azul-dorado">Azul-dorado</option>
+            <option value="verde">Verde</option>
+            <option value="rojo">Rojo</option>
+            <option value="morado">Morado</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:14px;">
+          <div class="checkbox-row">
+            <input type="checkbox" id="fDestacada"/>
+            <label for="fDestacada">Marcar como destacada</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-oro" onclick="crearNoticia()">Publicar noticia</button>
+    </div>
+
+    <!-- LISTA DE NOTICIAS -->
+    <div class="card">
+      <h2>Noticias publicadas <button class="btn btn-azul" style="float:right;margin-top:-4px;" onclick="cargarLista()">↻ Actualizar</button></h2>
+      <div id="listaWrap">
+        <div style="padding:20px;text-align:center;color:#667799;">Cargando...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const BACKEND = 'https://xeneize-backend.vercel.app';
+
+function getKey() { return sessionStorage.getItem('xn_admin_key') || ''; }
+
+function showLoading(v) {
+  document.getElementById('loadingOverlay').classList.toggle('show', v);
+}
+
+async function login() {
+  const key = document.getElementById('adminKey').value.trim();
+  if (!key) return;
+  showLoading(true);
+  try {
+    const r = await fetch(BACKEND + '/api/noticias?action=lista', {
+      headers: { 'x-admin-key': key }
+    });
+    if (r.ok) {
+      sessionStorage.setItem('xn_admin_key', key);
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      document.getElementById('loginError').classList.remove('show');
+      cargarLista();
+    } else {
+      document.getElementById('loginError').classList.add('show');
+    }
+  } catch(e) {
+    document.getElementById('loginError').textContent = 'Error de conexión: ' + e.message;
+    document.getElementById('loginError').classList.add('show');
+  }
+  showLoading(false);
+}
+
+function logout() {
+  sessionStorage.removeItem('xn_admin_key');
+  document.getElementById('panel').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'block';
+  document.getElementById('adminKey').value = '';
+}
+
+async function crearNoticia() {
+  const titulo = document.getElementById('fTitulo').value.trim();
+  const bajada = document.getElementById('fBajada').value.trim();
+  const tag = document.getElementById('fTag').value;
+  const tag_color = document.getElementById('fTagColor').value;
+  const imagen_emoji = document.getElementById('fEmoji').value.trim() || '⚽';
+  const imagen_bg = document.getElementById('fBg').value;
+  const destacada = document.getElementById('fDestacada').checked;
+
+  const errEl = document.getElementById('createError');
+  const okEl = document.getElementById('createSuccess');
+  errEl.classList.remove('show');
+  okEl.classList.remove('show');
+
+  if (!titulo) { errEl.textContent = 'El título es obligatorio.'; errEl.classList.add('show'); return; }
+
+  showLoading(true);
+  try {
+    const r = await fetch(BACKEND + '/api/noticias?action=crear', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': getKey() },
+      body: JSON.stringify({ titulo, bajada, tag, tag_color, imagen_emoji, imagen_bg, destacada })
+    });
+    if (r.ok) {
+      okEl.textContent = 'Noticia publicada correctamente.';
+      okEl.classList.add('show');
+      document.getElementById('fTitulo').value = '';
+      document.getElementById('fBajada').value = '';
+      document.getElementById('fDestacada').checked = false;
+      cargarLista();
+    } else {
+      const data = await r.json();
+      errEl.textContent = 'Error: ' + (data.error || r.status);
+      errEl.classList.add('show');
+    }
+  } catch(e) {
+    errEl.textContent = 'Error de conexión: ' + e.message;
+    errEl.classList.add('show');
+  }
+  showLoading(false);
+}
+
+async function cargarLista() {
+  const wrap = document.getElementById('listaWrap');
+  wrap.innerHTML = '<div style="padding:20px;text-align:center;color:#667799;">Cargando...</div>';
+  try {
+    const r = await fetch(BACKEND + '/api/noticias?action=lista', {
+      headers: { 'x-admin-key': getKey() }
+    });
+    if (!r.ok) { wrap.innerHTML = '<div style="padding:20px;color:#cc2200;">Error al cargar noticias.</div>'; return; }
+    const noticias = await r.json();
+    if (!noticias || !noticias.length) {
+      wrap.innerHTML = '<div style="padding:20px;text-align:center;color:#667799;">No hay noticias publicadas todavía.</div>';
+      return;
+    }
+    renderTabla(noticias);
+  } catch(e) {
+    wrap.innerHTML = '<div style="padding:20px;color:#cc2200;">Error: ' + e.message + '</div>';
+  }
+}
+
+function renderTabla(noticias) {
+  const wrap = document.getElementById('listaWrap');
+  const rows = noticias.map(n => {
+    const fecha = new Date(n.created_at).toLocaleString('es-AR', {day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const dest = n.destacada ? '<span class="dest-badge">Destacada</span> ' : '';
+    return '<tr>'
+      + '<td>' + dest + escHtml(n.titulo) + '</td>'
+      + '<td><span class="tag-badge tag-' + (n.tag_color||'azul') + '">' + escHtml(n.tag||'') + '</span></td>'
+      + '<td>' + fecha + '</td>'
+      + '<td><div class="btn-row">'
+      + '<button class="btn btn-azul" onclick="destacar(' + n.id + ')">★ Destacar</button>'
+      + '<button class="btn btn-rojo" onclick="borrar(' + n.id + ', \'' + escHtml(n.titulo).replace(/'/g, "\\'") + '\')">✕ Eliminar</button>'
+      + '</div></td>'
+      + '</tr>';
+  }).join('');
+  wrap.innerHTML = '<table>'
+    + '<thead><tr><th>Título</th><th>Tag</th><th>Fecha</th><th>Acciones</th></tr></thead>'
+    + '<tbody>' + rows + '</tbody>'
+    + '</table>';
+}
+
+async function destacar(id) {
+  showLoading(true);
+  try {
+    const r = await fetch(BACKEND + '/api/noticias?action=destacar&id=' + id, {
+      method: 'PATCH',
+      headers: { 'x-admin-key': getKey() }
+    });
+    if (r.ok) { cargarLista(); }
+    else { alert('Error al marcar como destacada.'); }
+  } catch(e) { alert('Error: ' + e.message); }
+  showLoading(false);
+}
+
+async function borrar(id, titulo) {
+  if (!confirm('¿Eliminar la noticia "' + titulo + '"? Esta acción no se puede deshacer.')) return;
+  showLoading(true);
+  try {
+    const r = await fetch(BACKEND + '/api/noticias?action=borrar&id=' + id, {
+      method: 'DELETE',
+      headers: { 'x-admin-key': getKey() }
+    });
+    if (r.ok) { cargarLista(); }
+    else { alert('Error al eliminar la noticia.'); }
+  } catch(e) { alert('Error: ' + e.message); }
+  showLoading(false);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Auto-login si ya hay clave en sessionStorage
+window.addEventListener('DOMContentLoaded', () => {
+  const key = getKey();
+  if (key) {
+    document.getElementById('adminKey').value = key;
+    login();
+  }
+  // Enter key en el input de clave
+  document.getElementById('adminKey').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+});
+</script>
+</body>
+</html>

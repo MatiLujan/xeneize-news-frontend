@@ -769,12 +769,12 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
             <div class="xn-hero-leyendo"><div class="xn-hero-leyendo-dot"></div><span class="xn-hero-leyendo-txt"><span id="heroLeyendo">847</span> leyendo ahora</span></div>
             <div class="xn-hero-star"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></div>
             <div>
-              <span class="xn-hero-exclusivo">Exclusivo</span><div class="xn-tag oro" style="display:inline-block;">Fichajes</div>
-              <div class="xn-hero-titulo">Boca va con todo por refuerzo europeo: negociacion avanzada con club de LaLiga</div>
+              <span class="xn-hero-exclusivo">Exclusivo</span><div id="heroTag" class="xn-tag oro" style="display:inline-block;">Fichajes</div>
+              <div id="heroTitulo" class="xn-hero-titulo">Boca va con todo por refuerzo europeo: negociacion avanzada con club de LaLiga</div>
             </div>
           </div>
         </div>
-        <div class="xn-notas-grid">
+        <div id="notasGrid" class="xn-notas-grid">
           <div class="xn-nota">
             <div class="xn-nota-img" style="background:linear-gradient(135deg,#001440 0%,#003399 100%);"><div class="xn-nota-img-ico">&#9878;</div></div>
             <div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div>
@@ -1469,6 +1469,53 @@ function rHilo(h){
     '<div class="f-resp-inp"><input id="fri-'+h.id+'" placeholder="Tu respuesta..."/><button class="f-resp-send" onclick="responder('+h.id+')">Responder</button></div>'+
     '</div></div>';
 }
+async function cargarNoticias(){
+  try{
+    const r=await fetch(BACKEND+'/api/noticias?action=lista');
+    if(!r.ok)return;
+    const noticias=await r.json();
+    if(!noticias||!noticias.length)return;
+    renderNoticias(noticias);
+  }catch(e){}
+}
+
+function renderNoticias(noticias){
+  const dest=noticias.find(n=>n.destacada)||noticias[0];
+  const resto=noticias.filter(n=>n.id!==dest.id).slice(0,4);
+
+  const heroTit=document.getElementById('heroTitulo');
+  if(heroTit&&dest)heroTit.textContent=dest.titulo;
+  const heroTag=document.getElementById('heroTag');
+  if(heroTag&&dest){heroTag.textContent=dest.tag||'Noticia';heroTag.className='xn-tag '+(dest.tag_color||'oro');}
+
+  const grid=document.getElementById('notasGrid');
+  if(grid&&resto.length){
+    grid.innerHTML=resto.map(n=>{
+      const bg=bgFromColor(n.imagen_bg||'azul');
+      const tagClass=n.tag_color||'azul';
+      const tiempo=tiempoRelativo(n.created_at);
+      return '<div class="xn-nota">'
+        +'<div class="xn-nota-img" style="background:'+bg+'"><div class="xn-nota-img-ico">'+(n.imagen_emoji||'⚽')+'</div></div>'
+        +'<div class="xn-tag '+tagClass+'">'+n.tag+'</div>'
+        +'<div class="xn-nota-titulo">'+n.titulo+'</div>'
+        +'<div class="xn-nota-footer"><div class="xn-nota-meta">'+tiempo+'</div>'
+        +'<button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="'+n.titulo.replace(/"/g,'&quot;')+'">𝕏</button>'
+        +'</div></div>';
+    }).join('');
+  }
+}
+
+function bgFromColor(c){
+  const map={
+    'azul':'linear-gradient(135deg,#001440 0%,#003399 100%)',
+    'azul-dorado':'linear-gradient(135deg,#002060 60%,#e09500 100%)',
+    'verde':'linear-gradient(135deg,#0a3d1a 0%,#1a7a3a 100%)',
+    'rojo':'linear-gradient(135deg,#4a0a00 0%,#cc2200 100%)',
+    'morado':'linear-gradient(135deg,#1a1a2e 0%,#334477 100%)',
+  };
+  return map[c]||c||map['azul'];
+}
+
 async function cargarForo(){
   const lista=document.getElementById('fLista');
   lista.innerHTML=[1,2,3].map(()=>`<div class="skel-row" style="padding:14px 18px;border-bottom:1px solid rgba(245,168,0,0.08);"><span class="skel skel-av"></span><div class="skel-body"><span class="skel skel-line" style="width:70%;"></span><span class="skel skel-line" style="width:40%;height:9px;"></span></div></div>`).join('');
@@ -1680,6 +1727,7 @@ function renderMisiones(){
 
 cargarForo();
 cargarStats();
+cargarNoticias();
 renderMisiones();
 
 // SISTEMA DE LOGROS
