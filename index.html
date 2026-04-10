@@ -1460,7 +1460,7 @@ async function darLike(id,btn){
 async function responder(id){
   const inp=document.getElementById('fri-'+id);
   const txt=inp.value.trim();if(!txt)return;
-  const autor=localStorage.getItem('xn_nombre')||'Hincha Xeneize';
+  const autor=(authPerfil&&authPerfil.apodo)||localStorage.getItem('xn_nombre')||'Hincha Xeneize';
   inp.value='';inp.disabled=true;
   try{
     await fetch(BACKEND+'/api/foro?action=respuesta',{
@@ -1478,7 +1478,7 @@ function selCat(el){document.querySelectorAll('.f-cat').forEach(c=>{c.classList.
 async function publicar(){
   const t=document.getElementById('nTitulo').value.trim();
   if(!t)return;
-  const autor=localStorage.getItem('xn_nombre')||'Hincha Xeneize';
+  const autor=(authPerfil&&authPerfil.apodo)||localStorage.getItem('xn_nombre')||'Hincha Xeneize';
   try{
     await fetch(BACKEND+'/api/foro?action=post',{
       method:'POST',headers:{'Content-Type':'application/json'},
