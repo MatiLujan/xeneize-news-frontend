@@ -1705,12 +1705,13 @@ if('serviceWorker' in navigator){
       const t=document.getElementById('xnToast');
       document.getElementById('xnToastIco').textContent='📲';
       document.getElementById('xnToastTit').textContent='Instalá Xeneize News';
-      document.getElementById('xnToastMsg').textContent='Agregala a tu pantalla de inicio y entrá con un toque.';
+      document.getElementById('xnToastMsg').textContent='Tocá acá para agregar a tu pantalla de inicio.';
       if(t){
         t.style.cursor='pointer';
-        t.onclick=()=>{deferredPrompt.prompt();deferredPrompt=null;t.classList.remove('show');t.style.cursor='';t.onclick=null;};
+        t.style.pointerEvents='auto';
+        t.onclick=()=>{deferredPrompt.prompt();deferredPrompt=null;t.classList.remove('show');t.style.cursor='';t.style.pointerEvents='none';t.onclick=null;};
         t.classList.add('show');
-        setTimeout(()=>t.classList.remove('show'),8000);
+        setTimeout(()=>{t.classList.remove('show');t.style.pointerEvents='none';},8000);
       }
     },30000);
   });
