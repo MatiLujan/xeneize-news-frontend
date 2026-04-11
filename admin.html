@@ -175,10 +175,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx
 .ep-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:4px;border-radius:5px;line-height:1;transition:background .1s;}
 .ep-btn:hover{background:var(--bg);}
 
-/* POS GRID */
-.pos-btn{width:32px;height:32px;border:1.5px solid var(--border);background:#f5f7fc;border-radius:5px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-.pos-btn:hover{background:#e8edf8;border-color:#aabbdd;}
-.pos-btn.active{background:var(--navy2);color:#fff;border-color:var(--navy2);}
+/* IMAGE POSITION DRAG */
+.pos-wrap{position:relative;width:100%;height:110px;border-radius:8px;overflow:hidden;cursor:crosshair;user-select:none;border:2px solid var(--border);}
+.pos-wrap:hover{border-color:var(--navy3);}
+.pos-wrap img,.pos-wrap .pos-bg{width:100%;height:100%;object-fit:cover;pointer-events:none;}
+.pos-bg{display:flex;align-items:center;justify-content:center;font-size:32px;}
+.pos-dot{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--gold);border:2.5px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.3),0 2px 6px rgba(0,0,0,.4);transform:translate(-50%,-50%);pointer-events:none;transition:none;}
+.pos-hint{font-size:11px;color:var(--txt3);margin-top:4px;}
 
 /* RESPONSIVE */
 @media(max-width:960px){.two-col{grid-template-columns:1fr;}.stats-row{display:none;}}
@@ -342,21 +345,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--tx
             </div>
           </div>
 
-          <div class="field">
-            <label>Posición de la imagen</label>
-            <div id="imgPosGrid" style="display:inline-grid;grid-template-columns:repeat(3,32px);gap:3px;">
-              <button type="button" class="pos-btn" data-pos="left top"     onclick="setPosBtn(this)">↖</button>
-              <button type="button" class="pos-btn" data-pos="center top"   onclick="setPosBtn(this)">↑</button>
-              <button type="button" class="pos-btn" data-pos="right top"    onclick="setPosBtn(this)">↗</button>
-              <button type="button" class="pos-btn" data-pos="left center"  onclick="setPosBtn(this)">←</button>
-              <button type="button" class="pos-btn active" data-pos="center center" onclick="setPosBtn(this)">●</button>
-              <button type="button" class="pos-btn" data-pos="right center" onclick="setPosBtn(this)">→</button>
-              <button type="button" class="pos-btn" data-pos="left bottom"  onclick="setPosBtn(this)">↙</button>
-              <button type="button" class="pos-btn" data-pos="center bottom" onclick="setPosBtn(this)">↓</button>
-              <button type="button" class="pos-btn" data-pos="right bottom" onclick="setPosBtn(this)">↘</button>
+          <div class="field" id="posField" style="display:none;">
+            <label>Posición de la imagen <span id="posLabel" style="font-weight:400;color:var(--txt3);text-transform:none;font-size:11px;">50% 50%</span></label>
+            <div class="pos-wrap" id="posWrap">
+              <div class="pos-bg" id="posBg" style="background:linear-gradient(135deg,#001440,#003399);">⚽</div>
+              <div class="pos-dot" id="posDot" style="left:50%;top:50%;"></div>
             </div>
-            <input type="hidden" id="fImgPos" value="center center"/>
-            <div class="field-note">Elegí el punto focal de la imagen para que no quede cortada.</div>
+            <div class="pos-hint">Arrastrá el punto amarillo para elegir el foco de la imagen.</div>
+            <input type="hidden" id="fImgPos" value="50% 50%"/>
           </div>
 
           <div class="field">
@@ -514,6 +510,7 @@ function handleFile(file){
         $('uploadStatus').textContent='✓ Imagen subida';
         $('uploadStatus').style.color='var(--green)';
         $('dropArea').classList.add('has-img');
+        updatePosPreview();
         syncPreview();
       }else{
         const d=await r.json();
@@ -566,14 +563,50 @@ function toggleEmojiPicker(evt){
 }
 function closeEmojiPicker(){$('emojiPicker').style.display='none';}
 
-function setPosBtn(btn){
-  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  $('fImgPos').value=btn.dataset.pos;
-  syncPreview();
+// ── Image position drag ──
+(function(){
+  let dragging=false;
+  function updatePos(e,wrap){
+    const r=wrap.getBoundingClientRect();
+    const clientX=e.touches?e.touches[0].clientX:e.clientX;
+    const clientY=e.touches?e.touches[0].clientY:e.clientY;
+    const x=Math.max(0,Math.min(1,(clientX-r.left)/r.width));
+    const y=Math.max(0,Math.min(1,(clientY-r.top)/r.height));
+    const px=Math.round(x*100)+'%';
+    const py=Math.round(y*100)+'%';
+    $('posDot').style.left=px;
+    $('posDot').style.top=py;
+    $('fImgPos').value=px+' '+py;
+    $('posLabel').textContent=px+' '+py;
+    syncPreview();
+  }
+  window.initPosDrag=function(){
+    const wrap=$('posWrap');
+    if(!wrap||wrap._dragging)return;
+    wrap._dragging=true;
+    wrap.addEventListener('mousedown',e=>{dragging=true;updatePos(e,wrap);});
+    wrap.addEventListener('touchstart',e=>{dragging=true;updatePos(e,wrap);},{passive:true});
+    window.addEventListener('mousemove',e=>{if(dragging)updatePos(e,wrap);});
+    window.addEventListener('touchmove',e=>{if(dragging)updatePos(e,wrap);},{passive:true});
+    window.addEventListener('mouseup',()=>dragging=false);
+    window.addEventListener('touchend',()=>dragging=false);
+  };
+})();
+
+function updatePosPreview(){
+  const imgUrl=getImgUrl();
+  const posField=$('posField');
+  if(!imgUrl){posField.style.display='none';return;}
+  posField.style.display='';
+  const bg=$('fBg').value||'azul';
+  const grad=BGS[bg];
+  const posBg=$('posBg');
+  posBg.style.background=grad;
+  posBg.innerHTML=imgUrl?'<img src="'+imgUrl+'" style="width:100%;height:100%;object-fit:cover;object-position:'+getImgPos()+';" onerror="this.style.display=\'none\'">':'<span>'+($('fEmoji').value||'⚽')+'</span>';
+  initPosDrag();
 }
 
-function getImgPos(){return $('fImgPos').value||'center center';}
+function getImgPos(){return $('fImgPos').value||'50% 50%';}
 
 function getImgUrl(){
   const tab=$('tabUpload').classList.contains('active');
@@ -592,6 +625,7 @@ function syncPreview(){
   const tc=TCS[tc_key]||TCS.azul;
   const grad=BGS[bg]||BGS.azul;
 
+  updatePosPreview();
   if(!titulo&&!bajada){
     $('prevWrap').innerHTML='<div class="prev-empty"><div style="font-size:36px;margin-bottom:8px;">📰</div><div>Completá el formulario para ver la vista previa</div></div>';
     return;
@@ -648,8 +682,10 @@ function resetForm(){
   $('fEmoji').value='⚽';$('fBg').value='azul';
   $('fImgUrl').value='';$('fDest').checked=false;
   $('fContenido').value='';
-  $('fImgPos').value='center center';
-  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.toggle('active',b.dataset.pos==='center center'));
+  $('fImgPos').value='50% 50%';
+  $('posDot').style.left='50%';$('posDot').style.top='50%';
+  $('posLabel').textContent='50% 50%';
+  $('posField').style.display='none';
   clearUpload();
   setImgTab('upload');
   cc('fTitulo','ccT',200);cc('fBajada','ccB',500);cc('fContenido','ccC',5000);
@@ -680,9 +716,13 @@ function loadEdit(n){
     clearUpload();
   }
   $('fContenido').value=n.contenido||'';
-  const pos=n.imagen_pos||'center center';
+  const pos=n.imagen_pos||'50% 50%';
   $('fImgPos').value=pos;
-  document.querySelectorAll('.pos-btn').forEach(b=>b.classList.toggle('active',b.dataset.pos===pos));
+  $('posLabel').textContent=pos;
+  const pct=pos.split(' ');
+  $('posDot').style.left=pct[0]||'50%';
+  $('posDot').style.top=pct[1]||'50%';
+  updatePosPreview();
   cc('fContenido','ccC',5000);
   $('fDest').checked=!!n.destacada;
   $('editBanner').style.display='flex';
