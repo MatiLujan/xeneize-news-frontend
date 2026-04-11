@@ -119,7 +119,7 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
 .xn-nota.visible{opacity:1;transform:translateY(0);}
 .xn-nota:hover{border-color:var(--oro);background:#fffbf0;transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,20,64,0.08);}
 .xn-hero-exclusivo{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:var(--rojo);color:white;margin-right:6px;position:relative;z-index:2;vertical-align:middle;}
-.xn-hero-img{height:210px;background:var(--azul2);background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:18px;position:relative;}
+.xn-hero-img{height:210px;background:var(--azul2);background-size:cover;background-position:center;display:flex;align-items:flex-end;padding:18px;position:relative;overflow:hidden;}
 .xn-hero-img::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(245,168,0,0.03) 0px,rgba(245,168,0,0.03) 1px,transparent 1px,transparent 12px),repeating-linear-gradient(-45deg,rgba(0,51,153,0.06) 0px,rgba(0,51,153,0.06) 1px,transparent 1px,transparent 12px);}
 .xn-hero-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,20,64,0.97) 0%,rgba(0,32,96,0.5) 60%,rgba(0,20,64,0.15) 100%);}
 .xn-nota-img{height:88px;border-radius:5px 5px 0 0;background-size:cover;background-position:center;position:relative;overflow:hidden;margin:-12px -12px 10px -12px;}
@@ -1514,7 +1514,7 @@ let _noticiasCache = [];
 function renderNoticias(noticias){
   _noticiasCache = noticias;
   const dest=noticias.find(n=>n.destacada)||noticias[0];
-  const resto=noticias.length<=4?noticias.slice(0,4):noticias.filter(n=>n.id!==dest.id).slice(0,4);
+  const resto=noticias.filter(n=>n.id!==dest.id).slice(0,4);
 
   // Hero card
   const heroTit=document.getElementById('heroTitulo');
@@ -1538,7 +1538,8 @@ function renderNoticias(noticias){
 
   // Grid cards
   const grid=document.getElementById('notasGrid');
-  if(grid&&resto.length){
+  if(grid){
+    if(!resto.length){grid.innerHTML='';return;}
     grid.innerHTML=resto.map(n=>{
       const bg=bgFromColor(n.imagen_bg||'azul');
       const tagClass=n.tag_color||'azul';
