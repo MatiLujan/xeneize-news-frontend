@@ -1398,7 +1398,12 @@ async function cargarStats(){
     if(ticker)ticker.textContent=tickerParts.join(' &middot; ')+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
     ['pUpdated','pUpdated2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='Actualizado '+now;});
-    mostrarPulso('body');
+    if(!boca){
+      document.querySelectorAll('.px-wrap').forEach(pw=>pw.style.display='none');
+      const sh=document.getElementById('statsHome');if(sh)sh.style.display='none';
+    } else {
+      mostrarPulso('body');
+    }
   }catch(e){
     // Ocultar bloque de stats si falla — no dejar espacio vacío
     ['pLoading','pError','pBody'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
