@@ -769,37 +769,12 @@ body{font-family:'Barlow',sans-serif;background:var(--gris);color:var(--txt);min
             <div class="xn-hero-leyendo"><div class="xn-hero-leyendo-dot"></div><span class="xn-hero-leyendo-txt"><span id="heroLeyendo">847</span> leyendo ahora</span></div>
             <div class="xn-hero-star"><svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9"/></svg></div>
             <div>
-              <span class="xn-hero-exclusivo">Exclusivo</span><div id="heroTag" class="xn-tag oro" style="display:inline-block;">Fichajes</div>
-              <div id="heroTitulo" class="xn-hero-titulo">Boca va con todo por refuerzo europeo: negociacion avanzada con club de LaLiga</div>
+              <span class="xn-hero-exclusivo">Exclusivo</span><div id="heroTag" class="xn-tag oro" style="display:inline-block;"></div>
+              <div id="heroTitulo" class="xn-hero-titulo"></div>
             </div>
           </div>
         </div>
-        <div id="notasGrid" class="xn-notas-grid">
-          <div class="xn-nota">
-            <div class="xn-nota-img" style="background:linear-gradient(135deg,#001440 0%,#003399 100%);"><div class="xn-nota-img-ico">&#9878;</div></div>
-            <div class="xn-tag azul">Analisis</div><div class="xn-nota-titulo">El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River</div>
-            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 2h &middot; 4 min</div><div class="xn-nota-vistas">&#128065; 3.2K</div></div>
-            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="El sistema tactico de Gago: asi funciono el 4-2-3-1 contra River">𝕏 Compartir</button>
-          </div>
-          <div class="xn-nota">
-            <div class="xn-nota-img" style="background:linear-gradient(135deg,#0a3d1a 0%,#1a7a3a 100%);"><div class="xn-nota-img-ico">&#128202;</div></div>
-            <div class="xn-tag verde">Stats</div><div class="xn-nota-titulo">Merentiel supera a Palermo en goles en un solo torneo</div>
-            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 4h &middot; 3 min</div><div class="xn-nota-vistas">&#128065; 5.8K</div></div>
-            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Merentiel supera a Palermo en goles en un solo torneo">𝕏 Compartir</button>
-          </div>
-          <div class="xn-nota">
-            <div class="xn-nota-img" style="background:linear-gradient(135deg,#1a1a2e 0%,#334477 100%);"><div class="xn-nota-img-ico">&#128176;</div></div>
-            <div class="xn-tag gris">Mercado</div><div class="xn-nota-titulo">Cavani abre la puerta a renovar hasta fin de 2025</div>
-            <div class="xn-nota-footer"><div class="xn-nota-meta">hace 5h &middot; 2 min</div><div class="xn-nota-vistas">&#128065; 2.1K</div></div>
-            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Cavani abre la puerta a renovar hasta fin de 2025">𝕏 Compartir</button>
-          </div>
-          <div class="xn-nota">
-            <div class="xn-nota-img" style="background:linear-gradient(135deg,#4a0a00 0%,#cc2200 100%);"><div class="xn-nota-img-ico">&#9889;</div></div>
-            <div class="xn-tag rojo">Informe</div><div class="xn-nota-titulo">Los 5 jugadores que mas corrieron en el Superclasico</div>
-            <div class="xn-nota-footer"><div class="xn-nota-meta">ayer &middot; 5 min</div><div class="xn-nota-vistas">&#128065; 8.4K</div></div>
-            <button class="xn-share-x" onclick="compartirEnX(this)" data-titulo="Los 5 jugadores que mas corrieron en el Superclasico">𝕏 Compartir</button>
-          </div>
-        </div>
+        <div id="notasGrid" class="xn-notas-grid"></div>
       </div>
 
       <div class="xn-stats-home" id="statsHome">
@@ -1425,9 +1400,10 @@ async function cargarStats(){
     ['pUpdated','pUpdated2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='Actualizado '+now;});
     mostrarPulso('body');
   }catch(e){
-    mostrarPulso('error');
-    const et=document.getElementById('pErrorTxt');if(et)et.textContent='No se pudieron cargar los datos';
-    const es=document.getElementById('pErrorSub');if(es)es.textContent=e.message||'Intenta de nuevo';
+    // Ocultar bloque de stats si falla — no dejar espacio vacío
+    ['pLoading','pError','pBody'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('visible');});
+    const pw=document.querySelector('.px-wrap');if(pw)pw.style.display='none';
+    const pw2=document.getElementById('sec-stats')?.querySelector('.px-wrap');if(pw2)pw2.style.display='none';
   }
 }
 
