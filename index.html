@@ -983,6 +983,9 @@ body{font-family:'Barlow',sans-serif;background:var(--azul);color:var(--txt);min
       <div class="f-filtro" onclick="filtrar(this,'mercado')">Mercado</div>
       <div class="f-filtro" onclick="filtrar(this,'debate')">Debate</div>
       <div class="f-filtro" onclick="filtrar(this,'historia')">Historia</div>
+      <div class="f-filtro" onclick="filtrar(this,'lesiones')">Lesiones</div>
+      <div class="f-filtro" onclick="filtrar(this,'memes')">&#128514; Memes</div>
+      <div class="f-filtro" onclick="filtrar(this,'basquet')">&#127936; Basquet</div>
     </div>
     <button class="f-btn-nuevo" onclick="toggleForm()">+ Nuevo hilo</button>
   </div>
@@ -994,6 +997,9 @@ body{font-family:'Barlow',sans-serif;background:var(--azul);color:var(--txt);min
       <div class="f-cat" data-cat="debate" onclick="selCat(this)">Debate</div>
       <div class="f-cat" data-cat="historia" onclick="selCat(this)">Historia</div>
       <div class="f-cat" data-cat="tactica" onclick="selCat(this)">Tactica</div>
+      <div class="f-cat" data-cat="lesiones" onclick="selCat(this)">Lesiones</div>
+      <div class="f-cat" data-cat="memes" onclick="selCat(this)">Memes</div>
+      <div class="f-cat" data-cat="basquet" onclick="selCat(this)">Basquet</div>
     </div>
     <input class="f-finput" id="nTitulo" placeholder="Titulo del hilo..."/>
     <textarea class="f-ftextarea" id="nTexto" placeholder="Desarrolla tu opinion..."></textarea>
@@ -1455,7 +1461,7 @@ const RNG=[{min:0,max:20,cls:'u-rookie',badge:'rb-r',label:'Rookie'},{min:21,max
 function getRango(pts,socio){if(socio)return RNG[4];return RNG.find(r=>pts>=r.min&&pts<=r.max)||RNG[0];}
 function avS(i){const a=AVC[i%AVC.length];return 'background:'+a.bg+';color:'+a.c+';';}
 function calor(c){if(c>=80)return{bg:'#fff0e0',color:'#b84a00',txt:'En fuego',bar:'#F5A800'};if(c>=55)return{bg:'#ffe8e8',color:'#aa1100',txt:'Caliente',bar:'#f97316'};if(c>=30)return{bg:'#e8f0ff',color:'#1a3a99',txt:'Activo',bar:'#60a5fa'};return{bg:'#e8f5ee',color:'#1a5a30',txt:'Nuevo',bar:'#4ade80'};}
-const CAT={superclasico:{bg:'#ffe8e8',c:'#aa1100',l:'Superclasico'},mercado:{bg:'#e8f0ff',c:'#1a3a99',l:'Mercado'},debate:{bg:'rgba(245,168,0,0.15)',c:'#7a5000',l:'Debate'},historia:{bg:'#e8f5ee',c:'#1a5a30',l:'Historia'},tactica:{bg:'#f0eaff',c:'#4a1a99',l:'Tactica'}};
+const CAT={superclasico:{bg:'#ffe8e8',c:'#aa1100',l:'Superclasico'},mercado:{bg:'#e8f0ff',c:'#1a3a99',l:'Mercado'},debate:{bg:'rgba(245,168,0,0.15)',c:'#7a5000',l:'Debate'},historia:{bg:'#e8f5ee',c:'#1a5a30',l:'Historia'},tactica:{bg:'#f0eaff',c:'#4a1a99',l:'Tactica'},lesiones:{bg:'#fee2e2',c:'#991b1b',l:'Lesiones'},memes:{bg:'#f0f3fa',c:'#334477',l:'Memes'},basquet:{bg:'#ffedd5',c:'#c2410c',l:'Basquet'}};
 function catB(cat){const s=CAT[cat]||CAT.debate;return '<span class="f-bcat" style="background:'+s.bg+';color:'+s.c+';">'+s.l+'</span>';}
 function uHTML(user,pts,socio,flair,sz){const r=getRango(pts,socio);const f=socio&&flair?'<span style="font-size:'+(sz-2)+'px;">'+flair+'</span>':'';return '<span class="f-uname '+r.cls+'" style="font-size:'+sz+'px;">'+user+'</span>'+f+'<span class="f-rbadge '+r.badge+'">'+r.label+'</span>';}
 function rResps(h){return h.resps.map(r=>'<div class="f-resp"><div class="f-resp-av" style="'+avS(r.av)+'">'+r.ini+'</div><div class="f-resp-bur"><div class="f-resp-user">'+uHTML(r.user,r.pts,r.socio,r.flair,12)+'</div><div class="f-resp-txt">'+r.txt+'</div></div></div>').join('');}
@@ -1655,7 +1661,7 @@ async function responder(id){
 }
 function filtrar(el,tipo){document.querySelectorAll('.f-filtro').forEach(f=>f.classList.remove('activo'));el.classList.add('activo');filtroActivo=tipo;renderForo();}
 function toggleForm(){const f=document.getElementById('nuevoForm');f.classList.toggle('visible');if(f.classList.contains('visible'))document.getElementById('nTitulo').focus();}
-function selCat(el){document.querySelectorAll('.f-cat').forEach(c=>{c.classList.remove('sel','superclasico','mercado','debate','historia','tactica');});el.classList.add('sel',el.dataset.cat);catSel=el.dataset.cat;}
+function selCat(el){document.querySelectorAll('.f-cat').forEach(c=>{c.classList.remove('sel','superclasico','mercado','debate','historia','tactica','lesiones','memes','basquet');});el.classList.add('sel',el.dataset.cat);catSel=el.dataset.cat;}
 async function publicar(){
   const t=document.getElementById('nTitulo').value.trim();
   if(!t)return;
